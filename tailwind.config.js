@@ -7,7 +7,14 @@ module.exports = {
         primary: "#267CE9",
       },
       fontFamily: {
+        sans: ["Kanit"],
+        serif: ["Kanit"],
+        mono: ["Kanit"],
+        display: ["Kanit"],
         body: ["Kanit"],
+      },
+      zIndex: {
+        "-1": "-1",
       },
     },
   },
