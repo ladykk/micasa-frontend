@@ -25,9 +25,9 @@ function App() {
 
   return (
     <Router>
-      <div className="app ">
+      <div className="app">
         <NavBar user={user} />
-        <div className="pt-12 w-screen h-screen">
+        <div className="pt-12 w-screen h-screen relative overflow-x-hidden">
           <Switch>
             <Route path="/property/:id">
               <PropertyPage />

@@ -63,7 +63,7 @@ const PropertyPage = () => {
   const [page, setPage] = useState("overview");
 
   return (
-    <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 overflow-x-hidden">
+    <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 ">
       <div
         className="w-screen h-3/4 background-cover-centered pt-12"
         style={{ backgroundImage: `url('${property.img}')` }}

@@ -10,7 +10,7 @@ import pic4 from "../assets/images/about/pic4.png";
 const AboutUsPage = () => {
   return (
     <div className="w-screen h-auto absolute top-0 left-0 right-0">
-      <div className="w-full h-screen pt-12  bg-black relative">
+      <div className="w-full h-screen pt-12 background-1 bg-black relative">
         <div className=" w-96 h-auto flex items-center flex-col absolute top-1/4 left-1/2 transform-center">
           <h1 className="text-white text-7xl font-semibold text-shadow">
             MI CASA
