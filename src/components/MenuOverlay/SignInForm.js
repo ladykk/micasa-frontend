@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import user_icon from "../../assets/icons/userform/user.png";
 import password_icon from "../../assets/icons/userform/key.png";
 
-const LoginForm = () => {
+const SignInForm = ({ toggleOverlay }) => {
   return (
     <form className="flex flex-col items-center w-full h-full p-3 pt-4 pb-4">
       <div class="w-full h-10 mb-4 bg-white p-2 rounded-lg flex items-center shadow-md ">
@@ -36,7 +36,8 @@ const LoginForm = () => {
         Sign In
       </button>
       <Link
-        to="/forget_password"
+        onClick={toggleOverlay}
+        to="/forgetpassword"
         className="w-full mx-auto text-gray-500 underline font-light italic text-center"
       >
         Forget password?
@@ -44,6 +45,7 @@ const LoginForm = () => {
       <hr className="w-full mt-5" />
       <p className="text-white pt-4 pb-3">Don't have an account yet?</p>
       <Link
+        onClick={toggleOverlay}
         to="/signup"
         className="flex items-center justify-center w-full h-10 rounded-xl bg-white text-blue-500 text-lg font-normal align-middle hover:bg-opacity-90 ease-in duration-75"
       >
@@ -53,4 +55,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignInForm;

@@ -1,14 +1,14 @@
 import React from "react";
-import LoginForm from "./MenuOverlay/LoginForm";
+import SignInForm from "./MenuOverlay/SignInForm";
 import UserMenu from "./MenuOverlay/UserMenu";
 
-const MenuOverlay = ({ user, handleSignIn }) => {
+const MenuOverlay = ({ user, handleSignIn, toggleOverlay }) => {
   return (
     <div className="w-80 h-auto bg-black bg-opacity-70 rounded-xl flex-shrink-0 mt-3">
-      {user ? (
+      {user.initialized ? (
         <UserMenu user={user} />
       ) : (
-        <LoginForm handleSignIn={handleSignIn} />
+        <SignInForm handleSignIn={handleSignIn} toggleOverlay={toggleOverlay} />
       )}
     </div>
   );

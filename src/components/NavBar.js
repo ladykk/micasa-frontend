@@ -5,7 +5,7 @@ import logo from "../assets/icons/logo.png";
 import avatar_icon from "../assets/icons/userform/avatar.png";
 import MenuOverlay from "./MenuOverlay";
 
-const NavBar = ({ user }) => {
+const NavBar = ({ user, handleSignIn }) => {
   //Overlay
   const [isOverlayOpen, setOverlay] = useState(false);
   const toggleOverlay = () => {
@@ -35,19 +35,19 @@ const NavBar = ({ user }) => {
             <div class="flex h-full mr-4">
               <Link
                 className="flex items-center justify-center h-full pl-5 pr-5 text-white font-normal hover:bg-black hover:bg-opacity-30 ease-in duration-75"
-                to="/buy"
+                to="/search/buy"
               >
                 Buy
               </Link>
               <Link
                 className="flex items-center justify-center h-full pl-5 pr-5 text-white font-normal hover:bg-black hover:bg-opacity-30 ease-in duration-75"
-                to="/rent"
+                to="/search/rent"
               >
                 Rent
               </Link>
               <Link
                 className="flex items-center justify-center h-full pl-5 pr-5 text-white font-normal hover:bg-black hover:bg-opacity-30 ease-in duration-75"
-                to="/new"
+                to="/search/new"
               >
                 New House
               </Link>
@@ -64,7 +64,10 @@ const NavBar = ({ user }) => {
                 About Us
               </Link>
             </div>
-            <Link className="pl-5 pr-5 pt-1 pb-1 mr-4 bg-white rounded-xl text-blue-500 font-normal ease-in duration-75 hover:bg-opacity-90">
+            <Link
+              to="/dashboard/sell"
+              className="pl-5 pr-5 pt-1 pb-1 mr-4 bg-white rounded-xl text-blue-500 font-normal ease-in duration-75 hover:bg-opacity-90"
+            >
               Sell
             </Link>
             {user.initialzed ? (
@@ -82,7 +85,7 @@ const NavBar = ({ user }) => {
                       : avatar_icon
                   }
                   alt=""
-                  className=" w-10"
+                  className=" w-10 rounded-full"
                 />
               </div>
             ) : (
@@ -95,24 +98,26 @@ const NavBar = ({ user }) => {
             )}
           </div>
         </nav>
-        {isOverlayOpen && (
-          <div className="flex w-full h-full items-start justify-start">
-            <div
-              id="overlay-menu-overlay"
-              class="flex w-full h-full cursor-pointer"
-              onClick={handleOverlayOnClick}
-            ></div>
-            <MenuOverlay />
-          </div>
-        )}
-      </div>
-      {isOverlayOpen && (
         <div
-          id="overlay-menu-overlay"
-          class="fixed top-0 bottom-0 left-0 right-0 -z-1 cursor-pointer"
-          onClick={handleOverlayOnClick}
-        ></div>
-      )}
+          className={`flex w-full h-full items-start justify-start trans-visibility ${
+            isOverlayOpen && "active"
+          }`}
+        >
+          <div
+            id="overlay-menu-overlay"
+            class="flex w-full h-full cursor-pointer"
+            onClick={handleOverlayOnClick}
+          ></div>
+          <MenuOverlay user={user} toggleOverlay={toggleOverlay} />
+        </div>
+      </div>
+      <div
+        id="overlay-menu-overlay"
+        class={`fixed top-0 bottom-0 left-0 right-0 -z-1 cursor-pointer ${
+          !isOverlayOpen && "hidden"
+        }`}
+        onClick={handleOverlayOnClick}
+      ></div>
     </header>
   );
 };

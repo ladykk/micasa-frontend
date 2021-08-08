@@ -58,6 +58,24 @@ p {
   background-size: cover;
 }
 
+.background-2 {
+  background-image: linear-gradient(
+      270deg,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.4) 47.4%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(0, 0, 0, 0.5) 74.82%,
+      rgba(0, 0, 0, 0.8) 100%
+    ),
+    url("./assets/images/bg2.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
 .background-3 {
   background-image: linear-gradient(
       180deg,
@@ -70,6 +88,11 @@ p {
   background-size: cover;
 }
 
+.background-cover-centered {
+  background-size: cover;
+  background-position: center;
+}
+
 /* icon */
 .invert-icon {
   filter: invert(100%);
@@ -78,4 +101,129 @@ p {
 /* transform */
 .transform-center {
   transform: translate(-50%, -50%);
+}
+.transform-rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* filter */
+.grayscale {
+  filter: grayscale(100%);
+}
+
+/* transitions */
+.trans-visibility {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 75ms linear;
+}
+
+.trans-visibility.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.trans-hover {
+  opacity: 0;
+  transition: opacity 75ms linear;
+}
+
+.trans-hover:hover {
+  opacity: 1;
+}
+
+.trans-toggle {
+  max-height: 0;
+  transition: max-height 0.15s ease-out;
+  overflow: hidden;
+}
+
+.trans-toggle.active {
+  max-height: 500px;
+  transition: max-height 0.25s ease-in;
+}
+
+.trans-hide {
+  opacity: 0;
+  max-height: 0;
+  transition: max-height 0.15s ease-out, opacity 0.15s ease-out;
+  overflow: hidden;
+}
+
+.trans-hide.active {
+  opacity: 1;
+  max-height: 3000px;
+  transition: max-height 0.25s ease-in, opacity 0.25s ease-in;
+}
+
+/* height */
+.h-fit-content {
+  height: fit-content;
+}
+
+.h-screen-80 {
+  height: 80vh;
+}
+
+/* Switch */
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 25px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: rgb(59, 130, 246);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px rgb(59, 130, 246);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(19px);
+  -ms-transform: translateX(19px);
+  transform: translateX(19px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 30px;
+}
+.slider.round:before {
+  border-radius: 50%;
 }
