@@ -114,7 +114,7 @@ const SearchPage = () => {
 
   return (
     <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 pt-20 pb-10 ">
-      <div className="w-4/5 h-auto mx-auto flex">
+      <div className="w-full pl-5 pr-5 2xl:w-4/5 h-auto mx-auto flex">
         <Filter contract={contract} params={params} setParams={setParams} />
         <div className="w-full h-auto">
           {/* Search Bar */}

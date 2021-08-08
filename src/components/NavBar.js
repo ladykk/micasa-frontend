@@ -20,7 +20,7 @@ const NavBar = ({ user, handleSignIn }) => {
 
   return (
     <header className="w-screen h-12 bg-black bg-opacity-40 fixed top-0 left-0 right-0 z-50">
-      <div className="w-4/5 mx-auto h-full">
+      <div className="w-full pl-5 pr-5 2xl:w-4/5 2xl:p-0 mx-auto h-full">
         <nav className="w-full h-12 flex justify-between">
           <Link
             className="flex items-center hover:bg-black hover:bg-opacity-30 ease-in duration-75"

@@ -88,8 +88,8 @@ const PropertyPage = () => {
           </div>
         </div>
       </div>
-      <div className="w-screen h-20 mx-auto bg-gray-200">
-        <div className="w-4/5 h-full mx-auto flex">
+      <div className="w-screen h-16 2xl:h-20 mx-auto bg-gray-200">
+        <div className="w-full xl:w-4/5 h-full mx-auto flex">
           <div
             onClick={() => setPage("overview")}
             className={`w-auto h-full flex flex-1 items-center justify-center cursor-pointer ease-in duration-75 ${
@@ -99,7 +99,7 @@ const PropertyPage = () => {
             <img
               src={overview}
               alt=""
-              className={`w-14 h-14 mr-4 ${
+              className={`w-12 h-12 2xl:w-14 2xl:h-14 mr-4 ${
                 page === "overview" && "invert-icon"
               }`}
             />
@@ -114,7 +114,9 @@ const PropertyPage = () => {
             <img
               src={images}
               alt=""
-              className={`w-14 h-14 mr-4 ${page === "images" && "invert-icon"}`}
+              className={`w-12 h-12 2xl:w-14 2xl:h-14 mr-4 ${
+                page === "images" && "invert-icon"
+              }`}
             />
             <h1 className="text-2xl">Images</h1>
           </div>
@@ -127,13 +129,15 @@ const PropertyPage = () => {
             <img
               src={map}
               alt=""
-              className={`w-14 h-14 mr-4 ${page === "map" && "invert-icon"}`}
+              className={`w-12 h-12 2xl:w-14 2xl:h-14 mr-4 ${
+                page === "map" && "invert-icon"
+              }`}
             />
             <h1 className="text-2xl">Map</h1>
           </div>
         </div>
       </div>
-      <div className="w-4/5 h-auto mx-auto relative">
+      <div className="w-full pr-12 pl-12 xl:w-4/5 xl:p-0 h-auto mx-auto relative">
         <div className="mt-10 mb-10">
           <div className="flex justify-between items-end mb-3">
             <h1 className="text-3xl font-bold">{property.name}</h1>

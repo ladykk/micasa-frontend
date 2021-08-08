@@ -36,7 +36,7 @@ const ReviewsPage = () => {
         </div>
       </div>
       <div className="w-full h-auto p-20 bg-black text-black">
-        <div className=" w-3/5 h-full mx-auto">
+        <div className=" w-full h-full mx-auto">
           {reviews.map((review, index) => (
             <ReviewCard key={index + 1} id={index + 1} review={review} />
           ))}
