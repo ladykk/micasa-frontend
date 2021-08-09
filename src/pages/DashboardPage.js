@@ -1,11 +1,12 @@
 import React from "react";
 import { useParams } from "react-router";
 import { Redirect, Route, Switch } from "react-router-dom";
-import FavoriteProperties from "../components/FavoriteProperties";
-import Menu from "../components/Menu";
 
 //import components
-import Profile from "../components/Profile";
+import Menu from "../components/Dashboard/Menu";
+import Profile from "../components/Dashboard/Profile";
+import FavoriteProperties from "../components/Dashboard/FavoriteProperties";
+import Reviews from "../components/Dashboard/Reviews";
 
 const DashboardPage = ({ user, handleSignOut }) => {
   let { menu } = useParams();
@@ -14,6 +15,13 @@ const DashboardPage = ({ user, handleSignOut }) => {
       <div className="w-full pl-5 pr-5 2xl:w-4/5 h-auto mx-auto flex">
         <Menu user={user} handleSignOut={handleSignOut} menu={menu} />
         <Switch>
+          <Route path="/dashboard/reviews">
+            {user.class === "Customer" ? (
+              <Reviews user={user} />
+            ) : (
+              <Redirect to="/401" />
+            )}
+          </Route>
           <Route path="/dashboard/favorites">
             {user.class === "Customer" ? (
               <FavoriteProperties user={user} />

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
 //import pictures
-import avatar_icon from "../assets/icons/userform/avatar.png";
-import contact from "../assets/images/contact.png";
+import avatar_icon from "../../assets/icons/userform/avatar.png";
+import contact from "../../assets/images/contact.png";
 
 //import modules
-const ImageAPI = require("../modules/ImageAPI");
+const ImageAPI = require("../../modules/ImageAPI");
 
 const Profile = ({ user }) => {
   const [form, setForm] = useState(user);

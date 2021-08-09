@@ -2,18 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 //import pictures
-import avatar_icon from "../assets/icons/userform/avatar.png";
-import profile from "../assets/icons/menu/user.png";
-import favorites from "../assets/icons/menu/favorite.png";
-import sell from "../assets/icons/menu/condo.png";
-import reviews from "../assets/icons/menu/satisfaction.png";
-import customers from "../assets/icons/menu/multiple-users-silhouette.png";
-import agents from "../assets/icons/menu/realtor.png";
-import approving from "../assets/icons/menu/auction.png";
-import signout from "../assets/icons/menu/logout.png";
+import avatar_icon from "../../assets/icons/userform/avatar.png";
+import profile from "../../assets/icons/menu/user.png";
+import favorites from "../../assets/icons/menu/favorite.png";
+import sell from "../../assets/icons/menu/condo.png";
+import reviews from "../../assets/icons/menu/satisfaction.png";
+import customers from "../../assets/icons/menu/multiple-users-silhouette.png";
+import agents from "../../assets/icons/menu/realtor.png";
+import approving from "../../assets/icons/menu/auction.png";
+import signout from "../../assets/icons/menu/logout.png";
 
 //import modules
-const ImageAPI = require("../modules/ImageAPI");
+const ImageAPI = require("../../modules/ImageAPI");
 
 const Menu = ({ user, handleSignOut, menu }) => {
   return (

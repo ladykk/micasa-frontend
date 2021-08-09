@@ -16,6 +16,9 @@ module.exports = {
       zIndex: {
         "-1": "-1",
       },
+      grayscale: {
+        0.8: "0.8",
+      },
     },
   },
   variants: {

@@ -32,8 +32,9 @@ const PropertyCard = ({ property }) => {
       case "Reserved":
         return "bg-yellow-500";
       case "Not Listing":
-      default:
         return "bg-gray-500";
+      default:
+        return "bg-gray-500 hidden";
     }
   };
 

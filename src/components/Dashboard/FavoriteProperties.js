@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { useQuery } from "../modules/RouterModule";
+import { useQuery } from "../../modules/RouterModule";
 
 //import pictures
-import avatar_icon from "../assets/icons/userform/avatar.png";
+import avatar_icon from "../../assets/icons/userform/avatar.png";
 
 //import components
-import PropertyCard from "./PropertyCard";
+import PropertyCard from "../PropertyCard";
 
 //import modules
-const ImageAPI = require("../modules/ImageAPI");
+const ImageAPI = require("../../modules/ImageAPI");
 
 const FavoriteProperties = ({ user }) => {
   const query = useQuery();
