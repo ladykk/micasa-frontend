@@ -24,14 +24,14 @@ function App() {
   //User
   const [user, setUser] = useState({
     // Customer
-    // username: "customer",
-    // class: "Customer",
-    // full_name: "Customer Account",
-    // email: "customer@gmail.com",
-    // phone_number: "0600000000",
-    // gender: "Not specific",
-    // birthday: "2000-01-01",
-    // real_estate_id: 1,
+    username: "customer",
+    class: "Customer",
+    full_name: "Customer Account",
+    email: "customer@gmail.com",
+    phone_number: "0600000000",
+    gender: "Not specific",
+    birthday: "2000-01-01",
+    real_estate_id: 1,
     // Agent
     // username: "agent",
     // real_id: 1,
@@ -42,14 +42,14 @@ function App() {
     // gender: "Not specific",
     // birthday: "2000-01-01",
     // Webmaster
-    username: "agent",
-    web_id: 1,
-    class: "Webmaster",
-    full_name: "Webmaster Account",
-    email: "webmaster@micasa.com",
-    phone_number: "0600000000",
-    gender: "Not specific",
-    birthday: "2000-01-01",
+    // username: "agent",
+    // web_id: 1,
+    // class: "Webmaster",
+    // full_name: "Webmaster Account",
+    // email: "webmaster@micasa.com",
+    // phone_number: "0600000000",
+    // gender: "Not specific",
+    // birthday: "2000-01-01",
   });
   const [fetchUser, setFetchUser] = useState(false);
   const handleSignIn = (e) => {

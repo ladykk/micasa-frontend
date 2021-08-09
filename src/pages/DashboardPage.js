@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router";
 import { Redirect, Route, Switch } from "react-router-dom";
+import FavoriteProperties from "../components/FavoriteProperties";
 import Menu from "../components/Menu";
 
 //import components
@@ -13,6 +14,13 @@ const DashboardPage = ({ user, handleSignOut }) => {
       <div className="w-full pl-5 pr-5 2xl:w-4/5 h-auto mx-auto flex">
         <Menu user={user} handleSignOut={handleSignOut} menu={menu} />
         <Switch>
+          <Route path="/dashboard/favorites">
+            {user.class === "Customer" ? (
+              <FavoriteProperties user={user} />
+            ) : (
+              <Redirect to="/401" />
+            )}
+          </Route>
           <Route path="/dashboard/profile">
             <Profile user={user} />
           </Route>

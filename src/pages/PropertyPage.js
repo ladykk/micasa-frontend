@@ -35,6 +35,7 @@ const PropertyPage = () => {
     location: "Bangkok, Huai Kwang",
     img: "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
     seen: 452,
+    status: "Listing",
     favorite: true,
     contract: "Rent",
     contract_requirement: "Min. 1 year contract",
@@ -62,8 +63,23 @@ const PropertyPage = () => {
 
   const [page, setPage] = useState("overview");
 
+  const getStatusColor = () => {
+    switch (property.status) {
+      case "Listing":
+        return "bg-green-500";
+      case "Sold":
+      case "Cancel":
+        return "bg-red-500";
+      case "Reserved":
+        return "bg-yellow-500";
+      case "Not Listing":
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   return (
-    <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 ">
+    <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0">
       <div
         className="w-screen h-3/4 background-cover-centered pt-12"
         style={{ backgroundImage: `url('${property.img}')` }}
@@ -140,7 +156,15 @@ const PropertyPage = () => {
       <div className="w-full pr-12 pl-12 xl:w-4/5 xl:p-0 h-auto mx-auto relative">
         <div className="mt-10 mb-10">
           <div className="flex justify-between items-end mb-3">
-            <h1 className="text-3xl font-bold">{property.name}</h1>
+            <div className="flex items-end">
+              <h1 className="text-3xl font-bold mr-3">{property.name}</h1>
+              <p
+                className={`text-xl p-0.5 pl-3 pr-3 rounded-full text-white font-normal ${getStatusColor()}`}
+              >
+                {property.status}
+              </p>
+            </div>
+
             <p className="text-xl text-gray-400">
               Property ID: {property.property_id}
             </p>

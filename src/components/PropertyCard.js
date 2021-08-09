@@ -22,6 +22,21 @@ const PropertyCard = ({ property }) => {
     //TODO: handle favorite
   };
 
+  const getStatusColor = () => {
+    switch (property.status) {
+      case "Listing":
+        return "bg-green-500";
+      case "Sold":
+      case "Cancel":
+        return "bg-red-500";
+      case "Reserved":
+        return "bg-yellow-500";
+      case "Not Listing":
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   return (
     <div className="w-full h-fit-content mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
       <Link
@@ -33,6 +48,14 @@ const PropertyCard = ({ property }) => {
           alt=""
           className="w-full h-full rounded-tl-xl rounded-bl-xl  object-cover object-center"
         />
+        {property.status && (
+          <p
+            className={`absolute top-0 left-0 shadow text-md mt-2 ml-2 p-0.5 pl-3 pr-3 rounded-full text-white font-normal ${getStatusColor()}`}
+          >
+            {property.status}
+          </p>
+        )}
+
         <div className="absolute top-0 right-0 p-1 pl-2 pr-2 bg-white bg-opacity-90 rounded-bl-lg">
           <div className="flex flex-col justify-center items-end">
             <p>

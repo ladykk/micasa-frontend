@@ -65,6 +65,7 @@ const SearchPage = () => {
       location: "Bangkok, Huai Kwang",
       img: "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
       seen: 452,
+      status: "Listing",
       favorite: true,
       contract: "Rent",
       contract_requirement: "Min. 1 year contract",
