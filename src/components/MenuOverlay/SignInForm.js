@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import user_icon from "../../assets/icons/userform/user.png";
 import password_icon from "../../assets/icons/userform/key.png";
 
-const SignInForm = ({ toggleOverlay }) => {
+const SignInForm = ({ toggleOverlay, handleSignIn }) => {
+  const [form, setForm] = useState({
+    username: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const handleOnChange = ({ target }) => {
+    setError("");
+    setForm({ ...form, [target.name]: target.value });
+  };
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    const result = handleSignIn(e);
+    if (result) {
+      toggleOverlay();
+    } else {
+      setError("Username or Password is incorrect.");
+    }
+  };
   return (
-    <form className="flex flex-col items-center w-full h-full p-3 pt-4 pb-4">
+    <form
+      onSubmit={handleOnSubmit}
+      className="flex flex-col items-center w-full h-full p-3 pt-4 pb-4"
+    >
       <div class="w-full h-10 mb-4 bg-white p-2 rounded-lg flex items-center shadow-md ">
         <img src={user_icon} alt="" className="h-6 w-auto mr-2" />
         <input
@@ -15,10 +36,16 @@ const SignInForm = ({ toggleOverlay }) => {
           id="username"
           required
           placeholder="Username"
+          value={form.username}
+          onChange={handleOnChange}
           className="w-full focus:outline-none h-full"
         />
       </div>
-      <div class="w-full h-10 mb-4 bg-white p-2 rounded-lg flex items-center shadow-md ">
+      <div
+        class={`w-full h-10 ${
+          error ? "mb-1" : "mb-4"
+        } bg-white p-2 rounded-lg flex items-center shadow-md `}
+      >
         <img src={password_icon} alt="" className="h-6 w-auto mr-2" />
         <input
           type="password"
@@ -26,9 +53,12 @@ const SignInForm = ({ toggleOverlay }) => {
           id="password"
           required
           placeholder="Password"
+          value={form.password}
+          onChange={handleOnChange}
           className="w-full focus:outline-none h-full"
         />
       </div>
+      <p className="text-red-500 mb-1">{error}</p>
       <button
         type="submit"
         className="w-full h-10 rounded-xl bg-blue-500 text-white text-lg font-normal hover:bg-opacity-90 ease-in duration-75 mb-5"

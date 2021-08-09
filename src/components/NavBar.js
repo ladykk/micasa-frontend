@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
+//import pictures
 import logo from "../assets/icons/logo.png";
 import avatar_icon from "../assets/icons/userform/avatar.png";
 import MenuOverlay from "./MenuOverlay";
 
-const NavBar = ({ user, handleSignIn }) => {
+//import modules
+const ImageAPI = require("../modules/ImageAPI");
+
+const NavBar = ({ user, handleSignIn, handleSignOut }) => {
   //Overlay
-  const [isOverlayOpen, setOverlay] = useState(false);
+  const [isOverlayOpen, setOverlay] = useState(true);
   const toggleOverlay = () => {
     setOverlay(!isOverlayOpen);
   };
@@ -70,7 +74,7 @@ const NavBar = ({ user, handleSignIn }) => {
             >
               Sell
             </Link>
-            {user.initialzed ? (
+            {user.username ? (
               <div
                 className="flex items-center h-full w-auto pl-2 pr-2 hover:bg-black hover:bg-opacity-30 ease-in duration-75 cursor-pointer"
                 onClick={toggleOverlay}
@@ -81,7 +85,7 @@ const NavBar = ({ user, handleSignIn }) => {
                 <img
                   src={
                     user.avatar_id
-                      ? `/images/avatar/${user.avatar_id}`
+                      ? ImageAPI.getAvatarURL(user.avatar_id)
                       : avatar_icon
                   }
                   alt=""
@@ -108,7 +112,12 @@ const NavBar = ({ user, handleSignIn }) => {
             class="flex w-full h-full cursor-pointer"
             onClick={handleOverlayOnClick}
           ></div>
-          <MenuOverlay user={user} toggleOverlay={toggleOverlay} />
+          <MenuOverlay
+            user={user}
+            handleSignIn={handleSignIn}
+            handleSignOut={handleSignOut}
+            toggleOverlay={toggleOverlay}
+          />
         </div>
       </div>
       <div

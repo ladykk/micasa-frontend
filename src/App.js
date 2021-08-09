@@ -21,14 +21,43 @@ import PropertyPage from "./pages/PropertyPage";
 
 function App() {
   //User
-  const [user, setUser] = useState({ initialized: false });
+  const [user, setUser] = useState({
+    // username: "micasa",
+    // class: "Customer",
+    // full_name: "Mi Casa",
+  });
+  const [fetchUser, setFetchUser] = useState(false);
+  const handleSignIn = (e) => {
+    const username = e.target.username.value;
+    switch (username) {
+      case "Customer":
+      case "Agent":
+      case "Webmaster":
+        setUser({
+          username: username,
+          class: username,
+          full_name: `${username} Account`,
+        });
+        return true;
+      default:
+        return false;
+    }
+  };
+  const handleSignOut = () => {
+    setUser({});
+  };
 
   return (
     <Router>
       <div className="app">
-        <NavBar user={user} />
+        <NavBar
+          user={user}
+          handleSignIn={handleSignIn}
+          handleSignOut={handleSignOut}
+        />
         <div className="pt-12 w-screen h-screen relative overflow-x-hidden">
           <Switch>
+            <Route path="/dashboard"></Route>
             <Route path="/property/:id">
               <PropertyPage />
             </Route>

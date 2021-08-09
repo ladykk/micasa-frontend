@@ -121,6 +121,7 @@ p {
 .trans-visibility.active {
   visibility: visible;
   opacity: 1;
+  transition: visibility 0s, opacity 50ms linear;
 }
 
 .trans-hover {
