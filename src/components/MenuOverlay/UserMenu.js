@@ -100,7 +100,8 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
           <p className="text-md">Approving Properties</p>
         </Link>
       )}
-      <div
+      <Link
+        to="/"
         onClick={() => {
           handleSignOut();
           toggleOverlay();
@@ -109,7 +110,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
       >
         <img src={signout} alt="" className="w-5 h-5 mr-2 invert-icon" />
         <p className="text-md">Sign Out</p>
-      </div>
+      </Link>
     </div>
   );
 };

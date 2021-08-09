@@ -116,7 +116,7 @@ const SignUpPage = () => {
                       avatar_file.current.click();
                     }
                   }}
-                  className={`z-50 absolute top-1/2 left-1/2 transform-center w-8 h-8 flex items-center justify-center rounded-full font-normal text-xl ${
+                  className={`z-20 absolute top-1/2 left-1/2 transform-center w-8 h-8 flex items-center justify-center rounded-full font-normal text-xl ${
                     preview
                       ? "trans-hover  bg-red-500"
                       : "bg-opacity-90 hover:bg-opacity-80 ease-in duration-75 bg-blue-500"

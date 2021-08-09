@@ -11,7 +11,7 @@ const ImageAPI = require("../modules/ImageAPI");
 
 const NavBar = ({ user, handleSignIn, handleSignOut }) => {
   //Overlay
-  const [isOverlayOpen, setOverlay] = useState(true);
+  const [isOverlayOpen, setOverlay] = useState(false);
   const toggleOverlay = () => {
     setOverlay(!isOverlayOpen);
   };
