@@ -1,24 +1,16 @@
 import React, { useState } from "react";
-import { useQuery } from "../../modules/RouterModule";
+import { Link } from "react-router-dom";
 
 //import pictures
-import avatar_icon from "../../assets/icons/userform/avatar.png";
+import add from "../../assets/icons/property_detail/add.png";
 
 //import components
 import PropertyCard from "../PropertyCard";
 
-//import modules
-const ImageAPI = require("../../modules/ImageAPI");
+const ManageProperties = ({ user }) => {
+  const [page, setPage] = useState("approved");
 
-const FavoriteProperties = ({ user }) => {
-  const [params, setParams] = useState({
-    //Query Properties
-    page: 1,
-    sort_by: "new_added",
-    items_per_page: 5,
-  });
-
-  const [properties, setProperties] = useState([
+  const [approved, setApproved] = useState([
     {
       property_id: "1",
       name: "Rhythm Ratchada - Huai Kwang",
@@ -48,11 +40,45 @@ const FavoriteProperties = ({ user }) => {
       ],
     },
   ]);
-  const total_page =
-    properties.length === 0
-      ? 1
-      : Math.ceil(properties.length / params.items_per_page);
+  const [pending, setPending] = useState([]);
+  const [sold, setSold] = useState([]);
+  const handleOnSetChange = ({ target }) => {
+    switch (target.id) {
+      case "approved":
+      case "pending":
+      case "sold":
+        setPage(target.id);
+      default:
+    }
+  };
 
+  //display set
+  let display_set;
+  switch (page) {
+    case "approved":
+      display_set = approved;
+      break;
+    case "pending":
+      display_set = pending;
+      break;
+    case "sold":
+      display_set = sold;
+      break;
+    default:
+      display_set = [];
+  }
+
+  //params
+  const [params, setParams] = useState({
+    //Query Properties
+    page: 1,
+    sort_by: "new_added",
+    items_per_page: 5,
+  });
+  const total_page =
+    display_set.length === 0
+      ? 1
+      : Math.ceil(display_set.length / params.items_per_page);
   const handleOnChange = ({ target }) => {
     setParams({ ...params, [target.name]: target.value });
   };
@@ -75,13 +101,59 @@ const FavoriteProperties = ({ user }) => {
 
   return (
     <div className="w-full h-auto">
-      <h1 className="text-5xl mb-5">Favorite Properties</h1>
+      <h1 className="text-5xl mb-5">Manage Properties</h1>
+      <div className="flex items-center justify-between">
+        <div className="p-1 border border-gray-300 rounded-full flex w-max mb-3">
+          <p
+            id="approved"
+            className={`p-0.5 pl-3 pr-3 rounded-full mr-1 cursor-pointer ease-in duration-75 ${
+              page === "approved"
+                ? "bg-blue-500 text-white font-normal"
+                : "hover:bg-opacity-30 hover:bg-gray-300"
+            }`}
+            onClick={handleOnSetChange}
+          >
+            Approved Properties
+          </p>
+          <p
+            id="pending"
+            className={`p-0.5 pl-3 pr-3 rounded-full mr-1 cursor-pointer ease-in duration-75 ${
+              page === "pending"
+                ? "bg-blue-500 text-white font-normal"
+                : "hover:bg-opacity-30 hover:bg-gray-300"
+            }`}
+            onClick={handleOnSetChange}
+          >
+            Pending Properties
+          </p>
+          <p
+            id="sold"
+            className={`p-0.5 pl-3 pr-3 rounded-full cursor-pointer ease-in duration-75 ${
+              page === "sold"
+                ? "bg-blue-500 text-white font-normal"
+                : "hover:bg-opacity-30 hover:bg-gray-300"
+            }`}
+            onClick={handleOnSetChange}
+          >
+            Sold Properties
+          </p>
+        </div>
+        <div className="p-0.5 flex w-max mb-3">
+          <Link
+            to="/add"
+            className="p-1 pl-4 pr-4 rounded-full cursor-pointer ease-in duration-75 bg-green-500 text-white font-normal flex hover:bg-opacity-90"
+          >
+            <img src={add} alt="" className="w-6 h-6 mr-2 invert-icon" />
+            Add Properties
+          </Link>
+        </div>
+      </div>
       <div className="w-full h-auto">
         {/* Query Options */}
         <div className="flex justify-between items-center mb-3">
           <p className="text-gray-500">
-            Page {params.page} of {total_page} (Total {properties.length}{" "}
-            {properties.length > 1 ? "properties" : "property"})
+            Page {params.page} of {total_page} (Total {display_set.length}{" "}
+            {display_set.length > 1 ? "properties" : "property"})
           </p>
           <div
             className="flex
@@ -119,19 +191,26 @@ const FavoriteProperties = ({ user }) => {
         </div>
         {/* Cards */}
         {}
-        {properties.map((property, index) => {
+        {display_set.map((property, index) => {
           const current_property = index + 1;
           const stop = params.page * params.items_per_page;
           const start = stop - params.items_per_page + 1;
           if (current_property >= start && current_property <= stop) {
-            return <PropertyCard key={property.id} property={property} />;
+            return (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                isHasFavorite={false}
+                isManage={true}
+              />
+            );
           }
         })}
         {/* Page Selector */}
         <div className="flex justify-between items-center mb-3">
           <p className="text-gray-500">
-            Page {params.page} of {total_page} (Total {properties.length}{" "}
-            {properties.length > 1 ? "properties" : "property"})
+            Page {params.page} of {total_page} (Total {display_set.length}{" "}
+            {display_set.length > 1 ? "properties" : "property"})
           </p>
           <div
             className="flex
@@ -174,4 +253,4 @@ const FavoriteProperties = ({ user }) => {
   );
 };
 
-export default FavoriteProperties;
+export default ManageProperties;

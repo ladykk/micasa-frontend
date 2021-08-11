@@ -35,8 +35,8 @@ const NavBar = ({ user, handleSignIn, handleSignOut }) => {
               MI CASA
             </h1>
           </Link>
-          <div class="flex items-center h-full">
-            <div class="flex h-full mr-4">
+          <div className="flex items-center h-full">
+            <div className="flex h-full mr-4">
               <Link
                 className="flex items-center justify-center h-full pl-5 pr-5 text-white font-normal hover:bg-black hover:bg-opacity-30 ease-in duration-75"
                 to="/search/buy"
@@ -94,7 +94,7 @@ const NavBar = ({ user, handleSignIn, handleSignOut }) => {
               </div>
             ) : (
               <div
-                class="pl-5 pr-5 pt-1 pb-1 bg-blue-500 rounded-xl text-white font-normal cursor-pointer ease-in duration-75 hover:bg-opacity-90"
+                className="pl-5 pr-5 pt-1 pb-1 bg-blue-500 rounded-xl text-white font-normal cursor-pointer ease-in duration-75 hover:bg-opacity-90"
                 onClick={toggleOverlay}
               >
                 Sign In
@@ -109,7 +109,7 @@ const NavBar = ({ user, handleSignIn, handleSignOut }) => {
         >
           <div
             id="overlay-menu-overlay"
-            class="flex w-full h-full cursor-pointer"
+            className="flex w-full h-full cursor-pointer"
             onClick={handleOverlayOnClick}
           ></div>
           <MenuOverlay
@@ -122,7 +122,7 @@ const NavBar = ({ user, handleSignIn, handleSignOut }) => {
       </div>
       <div
         id="overlay-menu-overlay"
-        class={`fixed top-0 bottom-0 left-0 right-0 -z-1 cursor-pointer ${
+        className={`fixed top-0 bottom-0 left-0 right-0 -z-1 cursor-pointer ${
           !isOverlayOpen && "hidden"
         }`}
         onClick={handleOverlayOnClick}

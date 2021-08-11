@@ -1,9 +1,9 @@
 import React from "react";
+import PropertyData from "../modules/PropertyData";
 
 //import pictures
-
 import airConditioning from "../assets/icons/facilities/air-conditioner.png";
-import bbqArea from "../assets/icons/facilities/grill.png";
+import balcony from "../assets/icons/facilities/balcony.png";
 import cctv from "../assets/icons/facilities/cctv.png";
 import concierge from "../assets/icons/facilities/bellboy.png";
 import fitness from "../assets/icons/facilities/fitness.png";
@@ -24,11 +24,11 @@ import wifi from "../assets/icons/facilities/wifi-router.png";
 const getIcon = (name) => {
   let icon;
   switch (name) {
-    case "Air conditioning":
+    case "Air Conditioning":
       icon = airConditioning;
       break;
-    case "BBQ Area":
-      icon = bbqArea;
+    case "Balcony":
+      icon = balcony;
       break;
     case "CCTV":
       icon = cctv;
@@ -83,7 +83,8 @@ const getIcon = (name) => {
   return icon;
 };
 
-const Facilities = ({ name }) => {
+const Facilities = ({ facility }) => {
+  const name = PropertyData.getFacilityName(facility);
   const icon = getIcon(name);
 
   return (

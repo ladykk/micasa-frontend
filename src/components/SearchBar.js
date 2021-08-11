@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropertyData from "../modules/PropertyData";
 
 const SearchBar = () => {
   const [query, setQuery] = useState({});
@@ -45,6 +46,7 @@ const SearchBar = () => {
         <option value="" disabled hidden>
           Property Type
         </option>
+        {PropertyData.getTypesAsOption()}
       </select>
       <select
         name="contract"
@@ -57,9 +59,7 @@ const SearchBar = () => {
         <option value="" disabled hidden>
           Contract
         </option>
-        <option value="buy">Buy</option>
-        <option value="rent">Rent</option>
-        <option value="new">New house</option>
+        {PropertyData.getContractsAsOption()}
       </select>
       <button className="h-full flex-grow-0 flex-shrink-0 w-28 bg-blue-500 text-white font-normal text-lg rounded-r-full">
         Search

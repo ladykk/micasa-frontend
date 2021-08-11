@@ -28,7 +28,7 @@ const SignInForm = ({ toggleOverlay, handleSignIn }) => {
       onSubmit={handleOnSubmit}
       className="flex flex-col items-center w-full h-full p-3 pt-4 pb-4"
     >
-      <div class="w-full h-10 mb-4 bg-white p-2 rounded-lg flex items-center shadow-md ">
+      <div className="w-full h-10 mb-4 bg-white p-2 rounded-lg flex items-center shadow-md ">
         <img src={user_icon} alt="" className="h-6 w-auto mr-2" />
         <input
           type="text"
@@ -42,7 +42,7 @@ const SignInForm = ({ toggleOverlay, handleSignIn }) => {
         />
       </div>
       <div
-        class={`w-full h-10 ${
+        className={`w-full h-10 ${
           error ? "mb-1" : "mb-4"
         } bg-white p-2 rounded-lg flex items-center shadow-md `}
       >

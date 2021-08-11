@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import Iframe from "react-iframe";
 
 //import pictures
@@ -23,43 +23,66 @@ import images from "../assets/icons/property_detail/image.png";
 import map from "../assets/icons/property_detail/map.png";
 import phone from "../assets/icons/property_detail/phone-call-fill.png";
 import email from "../assets/icons/property_detail/email-fill.png";
+import edit_icon from "../assets/icons/property_detail/edit.png";
+
+//import components
 import Facilities from "../components/Facilities";
 
-const PropertyPage = () => {
+const PropertyPage = ({ user, edit, preview, preview_images }) => {
   const { id } = useParams();
   const history = useHistory();
-
-  const [property, setProperty] = useState({
-    property_id: "1",
-    name: "Rhythm Ratchada - Huai Kwang",
-    location: "Bangkok, Huai Kwang",
-    img: "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
-    seen: 452,
-    status: "Listing",
-    favorite: true,
-    contract: "Rent",
-    contract_requirement: "Min. 1 year contract",
-    price: 18000,
-    payment: "Month",
-    property_type: "Condo",
-    bedroom: 2,
-    bathroom: 2,
-    area: 69.19,
-    ownership: "Leasehold",
-    furnishing: "Furnished",
-    near_station: "MRT-Ratchada",
-    facilities: [
-      "Air conditioning",
-      "CCTV",
-      "Garden",
-      "Parking",
-      "Security",
-      "Swimming Pool",
-    ],
-    maps_query: "RHYTHM+Ratchada-Huaikwang",
-    description:
-      "1 Bedroom Condo for Sale or Rent in RHYTHM RATCHADA, Sam Sen Nok, Bangkok near MRT Ratchadaphisek ** For Rent / Sale Condo ** Rhythm Ratchada(near Ratchada-Ladprao Intersection) High floor,very nice view, Sky Kitchen, View 1 bedroom, 1 bathroom,size 45.49 sq.m.,23th floor✅ Ready to use electrical appliances, including television, stereo, refrigerator, washing machine, microwave✅ There is a sauna and swimming pool.✅ Convenient transportation, next to MRT Ratchadaphisek✅ Near department stores such as Central Rama 9, Esplanade Ratchada, the street Ratchada, Big C, Ratchada, Lotus, Fortune✅ Near the train market, Ratchada market, Huay Kwang marketRent 20,000 baht / monthSelling 5.2 baht, including everything (Personal income tax 1% + 0.5% duty tax + 2% transfer fee.  *** Don't pay for business ***☎️  Contact: Kung",
-  });
+  const [property, setProperty] = useState(
+    edit
+      ? {
+          ...edit,
+        }
+      : preview
+      ? {
+          property_id: "None",
+          seen: 1,
+          favorite: false,
+          status: "Preview",
+          ...preview,
+          images: { ...preview_images },
+        }
+      : {
+          property_id: "1",
+          property_name: "Rhythm Ratchada - Huai Kwang",
+          property_type: "Condo",
+          contract: "Rent",
+          area: 69.19,
+          price: 18000,
+          rent_payment: "Month",
+          rent_requirement: "Min. 1 year contract",
+          bedroom: 2,
+          bathroom: 2,
+          address_line1: "",
+          address_line2: "",
+          district: "Huai Khwang",
+          province: "Bangkok",
+          near_station: "MRT Ratchadaphisek",
+          maps_query: "RHYTHM+Ratchada-Huaikwang",
+          furnishing: "Furnished",
+          ownership: "Leasehold",
+          facilities: {
+            air_conditioning: true,
+            cctv: true,
+            garden: true,
+            parking: true,
+            security: true,
+            swimming_pool: true,
+          },
+          description:
+            "1 Bedroom Condo for Sale or Rent in RHYTHM RATCHADA, Sam Sen Nok, Bangkok near MRT Ratchadaphisek ** For Rent / Sale Condo ** Rhythm Ratchada(near Ratchada-Ladprao Intersection) High floor,very nice view, Sky Kitchen, View 1 bedroom, 1 bathroom,size 45.49 sq.m.,23th floor✅ Ready to use electrical appliances, including television, stereo, refrigerator, washing machine, microwave✅ There is a sauna and swimming pool.✅ Convenient transportation, next to MRT Ratchadaphisek✅ Near department stores such as Central Rama 9, Esplanade Ratchada, the street Ratchada, Big C, Ratchada, Lotus, Fortune✅ Near the train market, Ratchada market, Huay Kwang marketRent 20,000 baht / monthSelling 5.2 baht, including everything (Personal income tax 1% + 0.5% duty tax + 2% transfer fee.  *** Don't pay for business ***☎️  Contact: Kung",
+          images: {
+            image_cover:
+              "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
+          },
+          seen: 452,
+          status: "Listing",
+          favorite: false,
+        }
+  );
 
   const [page, setPage] = useState("overview");
 
@@ -77,35 +100,98 @@ const PropertyPage = () => {
         return "bg-gray-500";
     }
   };
+  const getFacilities = () => {
+    const elements = [];
+    for (const facility in property.facilities) {
+      if (property.facilities[facility]) {
+        elements.push(facility);
+      }
+    }
+    return elements.map((facility, index) => (
+      <Facilities key={index} facility={facility} />
+    ));
+  };
+  const getImages = () => {
+    const elements = [];
+    for (const image in property.images) {
+      if (image !== "image_cover") {
+        elements.push(
+          <img
+            src={property.images[image]}
+            className="w-full h-96 object-cover object-center border border-gray-300 rounded-md shadow"
+          />
+        );
+      }
+    }
+    return elements;
+  };
 
   return (
-    <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0">
+    <div
+      className={`${
+        preview
+          ? "relative w-full h-full"
+          : "w-screen h-screen absolute top-0 left-0"
+      }`}
+    >
       <div
-        className="w-screen h-3/4 background-cover-centered pt-12"
-        style={{ backgroundImage: `url('${property.img}')` }}
+        className={`w-full ${
+          preview ? "h-120 rounded-t-md" : "h-3/4"
+        } background-cover-centered pt-12`}
+        style={{
+          backgroundImage: `url('${
+            property.images.image_cover ? property.images.image_cover : no_img
+          }')`,
+        }}
       >
-        <div className="w-4/5 h-auto mx-auto relative flex justify-between pt-5">
-          <div
-            className="flex bg-blue-500 text-white p-1 pl-3 pr-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75"
-            onClick={() => history.goBack()}
-          >
-            <img src={arrow} alt="" className="invert-icon w-5 h-5 mr-2" />
-            <p className="font-normal">Back to result</p>
+        {!preview && (
+          <div className="w-4/5 h-auto mx-auto relative flex justify-between pt-5">
+            <div
+              className="flex bg-blue-500 text-white p-1 pl-3 pr-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75"
+              onClick={() => history.goBack()}
+            >
+              <img src={arrow} alt="" className="invert-icon w-5 h-5 mr-2" />
+              <p className="font-normal">Back to result</p>
+            </div>
+            {edit ? (
+              <Link
+                to={`/edit/${property.property_id}/form`}
+                className="flex bg-green-500 text-white p-1 pr-3 pl-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75 "
+              >
+                <p className="font-normal">Edit Properties</p>
+                <img
+                  src={edit_icon}
+                  alt=""
+                  className="w-5 h-5 ml-2 invert-icon"
+                />
+              </Link>
+            ) : (
+              <div
+                className={`flex bg-white text-red-500 p-1 pr-3 pl-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75 ${
+                  property.favorite && "hover:line-through"
+                }`}
+              >
+                <p className="font-normal">
+                  {property.favorite ? "Favorite" : "Add to Favorite"}
+                </p>
+                <img
+                  src={property.favorite ? favorite : unfavorite}
+                  alt=""
+                  className="w-5 h-5 ml-2"
+                />
+              </div>
+            )}
           </div>
-          <div className="flex bg-white text-red-500 p-1 pr-3 pl-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75 hover:line-through">
-            <p className="font-normal">
-              {property.favorite ? "Favorite" : "Add to Favorite"}
-            </p>
-            <img
-              src={property.favorite ? favorite : unfavorite}
-              alt=""
-              className="w-5 h-5 ml-2"
-            />
-          </div>
-        </div>
+        )}
       </div>
-      <div className="w-screen h-16 2xl:h-20 mx-auto bg-gray-200">
-        <div className="w-full xl:w-4/5 h-full mx-auto flex">
+      <div
+        className={`h-16 ${
+          preview ? " w-full" : "w-screen 2xl:h-20"
+        }  mx-auto bg-gray-200`}
+      >
+        <div
+          className={`w-full ${!preview && "xl:w-4/5"}  h-full mx-auto flex`}
+        >
           <div
             onClick={() => setPage("overview")}
             className={`w-auto h-full flex flex-1 items-center justify-center cursor-pointer ease-in duration-75 ${
@@ -115,7 +201,7 @@ const PropertyPage = () => {
             <img
               src={overview}
               alt=""
-              className={`w-12 h-12 2xl:w-14 2xl:h-14 mr-4 ${
+              className={`w-12 h-12 ${!preview && "2xl:w-14 2xl:h-14"} mr-4 ${
                 page === "overview" && "invert-icon"
               }`}
             />
@@ -130,7 +216,7 @@ const PropertyPage = () => {
             <img
               src={images}
               alt=""
-              className={`w-12 h-12 2xl:w-14 2xl:h-14 mr-4 ${
+              className={`w-12 h-12 ${!preview && "2xl:w-14 2xl:h-14"} mr-4 ${
                 page === "images" && "invert-icon"
               }`}
             />
@@ -145,7 +231,7 @@ const PropertyPage = () => {
             <img
               src={map}
               alt=""
-              className={`w-12 h-12 2xl:w-14 2xl:h-14 mr-4 ${
+              className={`w-12 h-12 ${!preview && "2xl:w-14 2xl:h-14"} mr-4 ${
                 page === "map" && "invert-icon"
               }`}
             />
@@ -153,11 +239,17 @@ const PropertyPage = () => {
           </div>
         </div>
       </div>
-      <div className="w-full pr-12 pl-12 xl:w-4/5 xl:p-0 h-auto mx-auto relative">
+      <div
+        className={`w-full ${
+          preview ? "pr-3 pl-3 border-box" : "xl:w-4/5 xl:p-0 mx-auto"
+        }   h-auto`}
+      >
         <div className="mt-10 mb-10">
           <div className="flex justify-between items-end mb-3">
             <div className="flex items-end">
-              <h1 className="text-3xl font-bold mr-3">{property.name}</h1>
+              <h1 className="text-3xl font-bold mr-3">
+                {property.property_name}
+              </h1>
               <p
                 className={`text-xl p-0.5 pl-3 pr-3 rounded-full text-white font-normal ${getStatusColor()}`}
               >
@@ -171,11 +263,14 @@ const PropertyPage = () => {
           </div>
           <div className="flex justify-between items-center mb-3">
             <p className="text-lg">
-              <bold className="font-normal">{property.contract}:</bold>{" "}
-              {property.price} ฿ {property.payment && `/ ${property.payment}`}{" "}
-              <span className="text-red-500 italic">
-                ({property.contract_requirement})
-              </span>
+              <span className="font-normal">{property.contract}:</span>{" "}
+              {property.price} ฿{" "}
+              {property.rent_payment && `/ ${property.rent_payment}`}{" "}
+              {property.rent_requirement && (
+                <span className="text-red-500 italic">
+                  ({property.rent_requirement})
+                </span>
+              )}
             </p>
             <div className="flex items-center">
               <img src={seen} alt="" className="w-8 h-8 mr-3" />
@@ -185,10 +280,10 @@ const PropertyPage = () => {
             </div>
           </div>
         </div>
-        <div className="relative">
+        <div className={`w-full h-max-content pb-12`}>
           {/* Overview */}
           <div
-            className={`flex h-fit-content pb-12 absolute top-0 left-0 right-0 trans-hide ${
+            className={`flex h-fit-content trans-hide ${
               page === "overview" && "active"
             }`}
           >
@@ -199,9 +294,7 @@ const PropertyPage = () => {
               </p>
               <h1 className="w-full text-xl underline mb-4">Facilities</h1>
               <div className="flex flex-wrap items-center justify-start">
-                {property.facilities.map((facility) => (
-                  <Facilities name={facility} />
-                ))}
+                {getFacilities()}
               </div>
             </div>
             <div className=" w-max ml-28 mr-10 flex-shrink-0 flex-grow-0">
@@ -215,7 +308,7 @@ const PropertyPage = () => {
                 </div>
                 <div className="w-full flex items-center justify-start mb-3">
                   <img className="w-7 h-7 mr-3" src={location} alt="" />
-                  <p className="text-lg">{property.location}</p>
+                  <p className="text-lg">{`${property.province}, ${property.district}`}</p>
                 </div>
                 {property.near_station && (
                   <div className="w-full flex items-center justify-start mb-3">
@@ -287,25 +380,33 @@ const PropertyPage = () => {
           </div>
           {/* Images */}
           <div
-            className={`flex h-fit-content pb-12 absolute top-0 left-0 right-0 trans-hide ${
+            className={`w-full h-fit-content trans-hide grid grid-cols-2 gap-3 ${
               page === "images" && "active"
             }`}
-          ></div>
+          >
+            {getImages()}
+          </div>
           {/* Map */}
           <div
-            className={`flex h-fit-content pb-12 absolute top-0 left-0 right-0 trans-hide ${
+            className={`flex h-fit-content trans-hide ${
               page === "map" && "active"
             }`}
           >
             <Iframe
               url={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAy2j5w0QgLgcqULL0Kj0jGanCZ3WlEdKk&q=${property.maps_query}&zoom=19`}
-              className="w-full h-screen-80"
+              className={`w-full ${preview ? "h-120" : "h-screen-80"} `}
             />
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+PropertyPage.defaultProps = {
+  edit: null,
+  preview: null,
+  preview_images: null,
 };
 
 export default PropertyPage;

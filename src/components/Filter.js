@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import property_type_icon from "../assets/icons/filter/buildings.png";
 import bedroom_icon from "../assets/icons/filter/double-bed.png";
 import bathroom_icon from "../assets/icons/filter/toilet.png";
+import PropertyData from "../modules/PropertyData";
 
 const Filter = ({ contract, params, setParams }) => {
   const [errors, setErrors] = useState({});
@@ -44,14 +45,14 @@ const Filter = ({ contract, params, setParams }) => {
       case "security":
       case "swimming_pool":
       case "tv":
-      case "bbq":
+      case "balcony":
       case "concierge":
       case "garden":
       case "lift":
       case "playground":
-      case "river":
+      case "river_view":
       case "single_storey":
-      case "sport":
+      case "sport_center":
       case "wifi":
         setParams({ ...params, [target.name]: !params[target.name] });
         break;
@@ -184,6 +185,7 @@ const Filter = ({ contract, params, setParams }) => {
             <option value="" hidden disabled>
               Property Type
             </option>
+            {PropertyData.getTypesAsOption()}
           </select>
         </div>
         {/* Bedroom & Bathroom */}
@@ -235,7 +237,8 @@ const Filter = ({ contract, params, setParams }) => {
               value={params.min_price ? params.min_price : 0}
               onChange={handleOnChange}
               placeholder="Min."
-              step="1500"
+              step="1"
+              min="0"
             />
             <p className="m-4 mt-0 mb-0">-</p>
             <input
@@ -246,7 +249,8 @@ const Filter = ({ contract, params, setParams }) => {
               value={params.max_price ? params.max_price : 0}
               onChange={handleOnChange}
               placeholder="Max."
-              step="1500"
+              step="1"
+              min="0"
             />
           </div>
         </div>
@@ -271,7 +275,7 @@ const Filter = ({ contract, params, setParams }) => {
               value={params.min_area ? params.min_area : 0}
               onChange={handleOnChange}
               placeholder="Min."
-              step="5"
+              step="0.01"
             />
             <p className="m-4 mt-0 mb-0">-</p>
             <input
@@ -282,7 +286,7 @@ const Filter = ({ contract, params, setParams }) => {
               value={params.max_area ? params.max_area : 0}
               onChange={handleOnChange}
               placeholder="Max."
-              step="5"
+              step="0.01"
             />
           </div>
         </div>
@@ -507,13 +511,13 @@ const Filter = ({ contract, params, setParams }) => {
                 <div className="flex items-center mb-1.5">
                   <input
                     type="checkbox"
-                    id="bbq"
-                    name="bbq"
-                    checked={params.bbq}
+                    id="balcony"
+                    name="balcony"
+                    checked={params.balcony}
                     onChange={handleOnChange}
                     className="mr-3 w-4 h-4"
                   />
-                  <p>BBQ Area</p>
+                  <p>Balcony</p>
                 </div>
                 <div className="flex items-center mb-1.5">
                   <input
@@ -562,9 +566,9 @@ const Filter = ({ contract, params, setParams }) => {
                 <div className="flex items-center mb-1.5">
                   <input
                     type="checkbox"
-                    id="river"
-                    name="river"
-                    checked={params.river}
+                    id="river_view"
+                    name="river_view"
+                    checked={params.river_view}
                     onChange={handleOnChange}
                     className="mr-3 w-4 h-4"
                   />
@@ -584,9 +588,9 @@ const Filter = ({ contract, params, setParams }) => {
                 <div className="flex items-center mb-1.5">
                   <input
                     type="checkbox"
-                    id="sport"
-                    name="sport"
-                    checked={params.sport}
+                    id="sport_center"
+                    name="sport_center"
+                    checked={params.sport_center}
                     onChange={handleOnChange}
                     className="mr-3 w-4 h-4"
                   />

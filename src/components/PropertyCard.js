@@ -17,10 +17,12 @@ import partly_furnished from "../assets/icons/property/sofa.png";
 import unfurnished from "../assets/icons/property/box.png";
 import leasehold from "../assets/icons/property/contract.png";
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, isHasFavorite, isManage }) => {
   const handleFavorite = () => {
     //TODO: handle favorite
   };
+
+  const path = `/${isManage ? "edit" : "property"}/${property.property_id}`;
 
   const getStatusColor = () => {
     switch (property.status) {
@@ -41,7 +43,7 @@ const PropertyCard = ({ property }) => {
   return (
     <div className="w-full h-fit-content mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
       <Link
-        to={`/property/${property.property_id}`}
+        to={path}
         className=" w-80 border-r border-gray-300 flex-grow-0 flex-shrink-0 relative"
       >
         <img
@@ -60,7 +62,7 @@ const PropertyCard = ({ property }) => {
         <div className="absolute top-0 right-0 p-1 pl-2 pr-2 bg-white bg-opacity-90 rounded-bl-lg">
           <div className="flex flex-col justify-center items-end">
             <p>
-              <bold className="font-normal">{property.contract}:</bold>{" "}
+              <span className="font-normal">{property.contract}:</span>{" "}
               {property.price} ฿{" "}
               {property.payment ? `/ ${property.payment}` : ""}
             </p>
@@ -74,16 +76,17 @@ const PropertyCard = ({ property }) => {
       </Link>
       <div className="w-full h-full p-5">
         <div className="w-full h-6 flex justify-between items-center mb-3">
-          <Link to={`/property/${property.property_id}`}>
+          <Link to={path}>
             <h1 className="font-normal text-xl">{property.name}</h1>
           </Link>
-
-          <img
-            src={property.favorite ? favorite : unfavorite}
-            alt=""
-            className=" w-6 h-6 cursor-pointer"
-            onClick={handleFavorite}
-          />
+          {isHasFavorite && (
+            <img
+              src={property.favorite ? favorite : unfavorite}
+              alt=""
+              className=" w-6 h-6 cursor-pointer"
+              onClick={handleFavorite}
+            />
+          )}
         </div>
         <hr className="w-full mb-3" />
         <div className="w-full h-auto flex justify-between items-center mb-3">
@@ -159,6 +162,11 @@ const PropertyCard = ({ property }) => {
       </div>
     </div>
   );
+};
+
+PropertyCard.defaultProps = {
+  isHasFavorite: true,
+  isManage: false,
 };
 
 export default PropertyCard;

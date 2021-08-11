@@ -19,28 +19,30 @@ import NotFoundPage from "./pages/NotFoundPage";
 import SearchPage from "./pages/SearchPage";
 import PropertyPage from "./pages/PropertyPage";
 import DashboardPage from "./pages/DashboardPage";
+import EditPropertyPage from "./pages/EditPropertyPage";
+import AddPropertyPage from "./pages/AddPropertyPage";
 
 function App() {
   //User
   const [user, setUser] = useState({
     // Customer
-    username: "customer",
-    class: "Customer",
-    full_name: "Customer Account",
-    email: "customer@gmail.com",
-    phone_number: "0600000000",
-    gender: "Not specific",
-    birthday: "2000-01-01",
-    real_estate_id: 1,
-    // Agent
-    // username: "agent",
-    // real_id: 1,
-    // class: "Agent",
-    // full_name: "Agent Account",
-    // email: "agent@micasa.com",
+    // username: "customer",
+    // class: "Customer",
+    // full_name: "Customer Account",
+    // email: "customer@gmail.com",
     // phone_number: "0600000000",
     // gender: "Not specific",
     // birthday: "2000-01-01",
+    // real_estate_id: 1,
+    // Agent
+    username: "agent",
+    real_id: 1,
+    class: "Agent",
+    full_name: "Agent Account",
+    email: "agent@micasa.com",
+    phone_number: "0600000000",
+    gender: "Not specific",
+    birthday: "2000-01-01",
     // Webmaster
     // username: "agent",
     // web_id: 1,
@@ -82,6 +84,19 @@ function App() {
         />
         <div className="pt-12 w-screen h-screen relative overflow-x-hidden">
           <Switch>
+            <Route path="/add">
+              {user.username ? (
+                <AddPropertyPage user={user} />
+              ) : (
+                <Redirect to="/401" />
+              )}
+            </Route>
+            <Route path="/edit/:id">
+              <EditPropertyPage user={user} />
+            </Route>
+            <Route exact path="/edit/">
+              <Redirect to="/400" />
+            </Route>
             <Route path="/dashboard/:menu">
               <DashboardPage user={user} handleSignOut={handleSignOut} />
             </Route>

@@ -39,23 +39,25 @@ const Profile = ({ user }) => {
     setBlock(true);
     switch (target.name) {
       case "avatar_file":
-        const file = target.files[0];
-        switch (file.type) {
-          case "image/jpg":
-          case "image/jpeg":
-          case "image/png":
-            setPreview(URL.createObjectURL(file));
-            setForm({
-              ...form,
-              [target.name]: file,
-            });
-            break;
-          default:
-            setErrors({
-              ...errors,
-              [target.name]: "File type is not supported.",
-            });
-        }
+        try {
+          const file = target.files[0];
+          switch (file.type) {
+            case "image/jpg":
+            case "image/jpeg":
+            case "image/png":
+              setPreview(URL.createObjectURL(file));
+              setForm({
+                ...form,
+                [target.name]: file,
+              });
+              break;
+            default:
+              setErrors({
+                ...errors,
+                [target.name]: "File type is not supported.",
+              });
+          }
+        } catch (e) {}
         break;
       default:
         setForm({ ...form, [target.name]: target.value });
@@ -264,7 +266,7 @@ const Profile = ({ user }) => {
           ) : (
             <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow justify-center">
               <div className="flex justify-center items-center">
-                <img src={contact} class="w-28 h-28 mr-6" alt="" />
+                <img src={contact} className="w-28 h-28 mr-6" alt="" />
                 <div>
                   <p className="text-xl mb-2">
                     Contact Mi Casa Team to find you a real estate agent.

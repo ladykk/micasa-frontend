@@ -34,23 +34,25 @@ const SignUpPage = () => {
     setErrors({ ...errors, [target.name]: "" });
     switch (target.name) {
       case "avatar_file":
-        const file = target.files[0];
-        switch (file.type) {
-          case "image/jpg":
-          case "image/jpeg":
-          case "image/png":
-            setPreview(URL.createObjectURL(file));
-            setForm({
-              ...form,
-              [target.name]: file,
-            });
-            break;
-          default:
-            setErrors({
-              ...errors,
-              [target.name]: "File type is not supported.",
-            });
-        }
+        try {
+          const file = target.files[0];
+          switch (file.type) {
+            case "image/jpg":
+            case "image/jpeg":
+            case "image/png":
+              setPreview(URL.createObjectURL(file));
+              setForm({
+                ...form,
+                [target.name]: file,
+              });
+              break;
+            default:
+              setErrors({
+                ...errors,
+                [target.name]: "File type is not supported.",
+              });
+          }
+        } catch (e) {}
         break;
       case "confirm_password":
         if (target.value === form.password) {
@@ -68,7 +70,7 @@ const SignUpPage = () => {
   return (
     <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 pt-12 background-2 bg-black text-white">
       <div className="w-full pl-5 pr-5 xl:pl-14 xl:pr-14 2xl:w-4/5 2xl:p-0 h-full mx-auto relative flex">
-        <div class=" w-1/3 flex flex-col justify-center flex-shrink-0 flex-grow-0 mr-48">
+        <div className=" w-1/3 flex flex-col justify-center flex-shrink-0 flex-grow-0 mr-48">
           <div className="w-full flex items-end justify-between mb-4">
             <h1 className="text-4xl">At Mi Casa,</h1>
             <p className="text-xl">
@@ -87,7 +89,7 @@ const SignUpPage = () => {
             Learn more...
           </Link>
         </div>
-        <form class="w-full h-auto bg-black bg-opacity-60 rounded-xl p-7 mt-12 mb-12">
+        <form className="w-full h-auto bg-black bg-opacity-60 rounded-xl p-7 mt-12 mb-12">
           <h1 className="text-center text-5xl font-semibold mt-5 mb-10">
             Sign Up
           </h1>
@@ -131,7 +133,7 @@ const SignUpPage = () => {
               <p className="text-red-500">{errors.avatar_file}</p>
             </div>
             <div className=" w-3/5 h/full p-2 text-black">
-              <div class="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
                 <img src={name_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="text"
@@ -145,7 +147,7 @@ const SignUpPage = () => {
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.full_name}</p>
-              <div class="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
                 <img src={user_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="text"
@@ -159,7 +161,7 @@ const SignUpPage = () => {
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.username}</p>
-              <div class="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
                 <img src={password_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="password"
@@ -173,7 +175,7 @@ const SignUpPage = () => {
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.password}</p>
-              <div class="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
                 <img src={password_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="password"
@@ -189,7 +191,7 @@ const SignUpPage = () => {
               <p className="text-red-500 mt-1 mb-2">
                 {errors.confirm_password}
               </p>
-              <div class="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
                 <img src={email_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="email"
@@ -203,7 +205,7 @@ const SignUpPage = () => {
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.email}</p>
-              <div class="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
                 <img src={phone_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="text"
