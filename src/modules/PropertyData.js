@@ -307,6 +307,92 @@ const getFacilityName = (facility) => {
   }
 };
 
+// Google sheets
+const properties = axios
+  .get(
+    "https://spreadsheets.google.com/feeds/list/10p47ColHMuagBjd8LEg2AJtOOnCEldVjBRrPQ9QzWvw/od6/public/values",
+    {
+      params: {
+        alt: "json",
+      },
+    }
+  )
+  .then((result) => {
+    try {
+      const entry = result.data.feed.entry;
+      console.info("Loading properties from Google sheets");
+      const output = entry.map((property) => {
+        if (property.gsx$propertyname) {
+          return {
+            property_id: property.gsx$propertyid.$t,
+            property_name: property.gsx$propertyname.$t,
+            property_type: property.gsx$propertytype.$t,
+            contract: property.gsx$contract.$t,
+            area: Number.parseFloat(property.gsx$area.$t, 10),
+            price: Number.parseFloat(property.gsx$price.$t),
+            rent_payment: property.gsx$rentpayment.$t,
+            rent_requirement: property.gsx$rentrequirement.$t,
+            bedroom: property.gsx$bedroom.$t,
+            bathroom: property.gsx$bathroom.$t,
+            district: property.gsx$district.$t,
+            province: property.gsx$province.$t,
+            near_station: property.gsx$nearstation.$t,
+            maps_query: property.gsx$mapsquery.$t,
+            furnishing: property.gsx$furnishing.$t,
+            ownership: property.gsx$ownership.$t,
+            facilities: {
+              air_conditioning: property.gsx$airconditioning.$t === "Yes",
+              balcony: property.gsx$balcony.$t === "Yes",
+              cctv: property.gsx$cctv.$t === "Yes",
+              concierge: property.gsx$concierge.$t === "Yes",
+              fitness: property.gsx$fitness.$t === "Yes",
+              garden: property.gsx$garden.$t === "Yes",
+              library: property.gsx$library.$t === "Yes",
+              lift: property.gsx$lift.$t === "Yes",
+              parking: property.gsx$parking.$t === "Yes",
+              pet_friendly: property.gsx$petfriendly.$t === "Yes",
+              playground: property.gsx$playground.$t === "Yes",
+              river_view: property.gsx$riverview.$t === "Yes",
+              security: property.gsx$security.$t === "Yes",
+              single_storey: property.gsx$security.$t === "Yes",
+              sport_center: property.gsx$sportcenter.$t === "Yes",
+              swimming_pool: property.gsx$swimmingpool.$t === "Yes",
+              tv: property.gsx$tv.$t === "Yes",
+              wifi: property.gsx$wifi.$t === "Yes",
+            },
+            description: property.gsx$description.$t,
+            images: {
+              image_cover: property.gsx$imagecover.$t,
+              image_1: property.gsx$image1.$t,
+              image_2: property.gsx$image2.$t,
+              image_3: property.gsx$image3.$t,
+              image_4: property.gsx$image4.$t,
+              image_5: property.gsx$image5.$t,
+              image_6: property.gsx$image6.$t,
+              image_7: property.gsx$image7.$t,
+              image_8: property.gsx$image8.$t,
+              image_9: property.gsx$image9.$t,
+              image_10: property.gsx$image10.$t,
+            },
+            seen: Number.parseInt(property.gsx$seen.$t, 10),
+            status: property.gsx$status.$t,
+          };
+        }
+      });
+      console.info("Properties are loaded succuessfully.");
+      return output;
+    } catch (err) {
+      console.error("Cannot load properties. Reason:");
+      console.error(err);
+      return [];
+    }
+  })
+  .catch((err) => {
+    console.error("Cannot load properties. Reason:");
+    console.error(err);
+    return [];
+  });
+
 export default {
   getStatusAsOption,
   getTypesAsOption,
