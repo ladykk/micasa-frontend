@@ -10,36 +10,7 @@ import PropertyCard from "../PropertyCard";
 const ManageProperties = ({ user }) => {
   const [page, setPage] = useState("approved");
 
-  const [approved, setApproved] = useState([
-    {
-      property_id: "1",
-      name: "Rhythm Ratchada - Huai Kwang",
-      location: "Bangkok, Huai Kwang",
-      img: "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
-      seen: 452,
-      status: "Listing",
-      favorite: true,
-      contract: "Rent",
-      contract_requirement: "Min. 1 year contract",
-      price: 18000,
-      payment: "Month",
-      property_type: "Condo",
-      bedroom: 2,
-      bathroom: 2,
-      area: 69.19,
-      ownership: "Leasehold",
-      furnishing: "Furnished",
-      near_station: "MRT Ratchadaphisek",
-      facilities: [
-        "Air conditioning",
-        "CCTV",
-        "Garden",
-        "Parking",
-        "Security",
-        "Swimming Pool",
-      ],
-    },
-  ]);
+  const [approved, setApproved] = useState([]);
   const [pending, setPending] = useState([]);
   const [sold, setSold] = useState([]);
   const handleOnSetChange = ({ target }) => {
@@ -199,7 +170,7 @@ const ManageProperties = ({ user }) => {
             return (
               <PropertyCard
                 key={property.id}
-                property={property}
+                data={property}
                 isHasFavorite={false}
                 isManage={true}
               />

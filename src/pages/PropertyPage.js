@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Redirect, useHistory, useParams } from "react-router-dom";
 import Iframe from "react-iframe";
 
 //import pictures
@@ -27,10 +27,14 @@ import edit_icon from "../assets/icons/property_detail/edit.png";
 
 //import components
 import Facilities from "../components/Facilities";
+import PropertyData from "../modules/PropertyData";
+import PropertyMock from "../mock/PropertyMock";
+import Loading from "../components/Loading";
 
 const PropertyPage = ({ user, edit, preview, preview_images }) => {
   const { id } = useParams();
   const history = useHistory();
+  const [isFetch, setFetch] = useState(true);
   const [property, setProperty] = useState(
     edit
       ? {
@@ -45,44 +49,18 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
           ...preview,
           images: { ...preview_images },
         }
-      : {
-          property_id: "1",
-          property_name: "Rhythm Ratchada - Huai Kwang",
-          property_type: "Condo",
-          contract: "Rent",
-          area: 69.19,
-          price: 18000,
-          rent_payment: "Month",
-          rent_requirement: "Min. 1 year contract",
-          bedroom: 2,
-          bathroom: 2,
-          address_line1: "",
-          address_line2: "",
-          district: "Huai Khwang",
-          province: "Bangkok",
-          near_station: "MRT Ratchadaphisek",
-          maps_query: "RHYTHM+Ratchada-Huaikwang",
-          furnishing: "Furnished",
-          ownership: "Leasehold",
-          facilities: {
-            air_conditioning: true,
-            cctv: true,
-            garden: true,
-            parking: true,
-            security: true,
-            swimming_pool: true,
-          },
-          description:
-            "1 Bedroom Condo for Sale or Rent in RHYTHM RATCHADA, Sam Sen Nok, Bangkok near MRT Ratchadaphisek ** For Rent / Sale Condo ** Rhythm Ratchada(near Ratchada-Ladprao Intersection) High floor,very nice view, Sky Kitchen, View 1 bedroom, 1 bathroom,size 45.49 sq.m.,23th floor✅ Ready to use electrical appliances, including television, stereo, refrigerator, washing machine, microwave✅ There is a sauna and swimming pool.✅ Convenient transportation, next to MRT Ratchadaphisek✅ Near department stores such as Central Rama 9, Esplanade Ratchada, the street Ratchada, Big C, Ratchada, Lotus, Fortune✅ Near the train market, Ratchada market, Huay Kwang marketRent 20,000 baht / monthSelling 5.2 baht, including everything (Personal income tax 1% + 0.5% duty tax + 2% transfer fee.  *** Don't pay for business ***☎️  Contact: Kung",
-          images: {
-            image_cover:
-              "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
-          },
-          seen: 452,
-          status: "Listing",
-          favorite: false,
-        }
+      : {}
   );
+
+  useEffect(() => {
+    (async () => {
+      if (isFetch) {
+        const property = PropertyMock.getPropertyById(id);
+        setProperty(property);
+        setFetch(false);
+      }
+    })();
+  }, [isFetch]);
 
   const [page, setPage] = useState("overview");
 
@@ -126,7 +104,9 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
     return elements;
   };
 
-  return (
+  return isFetch ? (
+    <Loading />
+  ) : property ? (
     <div
       className={`${
         preview
@@ -316,20 +296,22 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
                     <p className="text-lg">{property.near_station}</p>
                   </div>
                 )}
-                <div className="w-full flex items-center justify-start mb-3">
-                  <img className="w-7 h-7 mr-3" src={bedroom} alt="" />
-                  <p className="text-lg">
-                    {property.bedroom}{" "}
-                    {property.bedroom > 1 ? "Bedrooms" : "Bedroom"}
-                  </p>
-                </div>
-                <div className="w-full flex items-center justify-start mb-3">
-                  <img className="w-7 h-7 mr-3" src={bathroom} alt="" />
-                  <p className="text-lg">
-                    {property.bathroom}{" "}
-                    {property.bathroom > 1 ? "Bathrooms" : "Bathroom"}
-                  </p>
-                </div>
+                {property.bedroom !== "None" && (
+                  <div className="w-full flex items-center justify-start mb-3">
+                    <img className="w-7 h-7 mr-3" src={bedroom} alt="" />
+                    <p className="text-lg">
+                      {PropertyData.getBedroomString(property.bedroom)}
+                    </p>
+                  </div>
+                )}
+                {property.bathroom !== "None" && (
+                  <div className="w-full flex items-center justify-start mb-3">
+                    <img className="w-7 h-7 mr-3" src={bathroom} alt="" />
+                    <p className="text-lg">
+                      {PropertyData.getBathroomString(property.bathroom)}
+                    </p>
+                  </div>
+                )}
                 <div className="w-full flex items-center justify-start mb-3">
                   <img className="w-7 h-7 mr-3" src={area} alt="" />
                   <p className="text-lg">
@@ -400,6 +382,8 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
         </div>
       </div>
     </div>
+  ) : (
+    <Redirect to="/400" />
   );
 };
 

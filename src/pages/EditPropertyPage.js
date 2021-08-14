@@ -31,10 +31,9 @@ const EditPropertyPage = ({ user }) => {
     price: 18000,
     rent_payment: "Month",
     rent_requirement: "Min. 1 year contract",
-    bedroom: 2,
-    bathroom: 2,
-    address_line1: "",
-    address_line2: "",
+    bedroom: "2",
+    bathroom: "2",
+
     district: "Huai Khwang",
     province: "Bangkok",
     near_station: "MRT Ratchadaphisek",

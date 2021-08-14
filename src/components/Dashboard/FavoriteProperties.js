@@ -18,36 +18,7 @@ const FavoriteProperties = ({ user }) => {
     items_per_page: 5,
   });
 
-  const [properties, setProperties] = useState([
-    {
-      property_id: "1",
-      name: "Rhythm Ratchada - Huai Kwang",
-      location: "Bangkok, Huai Kwang",
-      img: "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
-      seen: 452,
-      status: "Listing",
-      favorite: true,
-      contract: "Rent",
-      contract_requirement: "Min. 1 year contract",
-      price: 18000,
-      payment: "Month",
-      property_type: "Condo",
-      bedroom: 2,
-      bathroom: 2,
-      area: 69.19,
-      ownership: "Leasehold",
-      furnishing: "Furnished",
-      near_station: "MRT Ratchadaphisek",
-      facilities: [
-        "Air conditioning",
-        "CCTV",
-        "Garden",
-        "Parking",
-        "Security",
-        "Swimming Pool",
-      ],
-    },
-  ]);
+  const [properties, setProperties] = useState([]);
   const total_page =
     properties.length === 0
       ? 1
@@ -124,7 +95,7 @@ const FavoriteProperties = ({ user }) => {
           const stop = params.page * params.items_per_page;
           const start = stop - params.items_per_page + 1;
           if (current_property >= start && current_property <= stop) {
-            return <PropertyCard key={property.id} property={property} />;
+            return <PropertyCard key={property.id} data={property} />;
           }
         })}
         {/* Page Selector */}

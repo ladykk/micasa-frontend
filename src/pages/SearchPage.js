@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useQuery } from "../modules/RouterModule";
 
 //import components
 import Filter from "../components/Filter";
 import PropertyCard from "../components/PropertyCard";
+import PropertyMock from "../mock/PropertyMock";
 
 const SearchPage = () => {
   const history = useHistory();
@@ -13,7 +14,7 @@ const SearchPage = () => {
   const { contract } = useParams();
   const [params, setParams] = useState({
     //Terms
-    terms: query.get("terms"),
+    terms: query.get("terms") ? query.get("terms") : "",
     //Query Properties
     page: query.get("page") ? query.get("page") : 1,
     sort_by: query.get("sort_by") ? query.get("sort_by") : "new_added",
@@ -21,17 +22,25 @@ const SearchPage = () => {
       ? query.get("items_per_page")
       : 5,
     //Property Type
-    property_type: query.get("property_type"),
+    property_type: query.get("property_type") ? query.get("property_type") : "",
     //Bedroom
-    bedroom: query.get("bedroom"),
+    bedroom: query.get("bedroom") ? query.get("bedroom") : "",
     //Bathroom
-    bathroom: query.get("bathroom"),
+    bathroom: query.get("bathroom") ? query.get("bathroom") : "",
     //Area
-    min_area: query.get("min_area"),
-    max_area: query.get("max_area"),
+    min_area: query.get("min_area")
+      ? Number.parseFloat(query.get("min_area"), 10)
+      : 0,
+    max_area: query.get("max_area")
+      ? Number.parseFloat(query.get("max_area"), 10)
+      : 0,
     // Price
-    min_price: query.get("min_price"),
-    max_price: query.get("max_price"),
+    min_price: query.get("min_price")
+      ? Number.parseFloat(query.get("min_price"), 10)
+      : 0,
+    max_price: query.get("max_price")
+      ? Number.parseFloat(query.get("max_price"), 10)
+      : 0,
     //Furnishing
     furnished: query.get("furnished"),
     unfurnished: query.get("unfurnished"),
@@ -60,58 +69,52 @@ const SearchPage = () => {
     wifi: query.get("wifi"),
   });
 
-  const [properties, setProperties] = useState([
-    {
-      property_id: "1",
-      name: "Rhythm Ratchada - Huai Kwang",
-      location: "Bangkok, Huai Kwang",
-      img: "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
-      seen: 452,
-      status: "Listing",
-      favorite: true,
-      contract: "Rent",
-      contract_requirement: "Min. 1 year contract",
-      price: 18000,
-      payment: "Month",
-      property_type: "Condo",
-      bedroom: 2,
-      bathroom: 2,
-      area: 69.19,
-      ownership: "Leasehold",
-      furnishing: "Furnished",
-      near_station: "MRT Ratchadaphisek",
-      facilities: [
-        "Air conditioning",
-        "CCTV",
-        "Garden",
-        "Parking",
-        "Security",
-        "Swimming Pool",
-      ],
-    },
-  ]);
+  const [isFetch, setFetch] = useState(true);
+
+  const [properties, setProperties] = useState([]);
   const total_page =
     properties.length === 0
       ? 1
       : Math.ceil(properties.length / params.items_per_page);
+
+  useEffect(() => {
+    (async () => {
+      if (isFetch) {
+        const properties = PropertyMock.getPropertiesByContract(contract);
+        // const properties = PropertyMock.getPropertiesByContract(contract);
+        console.log(properties);
+        setProperties(properties);
+        setFetch(false);
+      }
+    })();
+  }, [isFetch]);
+
+  useEffect(() => {
+    if (!isFetch) {
+      setFetch(true);
+    }
+  }, [contract]);
 
   const handleOnChange = ({ target }) => {
     setParams({ ...params, [target.name]: target.value });
   };
 
   const handlePageChange = ({ target }) => {
+    const page = Number.parseInt(params.page, 10);
     switch (target.innerHTML) {
-      case "<":
-        if (params.page - 1 !== 0) {
-          setParams({ ...params, page: params.page - 1 });
+      case "&lt;":
+        if (page - 1 !== 0) {
+          console.log("left");
+          setParams({ ...params, page: page - 1 });
         }
         break;
-      case ">":
-        if (params.page + 1 !== total_page + 1) {
-          setParams({ ...params, page: params.page + 1 });
+      case "&gt;":
+        if (page + 1 !== total_page + 1) {
+          setParams({ ...params, page: page + 1 });
         }
         break;
       default:
+        setParams({ ...params, page: Number.parseInt(target.innerHTML, 10) });
     }
   };
 
@@ -186,7 +189,7 @@ const SearchPage = () => {
             const stop = params.page * params.items_per_page;
             const start = stop - params.items_per_page + 1;
             if (current_property >= start && current_property <= stop) {
-              return <PropertyCard key={property.id} property={property} />;
+              return <PropertyCard key={current_property} data={property} />;
             }
           })}
           {/* Page Selector */}
@@ -200,6 +203,7 @@ const SearchPage = () => {
           "
             >
               <p
+                name="left"
                 onClick={handlePageChange}
                 className="flex items-center justify-center w-8 h-9 border-gray-300 border hover:border-gray-400 hover:border-2 ease-in duration-75 rounded-lg shadow cursor-pointer"
               >
@@ -210,6 +214,8 @@ const SearchPage = () => {
                 for (let i = 1; i <= total_page; i++) {
                   elements.push(
                     <p
+                      key={i}
+                      onClick={handlePageChange}
                       className={`flex items-center justify-center w-8 h-9  ml-3
                       } ${
                         params.page === i
@@ -224,6 +230,7 @@ const SearchPage = () => {
                 return elements;
               })()}
               <p
+                name="right"
                 onClick={handlePageChange}
                 className="flex items-center justify-center w-8 h-9 ml-3 border-gray-300 border hover:border-gray-400 hover:border-2 ease-in duration-75 rounded-lg shadow cursor-pointer"
               >

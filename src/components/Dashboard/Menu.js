@@ -76,7 +76,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
       )}
       {user.class === "Agent" && (
         <Link
-          to="/dashboard/customer"
+          to="/dashboard/customers"
           className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
             menu === "customers" && "bg-gray-300 bg-opacity-30"
           }`}

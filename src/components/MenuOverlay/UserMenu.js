@@ -72,7 +72,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
       )}
       {user.class === "Agent" && (
         <Link
-          to="/dashboard/customer"
+          to="/dashboard/customers"
           onClick={toggleOverlay}
           className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
         >

@@ -23,8 +23,8 @@ const PropertyForm = ({ data }) => {
           price: "",
           rent_payment: "",
           rent_requirement: "",
-          bedroom: 0,
-          bathroom: 0,
+          bedroom: "",
+          bathroom: "",
           district: "",
           province: "",
           near_station: "",
@@ -80,8 +80,8 @@ const PropertyForm = ({ data }) => {
       form.contract &&
       form.area &&
       form.price &&
-      form.bedroom !== 0 &&
-      form.bathroom !== 0 &&
+      form.bedroom &&
+      form.bathroom &&
       form.district &&
       form.province &&
       form.furnishing &&
@@ -625,7 +625,7 @@ const PropertyForm = ({ data }) => {
                   className="outline-none w-full h-full"
                   required
                 >
-                  <option value="0" hidden disabled>
+                  <option value="" hidden disabled>
                     Choose
                   </option>
                   {PropertyData.getBedroomAsOption()}
@@ -645,7 +645,7 @@ const PropertyForm = ({ data }) => {
                   className="outline-none w-full h-full"
                   required
                 >
-                  <option value="0" hidden disabled>
+                  <option value="" hidden disabled>
                     Choose
                   </option>
                   {PropertyData.getBathroomAsOption()}

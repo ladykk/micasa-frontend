@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 
 const status = ["Listing", "Not Listing", "Cancel", "Reserved", "Sold"];
@@ -16,7 +17,7 @@ const types = [
   "Warehouse/Factory",
 ];
 const contracts = ["Sell", "Rent", "New house"];
-const rent_payments = ["Week", "Month", "Quater", "Year"];
+const rent_payments = ["Week", "Month", "Quarter", "Year"];
 const districts = [
   "Bang Bon",
   "Bang Kapi",
@@ -175,25 +176,52 @@ const stations = [
 ];
 const furnishing = ["Furnished", "Partly furnished", "Unfurnished"];
 const ownership = ["Freehold", "Leasehold"];
-const bedroom = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const bathroom = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const bedroom = [
+  "None",
+  "Studio",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+];
+const bathroom = ["None", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
 const getStatusAsOption = () => {
   const elements = [];
   status.forEach((status) =>
-    elements.push(<option value={status}>{status}</option>)
+    elements.push(
+      <option key={status} value={status}>
+        {status}
+      </option>
+    )
   );
   return elements;
 };
 const getTypesAsOption = () => {
   const elements = [];
-  types.forEach((type) => elements.push(<option value={type}>{type}</option>));
+  types.forEach((type) =>
+    elements.push(
+      <option key={type} value={type}>
+        {type}
+      </option>
+    )
+  );
   return elements;
 };
 const getContractsAsOption = () => {
   const elements = [];
   contracts.forEach((contract) =>
-    elements.push(<option value={contract}>{contract}</option>)
+    elements.push(
+      <option key={contract} value={contract}>
+        {contract}
+      </option>
+    )
   );
   return elements;
 };
@@ -201,7 +229,10 @@ const getRentPaymentsAsOption = () => {
   const elements = [];
   rent_payments.forEach((rent_payment) =>
     elements.push(
-      <option value={rent_payment}>{`Baht / ${rent_payment}`}</option>
+      <option
+        key={rent_payment}
+        value={rent_payment}
+      >{`Baht / ${rent_payment}`}</option>
     )
   );
   return elements;
@@ -209,45 +240,86 @@ const getRentPaymentsAsOption = () => {
 const getDistrictsAsOption = () => {
   const elements = [];
   districts.forEach((district) =>
-    elements.push(<option value={district}>{district}</option>)
+    elements.push(
+      <option key={district} value={district}>
+        {district}
+      </option>
+    )
   );
   return elements;
 };
 const getProvincesAsOption = () => {
   const elements = [];
   provinces.forEach((province) =>
-    elements.push(<option value={province}>{province}</option>)
+    elements.push(
+      <option key={province} value={province}>
+        {province}
+      </option>
+    )
   );
   return elements;
 };
 const getStationsAsOption = () => {
   const elements = [];
   stations.forEach((station) =>
-    elements.push(<option value={station}>{station}</option>)
+    elements.push(
+      <option key={station} value={station}>
+        {station}
+      </option>
+    )
   );
   return elements;
 };
 const getFurnishingAsOption = () => {
   const elements = [];
   furnishing.forEach((furnish) =>
-    elements.push(<option value={furnish}>{furnish}</option>)
+    elements.push(
+      <option key={furnish} value={furnish}>
+        {furnish}
+      </option>
+    )
   );
   return elements;
 };
 const getOwnershipAsOption = () => {
   const elements = [];
   ownership.forEach((owner) =>
-    elements.push(<option value={owner}>{owner}</option>)
+    elements.push(
+      <option key={owner} value={owner}>
+        {owner}
+      </option>
+    )
   );
   return elements;
+};
+const getBedroomString = (string) => {
+  const number = Number.parseInt(string, 10);
+  if (number) {
+    return `${number} ${number > 1 ? "Bedrooms" : "Bedroom"}`;
+  } else if (string === "None") {
+    return null;
+  } else {
+    return string;
+  }
+};
+
+const getBathroomString = (string) => {
+  const number = Number.parseInt(string, 10);
+  if (number) {
+    return `${number} ${number > 1 ? "Bathrooms" : "Bathroom"}`;
+  } else if (string === "None") {
+    return null;
+  } else {
+    return string;
+  }
 };
 const getBedroomAsOption = () => {
   const elements = [];
   bedroom.forEach((amount) =>
     elements.push(
-      <option value={amount}>{`${amount} ${
-        amount === 1 ? "Bedroom" : "Bedrooms"
-      }`}</option>
+      <option key={amount} value={amount}>
+        {getBedroomString(amount)}
+      </option>
     )
   );
   return elements;
@@ -256,14 +328,13 @@ const getBathroomAsOption = () => {
   const elements = [];
   bathroom.forEach((amount) =>
     elements.push(
-      <option value={amount}>{`${amount} ${
-        amount === 1 ? "Bathroom" : "Bathrooms"
-      }`}</option>
+      <option key={amount} value={amount}>
+        {getBathroomString(amount)}
+      </option>
     )
   );
   return elements;
 };
-
 const getFacilityName = (facility) => {
   switch (facility) {
     case "air_conditioning":
@@ -307,92 +378,6 @@ const getFacilityName = (facility) => {
   }
 };
 
-// Google sheets
-const properties = axios
-  .get(
-    "https://spreadsheets.google.com/feeds/list/10p47ColHMuagBjd8LEg2AJtOOnCEldVjBRrPQ9QzWvw/od6/public/values",
-    {
-      params: {
-        alt: "json",
-      },
-    }
-  )
-  .then((result) => {
-    try {
-      const entry = result.data.feed.entry;
-      console.info("Loading properties from Google sheets");
-      const output = entry.map((property) => {
-        if (property.gsx$propertyname) {
-          return {
-            property_id: property.gsx$propertyid.$t,
-            property_name: property.gsx$propertyname.$t,
-            property_type: property.gsx$propertytype.$t,
-            contract: property.gsx$contract.$t,
-            area: Number.parseFloat(property.gsx$area.$t, 10),
-            price: Number.parseFloat(property.gsx$price.$t),
-            rent_payment: property.gsx$rentpayment.$t,
-            rent_requirement: property.gsx$rentrequirement.$t,
-            bedroom: property.gsx$bedroom.$t,
-            bathroom: property.gsx$bathroom.$t,
-            district: property.gsx$district.$t,
-            province: property.gsx$province.$t,
-            near_station: property.gsx$nearstation.$t,
-            maps_query: property.gsx$mapsquery.$t,
-            furnishing: property.gsx$furnishing.$t,
-            ownership: property.gsx$ownership.$t,
-            facilities: {
-              air_conditioning: property.gsx$airconditioning.$t === "Yes",
-              balcony: property.gsx$balcony.$t === "Yes",
-              cctv: property.gsx$cctv.$t === "Yes",
-              concierge: property.gsx$concierge.$t === "Yes",
-              fitness: property.gsx$fitness.$t === "Yes",
-              garden: property.gsx$garden.$t === "Yes",
-              library: property.gsx$library.$t === "Yes",
-              lift: property.gsx$lift.$t === "Yes",
-              parking: property.gsx$parking.$t === "Yes",
-              pet_friendly: property.gsx$petfriendly.$t === "Yes",
-              playground: property.gsx$playground.$t === "Yes",
-              river_view: property.gsx$riverview.$t === "Yes",
-              security: property.gsx$security.$t === "Yes",
-              single_storey: property.gsx$security.$t === "Yes",
-              sport_center: property.gsx$sportcenter.$t === "Yes",
-              swimming_pool: property.gsx$swimmingpool.$t === "Yes",
-              tv: property.gsx$tv.$t === "Yes",
-              wifi: property.gsx$wifi.$t === "Yes",
-            },
-            description: property.gsx$description.$t,
-            images: {
-              image_cover: property.gsx$imagecover.$t,
-              image_1: property.gsx$image1.$t,
-              image_2: property.gsx$image2.$t,
-              image_3: property.gsx$image3.$t,
-              image_4: property.gsx$image4.$t,
-              image_5: property.gsx$image5.$t,
-              image_6: property.gsx$image6.$t,
-              image_7: property.gsx$image7.$t,
-              image_8: property.gsx$image8.$t,
-              image_9: property.gsx$image9.$t,
-              image_10: property.gsx$image10.$t,
-            },
-            seen: Number.parseInt(property.gsx$seen.$t, 10),
-            status: property.gsx$status.$t,
-          };
-        }
-      });
-      console.info("Properties are loaded succuessfully.");
-      return output;
-    } catch (err) {
-      console.error("Cannot load properties. Reason:");
-      console.error(err);
-      return [];
-    }
-  })
-  .catch((err) => {
-    console.error("Cannot load properties. Reason:");
-    console.error(err);
-    return [];
-  });
-
 export default {
   getStatusAsOption,
   getTypesAsOption,
@@ -406,4 +391,6 @@ export default {
   getBedroomAsOption,
   getBathroomAsOption,
   getFacilityName,
+  getBedroomString,
+  getBathroomString,
 };
