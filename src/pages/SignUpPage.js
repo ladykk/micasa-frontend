@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Prompt } from "react-router-dom";
 
 //import pictures
 import avatar_icon from "../assets/icons/userform/avatar.png";
@@ -8,6 +8,10 @@ import user_icon from "../assets/icons/userform/user.png";
 import password_icon from "../assets/icons/userform/key.png";
 import email_icon from "../assets/icons/userform/email.png";
 import phone_icon from "../assets/icons/userform/phone-call.png";
+import axios from "axios";
+
+//import modules
+const UserAPI = require("../modules/UserAPI");
 
 const SignUpPage = () => {
   const history = useHistory();
@@ -18,9 +22,11 @@ const SignUpPage = () => {
     confirm_password: "",
     email: "",
     phone_number: "",
+    avatar_file: "",
   });
   const [errors, setErrors] = useState({});
   const [preview, setPreview] = useState(null);
+  const [isBlock, setBlock] = useState(false);
 
   //avatar
   const avatar_file = React.createRef();
@@ -31,6 +37,8 @@ const SignUpPage = () => {
   };
 
   const handleChange = ({ target }) => {
+    setBlock(true);
+    setErrors({ ...errors, form: "" });
     setErrors({ ...errors, [target.name]: "" });
     switch (target.name) {
       case "avatar_file":
@@ -67,8 +75,60 @@ const SignUpPage = () => {
     }
   };
 
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    const signUpForm = UserAPI.signUpForm(form);
+    await axios({
+      method: "post",
+      url: UserAPI.apiUrls.register,
+      data: signUpForm,
+      header: { "Content-Type": "multipart/form-data" },
+    })
+      .then((result) => {
+        if (result.status === 201) {
+          setBlock(false);
+          history.push("/");
+        }
+      })
+      .catch((err) => {
+        switch (err.response.status) {
+          case 400:
+            const error = err.response.data.error;
+            switch (error) {
+              case "Format incorrect.":
+                setErrors({ ...errors, form: "Format incorrect." });
+                setTimeout(() => setErrors({ ...errors, form: "" }), 60000);
+                break;
+              case "(username) is already exist.":
+                setErrors({
+                  ...errors,
+                  username: `${form.username} is already used.`,
+                });
+                break;
+              case "(email) is already exist.":
+                setErrors({
+                  ...errors,
+                  email: `${form.email} is already used.`,
+                });
+                break;
+              default:
+                console.error(err.response);
+                setErrors({ ...errors, form: "Something went wrong." });
+                setTimeout(() => setErrors({ ...errors, form: "" }), 60000);
+            }
+            break;
+          default:
+            console.error(err.response);
+            setErrors({ ...errors, form: "Something went wrong." });
+            setTimeout(() => setErrors({ ...errors, form: "" }), 60000);
+            break;
+        }
+      });
+  };
+
   return (
     <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 pt-12 background-2 bg-black text-white">
+      <Prompt when={isBlock} message={"Are you sure to leave this page ?"} />
       <div className="w-full pl-5 pr-5 xl:pl-14 xl:pr-14 2xl:w-4/5 2xl:p-0 h-full mx-auto relative flex">
         <div className=" w-1/3 flex flex-col justify-center flex-shrink-0 flex-grow-0 mr-48">
           <div className="w-full flex items-end justify-between mb-4">
@@ -89,7 +149,10 @@ const SignUpPage = () => {
             Learn more...
           </Link>
         </div>
-        <form className="w-full h-auto bg-black bg-opacity-60 rounded-xl p-7 mt-12 mb-12">
+        <form
+          className="w-full h-auto bg-black bg-opacity-60 rounded-xl p-7 mt-12 mb-12"
+          onSubmit={handleOnSubmit}
+        >
           <h1 className="text-center text-5xl font-semibold mt-5 mb-10">
             Sign Up
           </h1>
@@ -239,6 +302,9 @@ const SignUpPage = () => {
               >
                 Sign Up
               </button>
+              {errors.form && (
+                <p className="text-red-500 mt-2">{errors.form}</p>
+              )}
             </div>
           </div>
         </form>

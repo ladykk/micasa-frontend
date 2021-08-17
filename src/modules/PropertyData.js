@@ -1,7 +1,15 @@
 import axios from "axios";
 import React from "react";
 
-const status = ["Listing", "Not Listing", "Cancel", "Reserved", "Sold"];
+const status = [
+  "Pending",
+  "Rejected",
+  "Listing",
+  "Not Listing",
+  "Cancel",
+  "Reserved",
+  "Sold",
+];
 const types = [
   "Apartment",
   "Condo",
@@ -297,7 +305,7 @@ const getBedroomString = (string) => {
   if (number) {
     return `${number} ${number > 1 ? "Bedrooms" : "Bedroom"}`;
   } else if (string === "None") {
-    return null;
+    return "None";
   } else {
     return string;
   }
@@ -308,7 +316,7 @@ const getBathroomString = (string) => {
   if (number) {
     return `${number} ${number > 1 ? "Bathrooms" : "Bathroom"}`;
   } else if (string === "None") {
-    return null;
+    return "None";
   } else {
     return string;
   }

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import avatar_icon from "../../assets/icons/userform/avatar.png";
 import search_icon from "../../assets/icons/form/mag-glass.png";
 import MiniPropertyCard from "./MiniPropertyCard";
+import CustomerCard from "./CustomerCard";
 
 //import modules
 const ImageAPI = require("../../modules/ImageAPI");
@@ -12,6 +13,19 @@ const ImageAPI = require("../../modules/ImageAPI");
 const Customers = ({ user }) => {
   const [page, setPage] = useState("favorite");
 
+  const [customers, setCustomers] = useState([
+    {
+      username: "customer",
+      class: "Customer",
+      full_name: "Customer Account",
+      email: "customer@gmail.com",
+      phone_number: "0600000000",
+      gender: "Not specific",
+      birthday: "2000-01-01",
+      favorite: [],
+      history: [],
+    },
+  ]);
   const [customer, setCustomer] = useState({ favorite: [], history: [] });
   const handleOnSetChange = ({ target }) => {
     switch (target.id) {
@@ -72,7 +86,7 @@ const Customers = ({ user }) => {
         <h1 className="text-5xl mb-5 h-fit-content flex-grow-0 flex-shrink-0">
           Customers
         </h1>
-        <div className="h-full border border-gray-300 p-2 rounded-lg">
+        <div className="h-full border border-gray-300 p-2 rounded-lg flex flex-col">
           <form className="w-full h-fit-content mb-2">
             <div className="border border-gray-300 rounded-full pl-2 pr-2 flex items-center h-8">
               <input
@@ -88,10 +102,14 @@ const Customers = ({ user }) => {
               />
             </div>
           </form>
-
+          <div className="h-full">
+            {customers.map((customer) => (
+              <CustomerCard customer={customer} setCustomer={setCustomer} />
+            ))}
+          </div>
           <Link
             to="/dashboard/customers/add"
-            className="mt-2 w-full flex items-center justify-center h-7 bg-blue-500 rounded-full text-white font-normal"
+            className="mt-2 w-full flex items-center justify-center h-7 bg-blue-500 rounded-full text-white font-normal flex-shrink-0 flex-grow-0"
           >
             Add Customer
           </Link>
@@ -103,32 +121,36 @@ const Customers = ({ user }) => {
             <div className="grid grid-cols-3 gap-2 w-max pl-9 mr-auto">
               <p className="mr-1 flex items-center justify-end">Username:</p>
               <p className="col-span-2 h-8 flex items-center">
-                {user.username}
+                {customer.username}
               </p>
               <p className="mr-1 flex items-center justify-end">Name:</p>
               <p className="col-span-2 h-8 flex items-center">
-                {user.full_name}
+                {customer.full_name}
               </p>
               <p className="mr-1 flex items-center justify-end">Email:</p>
-              <p className="col-span-2 h-8 flex items-center">{user.email}</p>
+              <p className="col-span-2 h-8 flex items-center">
+                {customer.email}
+              </p>
               <p className="mr-1 flex items-center justify-end">
                 Phone number:
               </p>
               <p className="col-span-2 h-8 flex items-center">
-                {user.phone_number}
+                {customer.phone_number}
               </p>
               <p className="mr-1 flex items-center justify-end">Gender:</p>
-              <p className="col-span-2 h-8 flex items-center">{user.gender}</p>
+              <p className="col-span-2 h-8 flex items-center">
+                {customer.gender}
+              </p>
               <p className="mr-1 flex items-center justify-end">Birthday:</p>
               <p className="col-span-2 h-8 flex items-center">
-                {user.birthday}
+                {customer.birthday}
               </p>
             </div>
             <div className="relative w-1/4 h-28 mb-8 mt-4 flex justify-center">
               <img
                 src={
-                  user.avatar_id
-                    ? ImageAPI.getAvatarURL(user.avatar_id)
+                  customer.avatar_id
+                    ? ImageAPI.getAvatarURL(customer.avatar_id)
                     : avatar_icon
                 }
                 alt=""
@@ -161,7 +183,12 @@ const Customers = ({ user }) => {
             </p>
           </div>
           <div className="p-2 border border-gray-300 rounded-md">
-            <MiniPropertyCard />
+            {display_set.map((property) => (
+              <MiniPropertyCard
+                key={property.property_id}
+                property={property}
+              />
+            ))}
           </div>
         </div>
       )}

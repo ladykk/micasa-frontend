@@ -24,7 +24,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
             user.avatar_id ? ImageAPI.getAvatarURL(user.avatar_id) : avatar_icon
           }
           alt=""
-          className=" w-16 h-16 mr-4"
+          className=" w-16 h-16 mr-4 rounded-full"
         />
         <div className="text-black">
           <h1 className="text-xl">Welcome!</h1>

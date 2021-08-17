@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { Prompt } from "react-router-dom";
 
 //import pictures
 import avatar_icon from "../../assets/icons/userform/avatar.png";
@@ -6,23 +8,22 @@ import contact from "../../assets/images/contact.png";
 
 //import modules
 const ImageAPI = require("../../modules/ImageAPI");
+const UserAPI = require("../../modules/UserAPI");
+const DateModule = require("../../modules/DateModule");
 
-const Profile = ({ user }) => {
-  const [form, setForm] = useState(user);
+const Profile = ({ user, setIsUserFetch }) => {
+  console.log(user.birthday);
+  const [form, setForm] = useState({
+    full_name: user.full_name,
+    email: user.email,
+    phone_number: user.phone_number,
+    gender: user.gender ? user.gender : "",
+    birthday: user.birthday ? DateModule.formatDate(user.birthday) : "",
+    avatar_file: null,
+  });
   const [isBlock, setBlock] = useState(false);
   const [errors, setErrors] = useState({});
   const [preview, setPreview] = useState(null);
-
-  //real estate info
-  const [realEstate, setRealEstate] = useState({
-    real_id: 1,
-    full_name: "Agent Account",
-    email: "agent@micasa.com",
-    phone_number: "02000000",
-  });
-  const realEstate_avatar = realEstate.avatar_id
-    ? ImageAPI.getAvatarURL(realEstate.avatar_id)
-    : avatar_icon;
 
   //avatar
   const current_avatar = user.avatar_id
@@ -67,13 +68,62 @@ const Profile = ({ user }) => {
   const handleCancelChange = () => {
     removerAvatar();
     setBlock(false);
-    setForm(user);
+    setForm({
+      full_name: user.full_name,
+      email: user.email,
+      phone_number: user.phone_number,
+      gender: user.gender,
+      birthday: user.birthday,
+      avatar_file: null,
+    });
+  };
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    const updateForm = UserAPI.updateFrom(form);
+    console.log("fetch");
+    await axios({
+      method: "patch",
+      url: UserAPI.apiUrls.update,
+      data: updateForm,
+      header: { "Content-Type": "multipart/form-data" },
+    })
+      .then((result) => {
+        if (result.status === 201) {
+          setIsUserFetch(true);
+        }
+      })
+      .catch(({ response }) => {
+        if (response) {
+          switch (response.status) {
+            case 401:
+              setErrors({
+                ...errors,
+                form: "Invalid credential or Session expired.",
+              });
+              break;
+            default:
+              console.error(response.data);
+              setErrors({ ...errors, form: "Something went wrong." });
+              break;
+          }
+          setTimeout(
+            setTimeout(() => setErrors({ ...errors, form: "" })),
+            60000
+          );
+        }
+      });
+    console.log("end");
   };
 
   return (
     <div className="w-full h-auto">
+      <Prompt when={isBlock} message="Are you sure to dismiss the change?" />
       <h1 className="text-5xl mb-5">My Profile</h1>
-      <form className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow place-items-start mb-10">
+      <form
+        className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow place-items-start mb-10"
+        onSubmit={handleOnSubmit}
+      >
         <div className="grid grid-cols-4 gap-2 w-max pl-9 mr-auto">
           <p className="mr-1 flex items-center justify-end">Username:</p>
           <p className="col-span-3 h-8 flex items-center">{user.username}</p>
@@ -119,8 +169,6 @@ const Profile = ({ user }) => {
             onChange={handleOnChange}
             value={form.phone_number}
             placeholder="Phone number"
-            pattern="((\+66|0)(\d{1,2}\-?\d{3}\-?\d{3,4}))|((\+๖๖|๐)([๐-๙]{1,2}\-?[๐-๙]{3}\-?[๐-๙]{3,4}))"
-            gm
             className=" col-span-3 w-72 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none"
             required
           />
@@ -134,7 +182,6 @@ const Profile = ({ user }) => {
               onChange={handleOnChange}
               checked={form.gender === "Male"}
               className="m-1 w-4 h-4"
-              required
             />
             <p className="mr-3">Male</p>
             <input
@@ -145,7 +192,6 @@ const Profile = ({ user }) => {
               onChange={handleOnChange}
               checked={form.gender === "Female"}
               className="m-1 w-4 h-4"
-              required
             />
             <p className="mr-3">Female</p>
             <input
@@ -156,7 +202,6 @@ const Profile = ({ user }) => {
               onChange={handleOnChange}
               checked={form.gender === "Not specific"}
               className="m-1 w-4 h-4"
-              required
             />
             <p className="mr-3">Not specific</p>
           </div>
@@ -168,7 +213,6 @@ const Profile = ({ user }) => {
             value={form.birthday}
             onChange={handleOnChange}
             className=" col-span-3 w-1/2 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none"
-            required
           />
           <div></div>
           <div className="col-span-3 flex">
@@ -188,6 +232,10 @@ const Profile = ({ user }) => {
               >
                 Cancel
               </button>
+            )}
+            {errors.form && <div></div>}
+            {errors.form && (
+              <p className="text-red-500 col-span-3">{errors.avatar_file}</p>
             )}
           </div>
         </div>
@@ -233,31 +281,35 @@ const Profile = ({ user }) => {
       {user.class === "Customer" && (
         <div>
           <h1 className="text-5xl mb-5">My Real Estate Agent</h1>
-          {realEstate.real_id ? (
+          {user.agent !== null ? (
             <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow place-items-start">
               <div className="grid grid-cols-4 gap-2 w-max pl-9 mr-auto">
                 <p className="mr-1 flex items-center justify-end">REAL-ID:</p>
                 <p className="col-span-3 h-8 flex items-center">
-                  {realEstate.real_id}
+                  {user.agent.agent_id}
                 </p>
                 <p className="mr-1 flex items-center justify-end">Name:</p>
                 <p className="col-span-3 h-8 flex items-center">
-                  {realEstate.full_name}
+                  {user.agent.full_name}
                 </p>
                 <p className="mr-1 flex items-center justify-end">Email:</p>
                 <p className="col-span-3 h-8 flex items-center">
-                  {realEstate.email}
+                  {user.agent.email}
                 </p>
                 <p className="mr-1 flex items-center justify-end">
                   Phone number:
                 </p>
                 <p className="col-span-3 h-8 flex items-center">
-                  {realEstate.phone_number}
+                  {user.agent.phone_number}
                 </p>
               </div>
               <div className="w-48 h/full p-2 flex flex-col items-center">
                 <img
-                  src={realEstate_avatar}
+                  src={
+                    user.agent.avatar_id !== null
+                      ? ImageAPI.getAvatarURL(user.agent.avatar_id)
+                      : avatar_icon
+                  }
                   alt=""
                   className="w-28 h-28 mb-8 mt-4 rounded-full"
                 />

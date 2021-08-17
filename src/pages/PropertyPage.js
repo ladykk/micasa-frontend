@@ -34,7 +34,7 @@ import Loading from "../components/Loading";
 const PropertyPage = ({ user, edit, preview, preview_images }) => {
   const { id } = useParams();
   const history = useHistory();
-  const [isFetch, setFetch] = useState(true);
+  const [isFetch, setFetch] = useState(preview ? false : true);
   const [property, setProperty] = useState(
     edit
       ? {
@@ -51,7 +51,7 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
         }
       : {}
   );
-
+  console.log(property);
   useEffect(() => {
     (async () => {
       if (isFetch) {
@@ -120,7 +120,7 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
         } background-cover-centered pt-12`}
         style={{
           backgroundImage: `url('${
-            property.images.image_cover ? property.images.image_cover : no_img
+            property ? property.images.image_cover : no_img
           }')`,
         }}
       >

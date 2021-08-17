@@ -83,7 +83,7 @@ const EditPropertyPage = ({ user }) => {
           </Route>
         </Switch>
       ) : (
-        <Redirect to="401" />
+        <Redirect to="/401" />
       )}
     </div>
   ) : (

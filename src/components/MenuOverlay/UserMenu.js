@@ -21,10 +21,12 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
       <div className="w-full flex items-center">
         <img
           src={
-            user.avatar_id ? ImageAPI.getAvatarURL(user.avatar_id) : avatar_icon
+            user.avatar_id === null
+              ? avatar_icon
+              : ImageAPI.getAvatarURL(user.avatar_id)
           }
           alt=""
-          className=" w-16 h-16 mr-4"
+          className=" w-16 h-16 mr-4 rounded-full"
         />
         <div className="text-white">
           <h1 className="text-xl">Welcome!</h1>

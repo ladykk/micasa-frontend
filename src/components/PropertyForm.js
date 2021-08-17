@@ -9,6 +9,10 @@ import maps from "../assets/images/maps.gif";
 
 //import components
 import PropertyPage from "../pages/PropertyPage";
+import axios from "axios";
+
+//import modules
+const PropertyAPI = require("../modules/PropertyAPI");
 
 const PropertyForm = ({ data }) => {
   const [isBlock, setBlock] = useState(false);
@@ -21,13 +25,13 @@ const PropertyForm = ({ data }) => {
           contract: "",
           area: "",
           price: "",
-          rent_payment: "",
+          rent_payment: "None",
           rent_requirement: "",
           bedroom: "",
           bathroom: "",
           district: "",
           province: "",
-          near_station: "",
+          near_station: "None",
           maps_query: "",
           furnishing: "",
           ownership: "Freehold",
@@ -69,7 +73,6 @@ const PropertyForm = ({ data }) => {
   );
   const [errors, setErrors] = useState({});
   const [previews, setPreviews] = useState(data ? { ...data.images } : {});
-  console.log(previews);
 
   //Display
   const [display, setDisplay] = useState(false);
@@ -89,21 +92,21 @@ const PropertyForm = ({ data }) => {
       form.images.image_cover
     ) {
       if (form.contract !== "Rent") {
-        setErrors({ ...errors, display: "" });
+        setErrors({ ...errors, form: "" });
         setDisplay(!display);
       } else if (form.contract === "Rent" && form.rent_payment) {
-        setErrors({ ...errors, display: "" });
+        setErrors({ ...errors, form: "" });
         setDisplay(!display);
       } else {
         setErrors({
           ...errors,
-          display: "Please fill all required field before preview.",
+          form: "Please fill all required field before preview.",
         });
       }
     } else {
       setErrors({
         ...errors,
-        display: "Please fill all required field before preview.",
+        form: "Please fill all required field before preview.",
       });
     }
   };
@@ -146,6 +149,24 @@ const PropertyForm = ({ data }) => {
     setBlock(true);
     setErrors({ ...errors, [target.name]: "", display: "" });
     switch (target.name) {
+      case "contract":
+        if (target.value === "Rent") {
+          setForm({
+            ...form,
+            rent_payment: "Month",
+            rent_requirement: "",
+            contract: "Rent",
+          });
+        } else {
+          console.log("not rent");
+          setForm({
+            ...form,
+            rent_payment: "None",
+            rent_requirement: "",
+            contract: target.value,
+          });
+        }
+        break;
       case "image_cover":
       case "image_1":
       case "image_2":
@@ -220,13 +241,13 @@ const PropertyForm = ({ data }) => {
             contract: "",
             area: "",
             price: "",
-            rent_payment: "",
+            rent_payment: "None",
             rent_requirement: "",
             bedroom: 0,
             bathroom: 0,
             district: "",
             province: "",
-            near_station: "",
+            near_station: "None",
             maps_query: "",
             furnishing: "",
             ownership: "Freehold",
@@ -271,6 +292,39 @@ const PropertyForm = ({ data }) => {
     setDisplay(false);
     setBlock(false);
   };
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    const addPropertyForm = PropertyAPI.addPropertyForm(form);
+    console.log("fetching");
+    await axios({
+      method: "post",
+      url: PropertyAPI.apiUrls.add,
+      data: addPropertyForm,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then((result) => {
+        if (result.status === 201) {
+          console.log(result.data);
+          console.log("result ok");
+        }
+      })
+      .catch(({ response }) => {
+        if (response) {
+          switch (response.status) {
+            case 401:
+              setErrors({ ...errors, form: "Invalid credential." });
+              break;
+            default:
+              console.error(response.data);
+              setErrors({ ...errors, form: "Something went wrong." });
+              break;
+          }
+        }
+      });
+    console.log("end");
+  };
+
   const images = () => {
     const elements = [];
     for (let i = 1; i <= 10; i++) {
@@ -320,7 +374,10 @@ const PropertyForm = ({ data }) => {
   };
 
   return (
-    <form className="w-full h-max-content relative p-6 border border-gray-300 rounded-lg shadow place-items-start mb-10">
+    <form
+      className="w-full h-max-content relative p-6 border border-gray-300 rounded-lg shadow place-items-start mb-10"
+      onSubmit={handleOnSubmit}
+    >
       <Prompt when={isBlock} message={"Are you sure to dismiss the from ?"} />
       {/* Floating Panel */}
       <div className="sticky top-5 left-0 right-0 w-full h-fit-content z-40 mb-5 flex items-center justify-between rounded-full border border-gray-300 p-2 pl-3 pr-3 bg-white shadow">
@@ -337,11 +394,11 @@ const PropertyForm = ({ data }) => {
             <span className="slider round"></span>
           </label>
           <p className="font-normal">Preview</p>
-          <p className="text-red-500 ml-3">{errors.display}</p>
+          <p className="text-red-500 ml-3">{errors.form}</p>
         </div>
         <div className="flex items-center">
           {/* Status */}
-          {data.status && (
+          {data && (
             <div className="flex mr-3">
               <p className="mr-2 flex items-center justify-end">
                 Status: <sup className="text-red-500">*</sup>
@@ -583,7 +640,7 @@ const PropertyForm = ({ data }) => {
                       className="outline-none w-full h-full"
                       required={form.contract === "Rent"}
                     >
-                      <option value="" hidden disabled>
+                      <option value="None" hidden disabled>
                         Choose
                       </option>
                       {PropertyData.getRentPaymentsAsOption()}
@@ -608,7 +665,6 @@ const PropertyForm = ({ data }) => {
                   onChange={handleOnChange}
                   className=" col-span-3 w-full h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none"
                   placeholder='e.g. "Min. 1 year", "Max. 5 years". (Blank for none)'
-                  required={form.contract === "Rent"}
                 />
               )}
               {/* Bedroom */}

@@ -5,6 +5,7 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import axios from "axios";
 
 //import components
 import NavBar from "./components/NavBar";
@@ -21,58 +22,46 @@ import PropertyPage from "./pages/PropertyPage";
 import DashboardPage from "./pages/DashboardPage";
 import EditPropertyPage from "./pages/EditPropertyPage";
 import AddPropertyPage from "./pages/AddPropertyPage";
+import Loading from "./components/Loading";
+
+//import modules
+import UserAPI from "./modules/UserAPI";
 
 function App() {
   //User
-  const [user, setUser] = useState({
-    // Customer
-    // username: "customer",
-    // class: "Customer",
-    // full_name: "Customer Account",
-    // email: "customer@gmail.com",
-    // phone_number: "0600000000",
-    // gender: "Not specific",
-    // birthday: "2000-01-01",
-    // real_estate_id: 1,
-    // Agent
-    username: "agent",
-    real_id: 1,
-    class: "Agent",
-    full_name: "Agent Account",
-    email: "agent@micasa.com",
-    phone_number: "0600000000",
-    gender: "Not specific",
-    birthday: "2000-01-01",
-    // Webmaster
-    // username: "agent",
-    // web_id: 1,
-    // class: "Webmaster",
-    // full_name: "Webmaster Account",
-    // email: "webmaster@micasa.com",
-    // phone_number: "0600000000",
-    // gender: "Not specific",
-    // birthday: "2000-01-01",
-  });
-  const [fetchUser, setFetchUser] = useState(false);
-  const handleSignIn = (e) => {
-    const username = e.target.username.value;
-    switch (username) {
-      case "Customer":
-      case "Agent":
-      case "Webmaster":
-        setUser({
-          username: username,
-          class: username,
-          full_name: `${username} Account`,
-        });
-        return true;
-      default:
-        return false;
-    }
+  const [user, setUser] = useState({});
+  const [isUserFetch, setIsUserFetch] = useState(true);
+  const handleSignIn = () => {
+    console.log("user fetch send");
+    setIsUserFetch(true);
   };
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    await axios({
+      method: "post",
+      url: UserAPI.apiUrls.logout,
+    });
     setUser({});
   };
+
+  useEffect(() => {
+    if (isUserFetch) {
+      (async () => {
+        await axios({
+          method: "get",
+          url: UserAPI.apiUrls.getUser,
+        })
+          .then((result) => {
+            if (result.status === 201) {
+              setUser(result.data);
+              setIsUserFetch(false);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })();
+    }
+  }, [isUserFetch]);
 
   return (
     <Router>
@@ -85,10 +74,14 @@ function App() {
         <div className="pt-12 w-screen h-screen relative overflow-x-hidden">
           <Switch>
             <Route path="/add">
-              {user.username ? (
-                <AddPropertyPage user={user} />
+              {!isUserFetch ? (
+                user.username ? (
+                  <AddPropertyPage user={user} />
+                ) : (
+                  <Redirect to="/401" />
+                )
               ) : (
-                <Redirect to="/401" />
+                <Loading />
               )}
             </Route>
             <Route path="/edit/:id">
@@ -98,7 +91,12 @@ function App() {
               <Redirect to="/400" />
             </Route>
             <Route path="/dashboard/:menu">
-              <DashboardPage user={user} handleSignOut={handleSignOut} />
+              <DashboardPage
+                user={user}
+                handleSignOut={handleSignOut}
+                isUserFetch={isUserFetch}
+                setIsUserFetch={setIsUserFetch}
+              />
             </Route>
             <Route exact path="/dashboard">
               <Redirect to="/dashboard/profile" />

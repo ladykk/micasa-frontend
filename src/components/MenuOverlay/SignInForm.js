@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import user_icon from "../../assets/icons/userform/user.png";
 import password_icon from "../../assets/icons/userform/key.png";
 
+import UserAPI from "../../modules/UserAPI";
+import axios from "axios";
+
 const SignInForm = ({ toggleOverlay, handleSignIn }) => {
   const [form, setForm] = useState({
     username: "",
@@ -14,14 +17,34 @@ const SignInForm = ({ toggleOverlay, handleSignIn }) => {
     setError("");
     setForm({ ...form, [target.name]: target.value });
   };
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
-    const result = handleSignIn(e);
-    if (result) {
-      toggleOverlay();
-    } else {
-      setError("Username or Password is incorrect.");
-    }
+    const signInForm = UserAPI.signInForm(form);
+    await axios({
+      method: "post",
+      url: UserAPI.apiUrls.login,
+      data: signInForm,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then((result) => {
+        if (result.status === 201) {
+          toggleOverlay();
+          handleSignIn();
+        }
+      })
+      .catch(({ response }) => {
+        if (response) {
+          switch (response.status) {
+            case 401:
+              setError("Username or Password is incorrect.");
+              break;
+            default:
+              console.error(response.data);
+              setError("Something went wrong.");
+              break;
+          }
+        }
+      });
   };
   return (
     <form
