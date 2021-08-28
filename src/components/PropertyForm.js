@@ -1,21 +1,26 @@
 import React, { useState } from "react";
-import { Prompt } from "react-router-dom";
+import { Prompt, useHistory } from "react-router-dom";
 import Iframe from "react-iframe";
 import PropertyData from "../modules/PropertyData";
 
 //import pictures
 import no_img from "../assets/images/noimage.png";
-import maps from "../assets/images/maps.gif";
+import maps from "../assets/images/maps.jpeg";
+import progress from "../assets/images/progress.gif";
 
 //import components
 import PropertyPage from "../pages/PropertyPage";
 import axios from "axios";
 
 //import modules
-const PropertyAPI = require("../modules/PropertyAPI");
+const PropertyAPI = require("../modules/api/PropertyAPI");
+const ImageAPI = require("../modules/api/ImageAPI");
 
-const PropertyForm = ({ data }) => {
+const PropertyForm = ({ data, setIsFetch }) => {
+  const history = useHistory();
+
   const [isBlock, setBlock] = useState(false);
+  const [isSubmit, setSubmit] = useState(false);
   const [form, setForm] = useState(
     data
       ? { ...data }
@@ -144,6 +149,9 @@ const PropertyForm = ({ data }) => {
         break;
       default:
     }
+    if (data) {
+      setBlock(true);
+    }
   };
   const handleOnChange = ({ target }) => {
     setBlock(true);
@@ -158,7 +166,6 @@ const PropertyForm = ({ data }) => {
             contract: "Rent",
           });
         } else {
-          console.log("not rent");
           setForm({
             ...form,
             rent_payment: "None",
@@ -295,34 +302,89 @@ const PropertyForm = ({ data }) => {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    const addPropertyForm = PropertyAPI.addPropertyForm(form);
-    console.log("fetching");
-    await axios({
-      method: "post",
-      url: PropertyAPI.apiUrls.add,
-      data: addPropertyForm,
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then((result) => {
-        if (result.status === 201) {
-          console.log(result.data);
-          console.log("result ok");
-        }
+    if (
+      form.property_name &&
+      form.property_type &&
+      form.contract &&
+      form.area &&
+      form.price &&
+      form.rent_payment &&
+      form.bedroom &&
+      form.bathroom &&
+      form.district &&
+      form.province &&
+      form.near_station &&
+      form.furnishing &&
+      form.ownership &&
+      form.description &&
+      form.image_cover
+    ) {
+      setErrors({ ...errors, form: "Please fill all required fields." });
+      return;
+    }
+    setSubmit(true);
+    if (data) {
+      const updatePropertyForm = PropertyAPI.updatePropertyForm(data, form);
+      await axios({
+        method: "patch",
+        url: `${PropertyAPI.apiUrls.edit}/${data.property_id}`,
+        data: updatePropertyForm,
+        headers: { "Content-Type": "multipart/form-data" },
       })
-      .catch(({ response }) => {
-        if (response) {
-          switch (response.status) {
-            case 401:
-              setErrors({ ...errors, form: "Invalid credential." });
-              break;
-            default:
-              console.error(response.data);
-              setErrors({ ...errors, form: "Something went wrong." });
-              break;
+        .then((result) => {
+          if (result.status === 201) {
+            setBlock(false);
+            setIsFetch(true);
+            history.goBack();
           }
-        }
-      });
-    console.log("end");
+        })
+        .catch(({ response }) => {
+          if (response) {
+            switch (response.status) {
+              case 400:
+                setErrors({ ...errors, form: "Bad request." });
+                break;
+              case 401:
+                setErrors({ ...errors, form: "Invalid credential." });
+                break;
+              default:
+                console.error(response.data);
+                setErrors({ ...errors, form: "Something went wrong." });
+                break;
+            }
+          }
+        })
+        .finally(() => {
+          setSubmit(false);
+        });
+    } else {
+      const addPropertyForm = PropertyAPI.addPropertyForm(form);
+      await axios({
+        method: "post",
+        url: PropertyAPI.apiUrls.add,
+        data: addPropertyForm,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then((result) => {
+          if (result.status === 201) {
+            setBlock(false);
+            history.goBack();
+          }
+        })
+        .catch(({ response }) => {
+          if (response) {
+            switch (response.status) {
+              case 401:
+                setErrors({ ...errors, form: "Invalid credential." });
+                break;
+              default:
+                console.error(response.data);
+                setErrors({ ...errors, form: "Something went wrong." });
+                break;
+            }
+          }
+        });
+    }
   };
 
   const images = () => {
@@ -395,6 +457,12 @@ const PropertyForm = ({ data }) => {
           </label>
           <p className="font-normal">Preview</p>
           <p className="text-red-500 ml-3">{errors.form}</p>
+          {isSubmit && (
+            <div className="flex items-center justify-center">
+              <img src={progress} alt="" className="w-8 h-8" />
+              <p className="ml-2">Processing...</p>
+            </div>
+          )}
         </div>
         <div className="flex items-center">
           {/* Status */}
@@ -412,11 +480,28 @@ const PropertyForm = ({ data }) => {
                   onChange={handleOnChange}
                   className="outline-none w-full h-full"
                   required
-                  disabled={display}
+                  disabled={display || data.status === "Pending"}
                 >
                   {PropertyData.getStatusAsOption()}
                 </select>
               </div>
+              {form.status === "Sold" && (
+                <div className="flex ml-3">
+                  <p className="mr-2 flex items-center justify-end">
+                    To: <sup className="text-red-500">*</sup>
+                  </p>
+                  <input
+                    type="text"
+                    name="buyer"
+                    id="buyer"
+                    value={form.buyer}
+                    onChange={handleOnChange}
+                    className=" h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none"
+                    disabled={form.status !== "Sold" || display}
+                    required={form.status === "Sold"}
+                  />
+                </div>
+              )}
             </div>
           )}
           {/* Reset Button */}
@@ -443,7 +528,11 @@ const PropertyForm = ({ data }) => {
       {display ? (
         <div className="w-full h-max-content border border-gray-300 rounded-md shadow">
           {/* Preview */}
-          <PropertyPage preview={form} preview_images={previews} />
+          <PropertyPage
+            preview={form}
+            preview_images={previews}
+            user={{ class: "Customer" }}
+          />
         </div>
       ) : (
         <div>
@@ -462,7 +551,6 @@ const PropertyForm = ({ data }) => {
                   onChange={handleOnChange}
                   ref={refs.image_cover}
                   className="hidden"
-                  required
                 />
                 <img
                   src={previews.image_cover ? previews.image_cover : no_img}

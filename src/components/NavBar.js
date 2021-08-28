@@ -7,14 +7,15 @@ import avatar_icon from "../assets/icons/userform/avatar.png";
 import MenuOverlay from "./MenuOverlay";
 
 //import modules
-const ImageAPI = require("../modules/ImageAPI");
+const ImageAPI = require("../modules/api/ImageAPI");
 
-const NavBar = ({ user, handleSignIn, handleSignOut }) => {
-  //Overlay
-  const [isOverlayOpen, setOverlay] = useState(false);
-  const toggleOverlay = () => {
-    setOverlay(!isOverlayOpen);
-  };
+const NavBar = ({
+  user,
+  handleSignIn,
+  handleSignOut,
+  isOverlayOpen,
+  toggleOverlay,
+}) => {
   const handleOverlayOnClick = (e) => {
     console.log(e.target.id);
     if (e.target.id === "overlay-menu-overlay") {
@@ -24,7 +25,7 @@ const NavBar = ({ user, handleSignIn, handleSignOut }) => {
 
   return (
     <header className="w-screen h-12 bg-black bg-opacity-40 fixed top-0 left-0 right-0 z-50">
-      <div className="w-full pl-5 pr-5 2xl:w-4/5 2xl:p-0 mx-auto h-full">
+      <div className="w-full pl-5 pr-5 desktop:w-4/5 desktop:p-0 mx-auto h-full">
         <nav className="w-full h-12 flex justify-between">
           <Link
             className="flex items-center hover:bg-black hover:bg-opacity-30 ease-in duration-75"
@@ -89,7 +90,7 @@ const NavBar = ({ user, handleSignIn, handleSignOut }) => {
                       : avatar_icon
                   }
                   alt=""
-                  className=" w-10 rounded-full"
+                  className=" w-10 h-10 rounded-full object-cover object-center"
                 />
               </div>
             ) : (

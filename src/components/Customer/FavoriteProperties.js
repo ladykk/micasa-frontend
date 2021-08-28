@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "../../modules/RouterModule";
+import axios from "axios";
 
 //import pictures
 import avatar_icon from "../../assets/icons/userform/avatar.png";
@@ -8,9 +9,11 @@ import avatar_icon from "../../assets/icons/userform/avatar.png";
 import PropertyCard from "../PropertyCard";
 
 //import modules
-const ImageAPI = require("../../modules/ImageAPI");
+import CustomerAPI from "../../modules/api/CustomerAPI";
+import ImageAPI from "../../modules/api/ImageAPI";
 
 const FavoriteProperties = ({ user }) => {
+  const [isFetch, setFetch] = useState(true);
   const [params, setParams] = useState({
     //Query Properties
     page: 1,
@@ -19,6 +22,30 @@ const FavoriteProperties = ({ user }) => {
   });
 
   const [properties, setProperties] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      if (isFetch) {
+        await axios
+          .get(CustomerAPI.apiUrls.favorite_properties)
+          .then((result) => {
+            if (result.status === 200) {
+              let data = result.data.payload.map((property) => {
+                let withImageUrl = property;
+                for (let image in withImageUrl.images) {
+                  withImageUrl.images[image] = ImageAPI.getImageURL(
+                    withImageUrl.images[image]
+                  );
+                }
+                return withImageUrl;
+              });
+              setProperties(data);
+            }
+          });
+      }
+    })();
+  }, [isFetch]);
+
   const total_page =
     properties.length === 0
       ? 1
@@ -58,20 +85,6 @@ const FavoriteProperties = ({ user }) => {
             className="flex
           "
           >
-            <div className="w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1">
-              <select
-                name="sort_by"
-                id="sort_by"
-                className="w-full h-full outline-none"
-                value={params.sort_by}
-                onChange={handleOnChange}
-              >
-                <option value="new_added">Newly Added</option>
-                <option value="most_seen">Most Seen</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-              </select>
-            </div>
             <div className=" w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1">
               <select
                 name="items_per_page"
@@ -89,13 +102,18 @@ const FavoriteProperties = ({ user }) => {
           </div>
         </div>
         {/* Cards */}
-        {}
         {properties.map((property, index) => {
           const current_property = index + 1;
           const stop = params.page * params.items_per_page;
           const start = stop - params.items_per_page + 1;
           if (current_property >= start && current_property <= stop) {
-            return <PropertyCard key={property.id} data={property} />;
+            return (
+              <PropertyCard
+                key={property.property_id}
+                data={property}
+                user={user}
+              />
+            );
           }
         })}
         {/* Page Selector */}
@@ -119,6 +137,7 @@ const FavoriteProperties = ({ user }) => {
               for (let i = 1; i <= total_page; i++) {
                 elements.push(
                   <p
+                    key={i}
                     className={`flex items-center justify-center w-8 h-9  ml-3
                       } ${
                         params.page === i

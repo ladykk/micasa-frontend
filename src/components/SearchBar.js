@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+
+//import modules
 import PropertyData from "../modules/PropertyData";
+import PropertyAPI from "../modules/api/PropertyAPI";
+import { useHistory } from "react-router-dom";
 
 const SearchBar = () => {
+  const history = useHistory();
   const [query, setQuery] = useState({});
   const handleChange = ({ target }) => {
     switch (target.name) {
       case "terms":
         setQuery({ ...query, terms: target.value });
         break;
-      case "type":
-        setQuery({ ...query, type: target.value });
+      case "property_type":
+        setQuery({ ...query, property_type: target.value });
         break;
       case "contract":
         setQuery({ ...query, contract: target.value });
@@ -24,28 +29,35 @@ const SearchBar = () => {
     }
   };
 
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    const { contract, ...params } = query;
+    history.push(
+      `/search/${contract}${PropertyAPI.generateQueryString(params, null)}`
+    );
+  };
+
   return (
-    <form className="flex items-center w-full h-14 bg-white rounded-full pl-4 shadow-xl">
+    <form
+      className="flex items-center w-full h-14 bg-white rounded-full pl-4 shadow-xl"
+      onSubmit={handleOnSubmit}
+    >
       <input
-        type="text"
+        property_type="text"
         name="terms"
         id="terms"
         placeholder="Search by property name, district, train station, or keyword."
         className="w-full h-full focus:outline-none m-2"
         onChange={handleChange}
-        required
       />
       <select
-        name="type"
-        id="type"
-        value={query.type ? query.type : ""}
+        name="property_type"
+        id="property_type"
+        value={query.property_type ? query.property_type : ""}
         className="h-full flex-grow-0 flex-shrink-0 w-40 focus:outline-none mr-2"
         onChange={handleChange}
-        required
       >
-        <option value="" disabled hidden>
-          Property Type
-        </option>
+        <option value="">All Property Type</option>
         {PropertyData.getTypesAsOption()}
       </select>
       <select

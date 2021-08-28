@@ -202,13 +202,22 @@ const bathroom = ["None", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
 const getStatusAsOption = () => {
   const elements = [];
-  status.forEach((status) =>
+  status.forEach((status) => {
+    let hidden = false;
+    switch (status) {
+      case "Pending":
+      case "Rejected":
+        hidden = true;
+        break;
+      default:
+        hidden = false;
+    }
     elements.push(
-      <option key={status} value={status}>
+      <option key={status} value={status} hidden={hidden}>
         {status}
       </option>
-    )
-  );
+    );
+  });
   return elements;
 };
 const getTypesAsOption = () => {

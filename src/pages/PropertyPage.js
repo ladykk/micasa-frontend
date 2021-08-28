@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect, useHistory, useParams } from "react-router-dom";
 import Iframe from "react-iframe";
+import axios from "axios";
 
 //import pictures
 import no_img from "../assets/images/noimage.png";
@@ -24,17 +25,31 @@ import map from "../assets/icons/property_detail/map.png";
 import phone from "../assets/icons/property_detail/phone-call-fill.png";
 import email from "../assets/icons/property_detail/email-fill.png";
 import edit_icon from "../assets/icons/property_detail/edit.png";
+import account from "../assets/icons/property_detail/user.png";
+import full_name from "../assets/icons/property_detail/id-card.png";
+import avatar_icon from "../assets/icons/userform/avatar.png";
 
 //import components
 import Facilities from "../components/Facilities";
 import PropertyData from "../modules/PropertyData";
-import PropertyMock from "../mock/PropertyMock";
 import Loading from "../components/Loading";
 
-const PropertyPage = ({ user, edit, preview, preview_images }) => {
+//import modules
+import ImageAPI from "../modules/api/ImageAPI";
+import PropertyAPI from "../modules/api/PropertyAPI";
+import CustomerAPI from "../modules/api/CustomerAPI";
+
+const PropertyPage = ({
+  user,
+  edit,
+  preview,
+  preview_images,
+  toggleOverlay,
+}) => {
   const { id } = useParams();
   const history = useHistory();
-  const [isFetch, setFetch] = useState(preview ? false : true);
+  const [isFetch, setFetch] = useState(preview || edit ? false : true);
+  const [isFavorite, setFavorite] = useState(false);
   const [property, setProperty] = useState(
     edit
       ? {
@@ -51,16 +66,95 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
         }
       : {}
   );
-  console.log(property);
+  const [seller, setSeller] = useState({});
   useEffect(() => {
     (async () => {
-      if (isFetch) {
-        const property = PropertyMock.getPropertyById(id);
-        setProperty(property);
-        setFetch(false);
+      if (isFetch && !edit && !preview) {
+        await axios
+          .get(`${PropertyAPI.apiUrls.byId}/${id}`)
+          .then((result) => {
+            if (result.status === 200) {
+              let property = result.data.payload;
+              for (let image in property.images) {
+                property.images[image] = ImageAPI.getImageURL(
+                  property.images[image]
+                );
+              }
+              setProperty(property);
+              setFetch(false);
+            }
+          })
+          .catch((err) => {
+            const response = err.response;
+            switch (response.status) {
+              case 400:
+                history.replace("/400");
+                break;
+              case 401:
+                history.replace("/401");
+                break;
+              case 404:
+                history.replace("/404");
+                break;
+              default:
+                console.error(response.data);
+            }
+          });
       }
     })();
   }, [isFetch]);
+
+  const handleFavorite = async () => {
+    if (user.username) {
+      const favoriteForm = new FormData();
+      favoriteForm.append("is_favorite", !isFavorite ? "true" : "false");
+      await axios({
+        method: "post",
+        url: `${CustomerAPI.apiUrls.favorite_property}/${id}`,
+        data: favoriteForm,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then((result) => {
+          if (result.status === 201) {
+            setFavorite(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          setFavorite(false);
+        });
+      setFavorite(!isFavorite);
+    } else {
+      toggleOverlay();
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (id) {
+        await axios
+          .get(`${CustomerAPI.apiUrls.favorite_property}/${id}`)
+          .then((result) => {
+            if (result.status === 200) {
+              setFavorite(result.data.payload);
+            }
+          });
+      }
+    })();
+  });
+
+  useEffect(() => {
+    (async () => {
+      if (user.class !== "Customer") {
+        await axios
+          .get(`${PropertyAPI.apiUrls.contact}/${id}`)
+          .then((result) => {
+            if (result.status === 200) {
+              setSeller(result.data.payload);
+            }
+          });
+      }
+    })();
+  });
 
   const [page, setPage] = useState("overview");
 
@@ -92,7 +186,7 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
   const getImages = () => {
     const elements = [];
     for (const image in property.images) {
-      if (image !== "image_cover") {
+      if (image !== "image_cover" && property.images[image] !== null) {
         elements.push(
           <img
             src={property.images[image]}
@@ -146,27 +240,31 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
                 />
               </Link>
             ) : (
-              <div
-                className={`flex bg-white text-red-500 p-1 pr-3 pl-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75 ${
-                  property.favorite && "hover:line-through"
-                }`}
-              >
-                <p className="font-normal">
-                  {property.favorite ? "Favorite" : "Add to Favorite"}
-                </p>
-                <img
-                  src={property.favorite ? favorite : unfavorite}
-                  alt=""
-                  className="w-5 h-5 ml-2"
-                />
-              </div>
+              user.class === "Customer" &&
+              user.username !== property.seller && (
+                <div
+                  onClick={handleFavorite}
+                  className={`flex bg-white text-red-500 p-1 pr-3 pl-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75 ${
+                    isFavorite && "hover:line-through"
+                  }`}
+                >
+                  <p className="font-normal">
+                    {isFavorite ? "Favorite" : "Add to Favorite"}
+                  </p>
+                  <img
+                    src={isFavorite ? favorite : unfavorite}
+                    alt=""
+                    className="w-5 h-5 ml-2"
+                  />
+                </div>
+              )
             )}
           </div>
         )}
       </div>
       <div
         className={`h-16 ${
-          preview ? " w-full" : "w-screen 2xl:h-20"
+          preview ? " w-full" : "w-screen desktop:h-20"
         }  mx-auto bg-gray-200`}
       >
         <div
@@ -181,9 +279,9 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
             <img
               src={overview}
               alt=""
-              className={`w-12 h-12 ${!preview && "2xl:w-14 2xl:h-14"} mr-4 ${
-                page === "overview" && "invert-icon"
-              }`}
+              className={`w-12 h-12 ${
+                !preview && "desktop:w-14 desktop:h-14"
+              } mr-4 ${page === "overview" && "invert-icon"}`}
             />
             <h1 className="text-2xl">Overview</h1>
           </div>
@@ -196,9 +294,9 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
             <img
               src={images}
               alt=""
-              className={`w-12 h-12 ${!preview && "2xl:w-14 2xl:h-14"} mr-4 ${
-                page === "images" && "invert-icon"
-              }`}
+              className={`w-12 h-12 ${
+                !preview && "desktop:w-14 desktop:h-14"
+              } mr-4 ${page === "images" && "invert-icon"}`}
             />
             <h1 className="text-2xl">Images</h1>
           </div>
@@ -211,9 +309,9 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
             <img
               src={map}
               alt=""
-              className={`w-12 h-12 ${!preview && "2xl:w-14 2xl:h-14"} mr-4 ${
-                page === "map" && "invert-icon"
-              }`}
+              className={`w-12 h-12 ${
+                !preview && "desktop:w-14 desktop:h-14"
+              } mr-4 ${page === "map" && "invert-icon"}`}
             />
             <h1 className="text-2xl">Map</h1>
           </div>
@@ -244,8 +342,9 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
           <div className="flex justify-between items-center mb-3">
             <p className="text-lg">
               <span className="font-normal">{property.contract}:</span>{" "}
-              {property.price} ฿{" "}
-              {property.rent_payment && `/ ${property.rent_payment}`}{" "}
+              {property.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+              ฿{" "}
+              {property.rent_payment !== "None" && `/ ${property.rent_payment}`}{" "}
               {property.rent_requirement && (
                 <span className="text-red-500 italic">
                   ({property.rent_requirement})
@@ -347,17 +446,47 @@ const PropertyPage = ({ user, edit, preview, preview_images }) => {
                   </div>
                 )}
               </div>
-              <h1 className="w-full text-xl underline mb-8">Contact</h1>
-              <div className="w-full pl-6 mb-5">
-                <div className="w-full flex items-center justify-start mb-3">
-                  <img className="w-7 h-7 mr-3" src={phone} alt="" />
-                  <p className="text-lg">02-000-0000</p>
+              <h1 className="w-full text-xl underline mb-5">Contact</h1>
+              {seller.username ? (
+                <div className="w-full pl-6 mb-5">
+                  <img
+                    src={
+                      seller.avatar_id
+                        ? ImageAPI.getAvatarURL(seller.avatar_id)
+                        : avatar_icon
+                    }
+                    className="w-24 h-24 rounded-full object-cover object-center mb-2 mx-auto"
+                    alt=""
+                  />
+                  <div className="w-full flex items-center justify-start mb-3">
+                    <img className="w-7 h-7 mr-3" src={account} alt="" />
+                    <p className="text-lg">{seller.username}</p>
+                  </div>
+                  <div className="w-full flex items-center justify-start mb-3">
+                    <img className="w-7 h-7 mr-3" src={full_name} alt="" />
+                    <p className="text-lg">{seller.full_name}</p>
+                  </div>
+                  <div className="w-full flex items-center justify-start mb-3">
+                    <img className="w-7 h-7 mr-3" src={phone} alt="" />
+                    <p className="text-lg">{seller.phone_number}</p>
+                  </div>
+                  <div className="w-full flex items-center justify-start mb-3">
+                    <img className="w-7 h-7 mr-3" src={email} alt="" />
+                    <p className="text-lg">{seller.email}</p>
+                  </div>
                 </div>
-                <div className="w-full flex items-center justify-start mb-3">
-                  <img className="w-7 h-7 mr-3" src={email} alt="" />
-                  <p className="text-lg">sales@micasa.com</p>
+              ) : (
+                <div className="w-full pl-6 mb-5">
+                  <div className="w-full flex items-center justify-start mb-3">
+                    <img className="w-7 h-7 mr-3" src={phone} alt="" />
+                    <p className="text-lg">02-000-0000</p>
+                  </div>
+                  <div className="w-full flex items-center justify-start mb-3">
+                    <img className="w-7 h-7 mr-3" src={email} alt="" />
+                    <p className="text-lg">sales@micasa.com</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
           {/* Images */}

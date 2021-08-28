@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import user_icon from "../../assets/icons/userform/user.png";
 import password_icon from "../../assets/icons/userform/key.png";
 
-import UserAPI from "../../modules/UserAPI";
+import UserAPI from "../../modules/api/UserAPI";
 import axios from "axios";
 
 const SignInForm = ({ toggleOverlay, handleSignIn }) => {

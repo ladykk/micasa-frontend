@@ -11,7 +11,7 @@ import phone_icon from "../assets/icons/userform/phone-call.png";
 import axios from "axios";
 
 //import modules
-const UserAPI = require("../modules/UserAPI");
+const UserAPI = require("../modules/api/UserAPI");
 
 const SignUpPage = () => {
   const history = useHistory();
@@ -129,7 +129,7 @@ const SignUpPage = () => {
   return (
     <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 pt-12 background-2 bg-black text-white">
       <Prompt when={isBlock} message={"Are you sure to leave this page ?"} />
-      <div className="w-full pl-5 pr-5 xl:pl-14 xl:pr-14 2xl:w-4/5 2xl:p-0 h-full mx-auto relative flex">
+      <div className="w-full pl-5 pr-5 xl:pl-14 xl:pr-14 desktop:w-4/5 desktop:p-0 h-full mx-auto relative flex">
         <div className=" w-1/3 flex flex-col justify-center flex-shrink-0 flex-grow-0 mr-48">
           <div className="w-full flex items-end justify-between mb-4">
             <h1 className="text-4xl">At Mi Casa,</h1>
@@ -170,7 +170,7 @@ const SignUpPage = () => {
                 <img
                   src={preview ? preview : avatar_icon}
                   alt=""
-                  className="w-full h-full rounded-full"
+                  className="w-full h-full rounded-full object-cover object-center"
                 />
                 <button
                   type="button"
@@ -278,8 +278,6 @@ const SignUpPage = () => {
                   onChange={handleChange}
                   value={form.phone_number}
                   placeholder="Phone number"
-                  pattern="((\+66|0)(\d{1,2}\-?\d{3}\-?\d{3,4}))|((\+๖๖|๐)([๐-๙]{1,2}\-?[๐-๙]{3}\-?[๐-๙]{3,4}))"
-                  gm
                   className="w-full focus:outline-none h-full"
                 />
               </div>

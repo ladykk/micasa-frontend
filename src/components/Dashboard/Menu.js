@@ -13,7 +13,7 @@ import approving from "../../assets/icons/menu/auction.png";
 import signout from "../../assets/icons/menu/logout.png";
 
 //import modules
-const ImageAPI = require("../../modules/ImageAPI");
+const ImageAPI = require("../../modules/api/ImageAPI");
 
 const Menu = ({ user, handleSignOut, menu }) => {
   return (
@@ -24,7 +24,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
             user.avatar_id ? ImageAPI.getAvatarURL(user.avatar_id) : avatar_icon
           }
           alt=""
-          className=" w-16 h-16 mr-4 rounded-full"
+          className=" w-16 h-16 mr-4 rounded-full object-cover object-center"
         />
         <div className="text-black">
           <h1 className="text-xl">Welcome!</h1>

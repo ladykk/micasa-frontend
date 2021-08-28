@@ -6,8 +6,9 @@ import property_type_icon from "../assets/icons/filter/buildings.png";
 import bedroom_icon from "../assets/icons/filter/double-bed.png";
 import bathroom_icon from "../assets/icons/filter/toilet.png";
 import PropertyData from "../modules/PropertyData";
+import PropertyAPI from "../modules/api/PropertyAPI";
 
-const Filter = ({ contract, params, setParams }) => {
+const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
   const [errors, setErrors] = useState({});
   const [isFurnishingOpen, setFurnishing] = useState(false);
   const [isOwnershipOpen, setOwnership] = useState(false);
@@ -57,7 +58,9 @@ const Filter = ({ contract, params, setParams }) => {
         setParams({ ...params, [target.name]: !params[target.name] });
         break;
       case "min_price":
-        if (params.max_price && number < max_price) {
+        if (number === 0) {
+          setParams({ ...params, [target.name]: number });
+        } else if (params.max_price && number < max_price) {
           setParams({ ...params, [target.name]: number });
         } else if (params.max_price && number < min_price) {
           setParams({ ...params, [target.name]: number });
@@ -73,7 +76,9 @@ const Filter = ({ contract, params, setParams }) => {
         }
         break;
       case "min_area":
-        if (params.max_area && number < max_area) {
+        if (number === 0) {
+          setParams({ ...params, [target.name]: number });
+        } else if (params.max_area && number < max_area) {
           setParams({ ...params, [target.name]: number });
         } else if (params.max_area && number < min_area) {
           setParams({ ...params, [target.name]: number });
@@ -90,7 +95,9 @@ const Filter = ({ contract, params, setParams }) => {
         }
         break;
       case "max_price":
-        if (params.min_price && number > min_price) {
+        if (number === 0) {
+          setParams({ ...params, [target.name]: number });
+        } else if (params.min_price && number > min_price) {
           setParams({ ...params, [target.name]: number });
         } else if (params.max_price && number > max_price) {
           setParams({ ...params, [target.name]: number });
@@ -105,7 +112,9 @@ const Filter = ({ contract, params, setParams }) => {
         }
         break;
       case "max_area":
-        if (params.min_area && number > min_area) {
+        if (number === 0) {
+          setParams({ ...params, [target.name]: number });
+        } else if (params.min_area && number > min_area) {
           setParams({ ...params, [target.name]: number });
         } else if (params.max_area && number > max_area) {
           setParams({ ...params, [target.name]: number });
@@ -123,9 +132,6 @@ const Filter = ({ contract, params, setParams }) => {
         setParams({ ...params, [target.name]: target.value });
     }
   };
-  const handleOnSubmit = (e) => {
-    e.preventDefault();
-  };
 
   return (
     <form
@@ -141,7 +147,7 @@ const Filter = ({ contract, params, setParams }) => {
           <p className=" mr-3">I'm looking for</p>
           <div className="h-9 flex items-center">
             <Link
-              to="/search/buy"
+              to={`/search/buy${PropertyAPI.generateQueryString(params, {})}`}
               className={`p-4 pt-1 pb-1 ml-1  font-normal rounded-full ${
                 contract === "buy"
                   ? "bg-blue-500 text-white border border-blue-500"
@@ -151,7 +157,7 @@ const Filter = ({ contract, params, setParams }) => {
               Buy
             </Link>
             <Link
-              to="/search/rent"
+              to={`/search/rent${PropertyAPI.generateQueryString(params, {})}`}
               className={`p-4 pt-1 pb-1 ml-1  font-normal rounded-full ${
                 contract === "rent"
                   ? "bg-blue-500 text-white border border-blue-500"
@@ -161,7 +167,7 @@ const Filter = ({ contract, params, setParams }) => {
               Rent
             </Link>
             <Link
-              to="/search/new"
+              to={`/search/new${PropertyAPI.generateQueryString(params, {})}`}
               className={`p-4 pt-1 pb-1 ml-1 font-normal rounded-full ${
                 contract === "new"
                   ? "bg-blue-500 text-white border border-blue-500"
@@ -182,9 +188,7 @@ const Filter = ({ contract, params, setParams }) => {
             value={params.property_type ? params.property_type : ""}
             onChange={handleOnChange}
           >
-            <option value="" hidden disabled>
-              Property Type
-            </option>
+            <option value="">All Property Type</option>
             {PropertyData.getTypesAsOption()}
           </select>
         </div>
@@ -199,9 +203,8 @@ const Filter = ({ contract, params, setParams }) => {
               value={params.bedroom ? params.bedroom : ""}
               onChange={handleOnChange}
             >
-              <option value="" hidden disabled>
-                Bedroom
-              </option>
+              <option value="">All Bedroom</option>
+              {PropertyData.getBedroomAsOption()}
             </select>
           </div>
           <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1">
@@ -213,9 +216,8 @@ const Filter = ({ contract, params, setParams }) => {
               value={params.bathroom ? params.bathroom : ""}
               onChange={handleOnChange}
             >
-              <option value="" hidden disabled>
-                Bathroom
-              </option>
+              <option value="">All Bathroom</option>
+              {PropertyData.getBathroomAsOption()}
             </select>
           </div>
         </div>

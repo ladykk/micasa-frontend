@@ -25,14 +25,19 @@ import AddPropertyPage from "./pages/AddPropertyPage";
 import Loading from "./components/Loading";
 
 //import modules
-import UserAPI from "./modules/UserAPI";
+import UserAPI from "./modules/api/UserAPI";
 
 function App() {
+  //Overlay
+  const [isOverlayOpen, setOverlay] = useState(false);
+  const toggleOverlay = () => {
+    setOverlay(!isOverlayOpen);
+  };
+
   //User
   const [user, setUser] = useState({});
   const [isUserFetch, setIsUserFetch] = useState(true);
   const handleSignIn = () => {
-    console.log("user fetch send");
     setIsUserFetch(true);
   };
   const handleSignOut = async () => {
@@ -61,7 +66,7 @@ function App() {
           });
       })();
     }
-  }, [isUserFetch]);
+  });
 
   return (
     <Router>
@@ -70,6 +75,8 @@ function App() {
           user={user}
           handleSignIn={handleSignIn}
           handleSignOut={handleSignOut}
+          isOverlayOpen={isOverlayOpen}
+          toggleOverlay={toggleOverlay}
         />
         <div className="pt-12 w-screen h-screen relative overflow-x-hidden">
           <Switch>
@@ -102,13 +109,13 @@ function App() {
               <Redirect to="/dashboard/profile" />
             </Route>
             <Route path="/property/:id">
-              <PropertyPage />
+              <PropertyPage user={user} toggleOverlay={toggleOverlay} />
             </Route>
             <Route exact path="/property/">
               <Redirect to="/400" />
             </Route>
             <Route path="/search/:contract">
-              <SearchPage />
+              <SearchPage user={user} toggleOverlay={toggleOverlay} />
             </Route>
             <Route path="/search/" exact>
               <Redirect to="/search/buy" />

@@ -30,7 +30,7 @@ const AboutUsPage = () => {
         </div>
       </div>
       <div className="w-full h-auto p-20 bg-black text-white">
-        <div className="w-full pl-5 pr-5 2xl:w-3/4 1xl:p-0 h-full mx-auto">
+        <div className="w-full pl-5 pr-5 desktop:w-3/4 1xl:p-0 h-full mx-auto">
           <div className="w-full flex items-center mb-12">
             <img
               src={pic1}

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 //import pictures
 import add from "../../assets/icons/property_detail/add.png";
@@ -7,9 +8,14 @@ import add from "../../assets/icons/property_detail/add.png";
 //import components
 import PropertyCard from "../PropertyCard";
 
+//import modules
+import PropertyAPI from "../../modules/api/PropertyAPI";
+import ImageAPI from "../../modules/api/ImageAPI";
+import Loading from "../Loading";
+
 const ManageProperties = ({ user }) => {
   const [page, setPage] = useState("approved");
-
+  const [isFetch, setIsFetch] = useState(true);
   const [approved, setApproved] = useState([]);
   const [pending, setPending] = useState([]);
   const [sold, setSold] = useState([]);
@@ -22,6 +28,49 @@ const ManageProperties = ({ user }) => {
       default:
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      if (isFetch) {
+        await axios.get(PropertyAPI.apiUrls.seller).then((result) => {
+          if (result.status === 200) {
+            let data = result.data.payload.map((property) => {
+              let withImageUrl = property;
+              for (let image in withImageUrl.images) {
+                withImageUrl.images[image] = ImageAPI.getImageURL(
+                  withImageUrl.images[image]
+                );
+              }
+              return withImageUrl;
+            });
+            setApproved(
+              data.filter(
+                (property) =>
+                  property.status !== "Pending" &&
+                  property.status !== "Rejected" &&
+                  property.status !== "Sold" &&
+                  property.status !== "Cancel"
+              )
+            );
+            setPending(
+              data.filter(
+                (property) =>
+                  property.status === "Pending" ||
+                  property.status === "Rejected"
+              )
+            );
+            setSold(
+              data.filter(
+                (property) =>
+                  property.status === "Sold" || property.status === "Cancel"
+              )
+            );
+            setIsFetch(false);
+          }
+        });
+      }
+    })();
+  }, [isFetch]);
 
   //display set
   let display_set;
@@ -54,23 +103,46 @@ const ManageProperties = ({ user }) => {
     setParams({ ...params, [target.name]: target.value });
   };
 
+  let filter_set;
+  switch (params.sort_by) {
+    case "new_added":
+      filter_set = display_set.sort((a, b) => b.property_id - a.property_id);
+      break;
+    case "most_seen":
+      filter_set = display_set.sort((a, b) => b.seen - a.seen);
+      break;
+    case "price-low":
+      filter_set = display_set.sort((a, b) => b.price - a.price);
+      break;
+    case "price-high":
+      filter_set = display_set.sort((a, b) => a.price - b.price);
+      break;
+    default:
+      filter_set = display_set;
+  }
+
   const handlePageChange = ({ target }) => {
+    const page = Number.parseInt(params.page, 10);
     switch (target.innerHTML) {
-      case "<":
-        if (params.page - 1 !== 0) {
-          setParams({ ...params, page: params.page - 1 });
+      case "&lt;":
+        if (page - 1 !== 0) {
+          console.log("left");
+          setParams({ ...params, page: page - 1 });
         }
         break;
-      case ">":
-        if (params.page + 1 !== total_page + 1) {
-          setParams({ ...params, page: params.page + 1 });
+      case "&gt;":
+        if (page + 1 !== total_page + 1) {
+          setParams({ ...params, page: page + 1 });
         }
         break;
       default:
+        setParams({ ...params, page: Number.parseInt(target.innerHTML, 10) });
     }
   };
 
-  return (
+  return isFetch ? (
+    <Loading />
+  ) : (
     <div className="w-full h-auto">
       <h1 className="text-5xl mb-5">Manage Properties</h1>
       <div className="flex items-center justify-between">
@@ -169,7 +241,7 @@ const ManageProperties = ({ user }) => {
           if (current_property >= start && current_property <= stop) {
             return (
               <PropertyCard
-                key={property.id}
+                key={property.property_id}
                 data={property}
                 isHasFavorite={false}
                 isManage={true}
@@ -188,6 +260,7 @@ const ManageProperties = ({ user }) => {
           "
           >
             <p
+              name="left"
               onClick={handlePageChange}
               className="flex items-center justify-center w-8 h-9 border-gray-300 border hover:border-gray-400 hover:border-2 ease-in duration-75 rounded-lg shadow cursor-pointer"
             >
@@ -198,6 +271,8 @@ const ManageProperties = ({ user }) => {
               for (let i = 1; i <= total_page; i++) {
                 elements.push(
                   <p
+                    key={i}
+                    onClick={handlePageChange}
                     className={`flex items-center justify-center w-8 h-9  ml-3
                       } ${
                         params.page === i
@@ -212,6 +287,7 @@ const ManageProperties = ({ user }) => {
               return elements;
             })()}
             <p
+              name="right"
               onClick={handlePageChange}
               className="flex items-center justify-center w-8 h-9 ml-3 border-gray-300 border hover:border-gray-400 hover:border-2 ease-in duration-75 rounded-lg shadow cursor-pointer"
             >

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 //import pictures
 import no_img from "../assets/images/noimage.png";
@@ -18,12 +19,51 @@ import unfurnished from "../assets/icons/property/box.png";
 import leasehold from "../assets/icons/property/contract.png";
 import PropertyData from "../modules/PropertyData";
 
-const PropertyCard = ({ data, isHasFavorite, isManage }) => {
-  const [isFavorite, setFavorite] = useState(data.favorite);
+import CustomerAPI from "../modules/api/CustomerAPI";
 
-  const handleFavorite = () => {
-    setFavorite(!isFavorite);
+const PropertyCard = ({
+  data,
+  isHasFavorite,
+  isManage,
+  user,
+  toggleOverlay,
+}) => {
+  const [isFavorite, setFavorite] = useState(false);
+  const handleFavorite = async () => {
+    if (user.username) {
+      const favoriteForm = new FormData();
+      favoriteForm.append("is_favorite", !isFavorite ? "true" : "false");
+      await axios({
+        method: "post",
+        url: `${CustomerAPI.apiUrls.favorite_property}/${data.property_id}`,
+        data: favoriteForm,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then((result) => {
+          if (result.status === 201) {
+            setFavorite(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          setFavorite(false);
+        });
+      setFavorite(!isFavorite);
+    } else {
+      toggleOverlay();
+    }
   };
+
+  useEffect(() => {
+    (async () => {
+      await axios
+        .get(`${CustomerAPI.apiUrls.favorite_property}/${data.property_id}`)
+        .then((result) => {
+          if (result.status === 200) {
+            setFavorite(result.data.payload);
+          }
+        });
+    })();
+  });
 
   const path = `/${isManage ? "edit" : "property"}/${data.property_id}`;
 
@@ -42,10 +82,9 @@ const PropertyCard = ({ data, isHasFavorite, isManage }) => {
         return "bg-gray-500 hidden";
     }
   };
-
   const getFacilities = () => {
     const elements = [];
-    for (const facility in data.facilities) {
+    for (let facility in data.facilities) {
       if (data.facilities[facility]) {
         elements.push(
           <p
@@ -61,7 +100,7 @@ const PropertyCard = ({ data, isHasFavorite, isManage }) => {
   };
 
   return (
-    <div className="w-full h-fit-content mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
+    <div className="w-full h-fit-content max-h-72 mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
       <Link
         to={path}
         className=" w-80 max-h-72 border-r border-gray-300 flex-grow-0 flex-shrink-0 relative"
@@ -84,7 +123,7 @@ const PropertyCard = ({ data, isHasFavorite, isManage }) => {
             <p>
               <span className="font-normal">{data.contract}:</span>{" "}
               {data.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ฿{" "}
-              {data.rent_payment ? `/ ${data.rent_payment}` : ""}
+              {data.rent_payment !== "None" ? `/ ${data.rent_payment}` : ""}
             </p>
             {data.rent_requirement && (
               <p className="text-red-500 text-sm italic">
@@ -94,19 +133,22 @@ const PropertyCard = ({ data, isHasFavorite, isManage }) => {
           </div>
         </div>
       </Link>
-      <div className="w-full h-full p-5">
+      <div className="w-full h-full max-h-72 p-5">
         <div className="w-full h-6 flex justify-between items-center mb-3">
           <Link to={path}>
             <h1 className="font-normal text-xl">{data.property_name}</h1>
           </Link>
-          {isHasFavorite && (
-            <img
-              src={isFavorite ? favorite : unfavorite}
-              alt=""
-              className=" w-6 h-6 cursor-pointer"
-              onClick={handleFavorite}
-            />
-          )}
+          {isHasFavorite &&
+            user.username !== data.seller &&
+            user.class !== "Agent" &&
+            user.class !== "Webmaster" && (
+              <img
+                src={isFavorite ? favorite : unfavorite}
+                alt=""
+                className=" w-6 h-6 cursor-pointer"
+                onClick={handleFavorite}
+              />
+            )}
         </div>
         <hr className="w-full mb-3" />
         <div className="w-full h-auto flex justify-between items-center mb-3">
@@ -115,7 +157,7 @@ const PropertyCard = ({ data, isHasFavorite, isManage }) => {
               <img src={location} alt="" className="w-6 h-6 mr-1" />
               <p>{`${data.district}, ${data.province}`}</p>
             </div>
-            {data.near_station && (
+            {data.near_station !== "None" && (
               <div className="flex items-end justify-start mr-4">
                 <img src={station} alt="" className="w-6 h-6 mr-1" />
                 <p>{data.near_station}</p>
@@ -173,8 +215,7 @@ const PropertyCard = ({ data, isHasFavorite, isManage }) => {
         {!Object.keys(data.facilities).every(
           (key) => data.facilities[key] === false
         ) && <p className="mb-1 font-light">Facilities</p>}
-
-        <div className="flex flex-wrap">{getFacilities()}</div>
+        <div className="flex flex-wrap overflow-clip">{getFacilities()}</div>
       </div>
     </div>
   );

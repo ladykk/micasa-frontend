@@ -10,7 +10,7 @@ const AddPropertyPage = () => {
 
   return (
     <div className="w-screen h-fit-content absolute top-0 left-0 right-0 bottom-0 pt-20">
-      <div className="w-full pl-5 pr-5 2xl:w-4/5 2xl:p-0 h-fit-content mx-auto pb-20 relative">
+      <div className="w-full pl-5 pr-5 desktop:w-4/5 desktop:p-0 h-fit-content mx-auto pb-20 relative">
         <div className="flex items-center mb-5">
           <img
             src={arrow}

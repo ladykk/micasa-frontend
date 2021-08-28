@@ -5,11 +5,13 @@ import { Redirect, Route, Switch } from "react-router-dom";
 //import components
 import Menu from "../components/Dashboard/Menu";
 import Profile from "../components/Dashboard/Profile";
-import FavoriteProperties from "../components/Dashboard/FavoriteProperties";
-import Reviews from "../components/Dashboard/Reviews";
-import ManageProperties from "../components/Dashboard/ManageProperties";
-import Customers from "../components/Dashboard/Customers";
+import FavoriteProperties from "../components/Customer/FavoriteProperties";
+import Reviews from "../components/Customer/Reviews";
+import ManageProperties from "../components/Customer/ManageProperties";
+import Customers from "../components/Agent_Webmaster/Customers";
 import Loading from "../components/Loading";
+import ApproveProperties from "../components/Agent_Webmaster/ApproveProperties";
+import Agents from "../components/Agent_Webmaster/Agents";
 
 const DashboardPage = ({
   user,
@@ -21,9 +23,19 @@ const DashboardPage = ({
   return !isUserFetch ? (
     user.username ? (
       <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 pt-20 pb-10 ">
-        <div className="w-full pl-5 pr-5 2xl:w-4/5 h-auto mx-auto flex">
+        <div className="w-full pl-5 pr-5 desktop:w-4/5 h-auto mx-auto flex">
           <Menu user={user} handleSignOut={handleSignOut} menu={menu} />
           <Switch>
+            <Route path="/dashboard/agents">
+              {user.class === "Webmaster" ? <Agents /> : <Redirect to="/401" />}
+            </Route>
+            <Route path="/dashboard/approve">
+              {user.class === "Webmaster" ? (
+                <ApproveProperties />
+              ) : (
+                <Redirect to="/401" />
+              )}
+            </Route>
             <Route path="/dashboard/customers/">
               {user.class === "Agent" ? (
                 <Customers user={user} />

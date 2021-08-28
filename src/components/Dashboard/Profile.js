@@ -7,12 +7,11 @@ import avatar_icon from "../../assets/icons/userform/avatar.png";
 import contact from "../../assets/images/contact.png";
 
 //import modules
-const ImageAPI = require("../../modules/ImageAPI");
-const UserAPI = require("../../modules/UserAPI");
+const ImageAPI = require("../../modules/api/ImageAPI");
+const UserAPI = require("../../modules/api/UserAPI");
 const DateModule = require("../../modules/DateModule");
 
 const Profile = ({ user, setIsUserFetch }) => {
-  console.log(user.birthday);
   const [form, setForm] = useState({
     full_name: user.full_name,
     email: user.email,
@@ -131,13 +130,15 @@ const Profile = ({ user, setIsUserFetch }) => {
             <p className="mr-1 flex items-center justify-end">REAL-ID:</p>
           )}
           {user.class === "Agent" && (
-            <p className="col-span-3 h-8 flex items-center">{user.real_id}</p>
+            <p className="col-span-3 h-8 flex items-center">{user.agent_id}</p>
           )}
           {user.class === "Webmaster" && (
             <p className="mr-1 flex items-center justify-end">WEB-ID:</p>
           )}
           {user.class === "Webmaster" && (
-            <p className="col-span-3 h-8 flex items-center">{user.web_id}</p>
+            <p className="col-span-3 h-8 flex items-center">
+              {user.webmaster_id}
+            </p>
           )}
           <p className="mr-1 flex items-center justify-end">Name:</p>
           <input
@@ -252,7 +253,7 @@ const Profile = ({ user, setIsUserFetch }) => {
             <img
               src={preview ? preview : current_avatar}
               alt=""
-              className="w-full h-full rounded-full"
+              className="w-full h-full rounded-full object-cover object-center"
             />
             <button
               type="button"
@@ -311,7 +312,7 @@ const Profile = ({ user, setIsUserFetch }) => {
                       : avatar_icon
                   }
                   alt=""
-                  className="w-28 h-28 mb-8 mt-4 rounded-full"
+                  className="w-28 h-28 mb-8 mt-4 rounded-full object-cover object-center"
                 />
               </div>
             </div>
