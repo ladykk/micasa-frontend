@@ -11,6 +11,9 @@ module.exports = {
         "fit-content": "fit-content",
         "max-content": "max_content",
       },
+      minHeight: {
+        40: "10rem",
+      },
       colors: {
         primary: "#267CE9",
       },

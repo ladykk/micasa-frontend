@@ -17,7 +17,7 @@ const UserCard = ({ user, setUser, setRemove }) => {
 
   return (
     <div
-      className="border gray-300 rounded-lg p-2 flex items-center mb-2 justify-between"
+      className="border border-gray-300 rounded-lg p-2 flex items-center mb-2 justify-between hover:border-gray-400 ease-in duration-75"
       onClick={setUser && onClickCustomer}
     >
       <div className={`flex items-center ${setUser && "cursor-pointer"}`}>

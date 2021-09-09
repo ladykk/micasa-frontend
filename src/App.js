@@ -41,14 +41,24 @@ function App() {
     setIsUserFetch(true);
   };
   const handleSignOut = async () => {
+    //Set Logout
     await axios({
       method: "post",
       url: UserAPI.apiUrls.logout,
+    }).catch((err) => {
+      if (err) {
+        if (err.response.data) {
+          console.error(err.response.data);
+        } else {
+          console.error(err);
+        }
+      }
     });
     setUser({});
   };
 
   useEffect(() => {
+    //Fetch user detail.
     if (isUserFetch) {
       (async () => {
         await axios({
@@ -56,14 +66,20 @@ function App() {
           url: UserAPI.apiUrls.getUser,
         })
           .then((result) => {
-            if (result.status === 201) {
-              setUser(result.data);
-              setIsUserFetch(false);
+            if (result.status === 200) {
+              setUser(result.data.payload);
             }
           })
           .catch((err) => {
-            console.log(err);
-          });
+            if (err) {
+              if (err.response.data) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
+          })
+          .finally(() => setIsUserFetch(false));
       })();
     }
   });
@@ -114,7 +130,7 @@ function App() {
             <Route exact path="/property/">
               <Redirect to="/400" />
             </Route>
-            <Route path="/search/:contract">
+            <Route path="/search/:contract_type">
               <SearchPage user={user} toggleOverlay={toggleOverlay} />
             </Route>
             <Route path="/search/" exact>

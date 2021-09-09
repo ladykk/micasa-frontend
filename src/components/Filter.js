@@ -8,7 +8,7 @@ import bathroom_icon from "../assets/icons/filter/toilet.png";
 import PropertyData from "../modules/PropertyData";
 import PropertyAPI from "../modules/api/PropertyAPI";
 
-const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
+const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
   const [errors, setErrors] = useState({});
   const [isFurnishingOpen, setFurnishing] = useState(false);
   const [isOwnershipOpen, setOwnership] = useState(false);
@@ -66,9 +66,10 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
           setParams({ ...params, [target.name]: number });
         } else if (!params.max_price) {
           setParams({ ...params, [target.name]: number });
-        } else if (number === NaN) {
+        } else if (Number.isNaN(number)) {
           setParams({ ...params, [target.name]: 0 });
         } else {
+          setParams({ ...params, [target.name]: number });
           setErrors({
             ...errors,
             [target.name]: "(Min > Max)",
@@ -84,9 +85,10 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
           setParams({ ...params, [target.name]: number });
         } else if (!params.max_area) {
           setParams({ ...params, [target.name]: number });
-        } else if (number === NaN) {
+        } else if (Number.isNaN(number)) {
           setParams({ ...params, [target.name]: 0 });
         } else {
+          setParams({ ...params, [target.name]: number });
           setErrors({
             ...errors,
             [target.name]: "(Min > Max)",
@@ -105,9 +107,10 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
           setParams({ ...params, [target.name]: min_price + 1500 });
         } else if (!params.max_price) {
           setParams({ ...params, [target.name]: number });
-        } else if (number === NaN) {
+        } else if (Number.isNaN(number)) {
           setParams({ ...params, [target.name]: 0 });
         } else {
+          setParams({ ...params, [target.name]: number });
           setErrors({ ...errors, [target.name]: "(Max < Min)" });
         }
         break;
@@ -119,12 +122,13 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
         } else if (params.max_area && number > max_area) {
           setParams({ ...params, [target.name]: number });
         } else if (!params.max_area && params.min_area) {
-          setParams({ ...params, [target.name]: min_area + 1500 });
+          setParams({ ...params, [target.name]: min_area + 5 });
         } else if (!params.max_area) {
           setParams({ ...params, [target.name]: number });
-        } else if (number === NaN) {
+        } else if (Number.isNaN(number)) {
           setParams({ ...params, [target.name]: 0 });
         } else {
+          setParams({ ...params, [target.name]: number });
           setErrors({ ...errors, [target.name]: "(Max < Min)" });
         }
         break;
@@ -139,7 +143,7 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
       className=" w-max h-fit-content flex flex-grow-0 flex-shrink-0 mr-10"
       onSubmit={handleOnSubmit}
     >
-      <div className="w-full h-auto p-4 pt-8 pb-8 border border-gray-300 rounded-xl shadow">
+      <div className="w-full h-auto p-4 pt-8 pb-8 border border-gray-300 rounded-xl shadow hover:border-gray-400 ease-in duration-75">
         {/* Header */}
         <h1 className="text-5xl font-medium mb-3">Filter</h1>
         {/* Contract */}
@@ -149,9 +153,9 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
             <Link
               to={`/search/buy${PropertyAPI.generateQueryString(params, {})}`}
               className={`p-4 pt-1 pb-1 ml-1  font-normal rounded-full ${
-                contract === "buy"
+                contract_type === "buy"
                   ? "bg-blue-500 text-white border border-blue-500"
-                  : "bg-white text-blue-500 border border-gray-300 ease-in duration-75 hover:bg-gray-500 hover:bg-opacity-5"
+                  : "bg-white text-blue-500 border border-gray-300 ease-in duration-75 hover:border-gray-400"
               }`}
             >
               Buy
@@ -159,9 +163,9 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
             <Link
               to={`/search/rent${PropertyAPI.generateQueryString(params, {})}`}
               className={`p-4 pt-1 pb-1 ml-1  font-normal rounded-full ${
-                contract === "rent"
+                contract_type === "rent"
                   ? "bg-blue-500 text-white border border-blue-500"
-                  : "bg-white text-blue-500 border border-gray-300 ease-in duration-75 hover:bg-gray-500 hover:bg-opacity-5"
+                  : "bg-white text-blue-500 border border-gray-300 ease-in duration-75 hover:border-gray-400"
               }`}
             >
               Rent
@@ -169,9 +173,9 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
             <Link
               to={`/search/new${PropertyAPI.generateQueryString(params, {})}`}
               className={`p-4 pt-1 pb-1 ml-1 font-normal rounded-full ${
-                contract === "new"
+                contract_type === "new"
                   ? "bg-blue-500 text-white border border-blue-500"
-                  : "bg-white text-blue-500 border border-gray-300 ease-in duration-75 hover:bg-gray-500 hover:bg-opacity-5"
+                  : "bg-white text-blue-500 border border-gray-300 ease-in duration-75 hover:border-gray-400"
               }`}
             >
               New House
@@ -179,7 +183,7 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
           </div>
         </div>
         {/* Property Type */}
-        <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 mb-3">
+        <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 mb-3 hover:border-gray-400 ease-in duration-75">
           <img src={property_type_icon} alt="" className="w-6 h-6 mr-1" />
           <select
             name="property_type"
@@ -194,7 +198,7 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
         </div>
         {/* Bedroom & Bathroom */}
         <div className="flex mb-3 w-full">
-          <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 mr-1">
+          <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 mr-1 hover:border-gray-400 ease-in duration-75">
             <img src={bedroom_icon} alt="" className="w-6 h-6 mr-1" />
             <select
               name="bedroom"
@@ -207,7 +211,7 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
               {PropertyData.getBedroomAsOption()}
             </select>
           </div>
-          <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1">
+          <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1 hover:border-gray-400 ease-in duration-75">
             <img src={bathroom_icon} alt="" className="w-6 h-6 mr-1" />
             <select
               name="bathroom"
@@ -235,7 +239,7 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
               type="number"
               name="min_price"
               id="min_price"
-              className=" w-28 h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 outline-none text-center"
+              className=" w-28 h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 outline-none text-center hover:border-gray-400 ease-in duration-75"
               value={params.min_price ? params.min_price : 0}
               onChange={handleOnChange}
               placeholder="Min."
@@ -247,7 +251,7 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
               type="number"
               name="max_price"
               id="max_price"
-              className=" w-28 h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 outline-none text-center"
+              className=" w-28 h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 outline-none text-center hover:border-gray-400 ease-in duration-75"
               value={params.max_price ? params.max_price : 0}
               onChange={handleOnChange}
               placeholder="Max."
@@ -273,7 +277,7 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
               type="number"
               name="min_area"
               id="min_area"
-              className=" w-28 h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 outline-none text-center"
+              className=" w-28 h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 outline-none text-center hover:border-gray-400 ease-in duration-75"
               value={params.min_area ? params.min_area : 0}
               onChange={handleOnChange}
               placeholder="Min."
@@ -284,7 +288,7 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
               type="number"
               name="max_area"
               id="max_area"
-              className=" w-28 h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 outline-none text-center"
+              className=" w-28 h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 outline-none text-center hover:border-gray-400 ease-in duration-75"
               value={params.max_area ? params.max_area : 0}
               onChange={handleOnChange}
               placeholder="Max."
@@ -490,7 +494,6 @@ const Filter = ({ contract, params, setParams, handleOnSubmit }) => {
                     type="checkbox"
                     id="swimming_pool"
                     name="swimming_pool"
-                    id="swimming_pool"
                     checked={params.swimming_pool}
                     className="mr-3 w-4 h-4"
                     onChange={handleOnChange}

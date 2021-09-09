@@ -1,26 +1,26 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 //import components
 import ReviewCard from "../components/ReviewCard";
 
+//import modules
+import ReviewsAPI from "../modules/api/ReviewsAPI";
+
 const ReviewsPage = () => {
-  const [reviews, setReviews] = useState([
-    {
-      message:
-        "We are from out of province and wanted to sell our downtown Bangkok condo but didn’t know a realtor. We searched online for realtors with 5 star reviews and Christine Cowern’s name came up. She has without a doubt earned those reviews. From the initial phone call the service we received was exceptional.",
-      rate: 4,
-      full_name: "Jungkook Jeon",
-      avatar_id: null,
-    },
-    {
-      message:
-        "We are from out of province and wanted to sell our downtown Bangkok condo but didn’t know a realtor. We searched online for realtors with 5 star reviews and Christine Cowern’s name came up. She has without a doubt earned those reviews. From the initial phone call the service we received was exceptional.",
-      rate: 5,
-      full_name: "Jungkook Jeon",
-      avatar_id: null,
-    },
-  ]);
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    //Fetch reviews
+    (async () => {
+      await axios.get(ReviewsAPI.apiUrls.reviews).then((result) => {
+        if (result.status === 200) {
+          setReviews(result.data.payload);
+        }
+      });
+    })();
+  });
 
   return (
     <div className="w-screen h-auto absolute top-0 left-0 right-0">

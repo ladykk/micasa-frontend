@@ -17,7 +17,7 @@ const ImageAPI = require("../../modules/api/ImageAPI");
 
 const Menu = ({ user, handleSignOut, menu }) => {
   return (
-    <div className="flex flex-col items-center w-80 h-full p-4 border border-gray-300 rounded-xl shadow mr-16 flex-grow-0 flex-shrink-0">
+    <div className="flex flex-col items-center w-80 h-full p-4 border border-gray-300 rounded-xl shadow mr-16 flex-grow-0 flex-shrink-0 hover:border-gray-400 ease-in duration-75">
       <div className="w-full flex items-center">
         <img
           src={

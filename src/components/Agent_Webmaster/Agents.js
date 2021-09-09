@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
 //import pictures
@@ -15,9 +14,9 @@ import Loading from "../Loading";
 import WebmasterAPI from "../../modules/api/WebmasterAPI";
 const ImageAPI = require("../../modules/api/ImageAPI");
 
-const Agents = ({ user }) => {
+const Agents = () => {
   //Fetch
-  const [isFetch, setFetch] = useState(true);
+  const [isAgentsFetch, setAgentsFetch] = useState(true);
   const [isCustomersFetch, setCustomersFetch] = useState(false);
   //Toggle
   const [isAddAgent, setAddAgent] = useState(false);
@@ -29,22 +28,29 @@ const Agents = ({ user }) => {
 
   useEffect(() => {
     (async () => {
-      if (isFetch) {
+      //Fetch agents
+      if (isAgentsFetch) {
         await axios
           .get(WebmasterAPI.apiUrls.agents)
           .then((result) => {
             if (result.status === 200) {
               let users = result.data.payload;
               setAgents(users);
-              setFetch(false);
             }
           })
           .catch((err) => {
-            console.error(err);
-          });
+            if (err) {
+              if (err.response) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
+          })
+          .finally(() => setAgentsFetch(false));
       }
     })();
-  });
+  }, [isAgentsFetch]);
 
   useEffect(() => {
     (async () => {
@@ -55,12 +61,18 @@ const Agents = ({ user }) => {
             if (result.status === 200) {
               let users = result.data.payload;
               setCustomers(users);
-              setCustomersFetch(false);
             }
           })
           .catch((err) => {
-            console.error(err);
-          });
+            if (err) {
+              if (err.response) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
+          })
+          .finally(() => setCustomersFetch(false));
       }
     })();
   });
@@ -92,19 +104,24 @@ const Agents = ({ user }) => {
       .then((result) => {
         if (result.status === 201) {
           toggleAddAgent();
-          setFetch(true);
+          setAgentsFetch(true);
         }
       })
       .catch((err) => {
-        if (err.response) {
-          const response = err.response;
-          switch (response.status) {
-            case 400:
-              setAddUserResponse(response.data.error);
-              break;
-            default:
-              console.error(response.data);
-              setAddUserResponse("Something went wrong.");
+        if (err) {
+          if (err.response.data) {
+            switch (err.response.status) {
+              case 400:
+              case 401:
+                setAddUserResponse(err.response.data.error);
+                break;
+              default:
+                console.error(err.response.data);
+                setAddUserResponse("Something went wrong.");
+                break;
+            }
+          } else {
+            console.error(err);
           }
         }
       });
@@ -114,12 +131,16 @@ const Agents = ({ user }) => {
       .delete(`${WebmasterAPI.apiUrls.deleteAgent}/${user.username}`)
       .then((result) => {
         if (result.status === 201) {
-          setFetch(true);
+          setAgentsFetch(true);
         }
       })
       .catch((err) => {
-        if (err.response) {
-          console.error(err.response.data);
+        if (err) {
+          if (err.response.data) {
+            console.error(err.response.data);
+          } else {
+            console.error(err);
+          }
         }
       });
   };
@@ -156,18 +177,21 @@ const Agents = ({ user }) => {
         }
       })
       .catch((err) => {
-        if (err.response) {
-          const response = err.response;
-          switch (response.status) {
-            case 400:
-              setAddCustomerResponse(response.data.error);
-              break;
-            default:
-              console.error(response.data);
-              setAddCustomerResponse("Something went wrong.");
+        if (err) {
+          if (err.response.data) {
+            switch (err.response.status) {
+              case 400:
+              case 401:
+                setAddCustomerResponse(err.response.data.error);
+                break;
+              default:
+                console.error(err.response.data);
+                setAddCustomerResponse("Something went wrong.");
+                break;
+            }
+          } else {
+            console.error(err);
           }
-        } else {
-          console.error(err);
         }
       });
   };
@@ -180,8 +204,12 @@ const Agents = ({ user }) => {
         }
       })
       .catch((err) => {
-        if (err.response) {
-          console.error(err.response.data);
+        if (err) {
+          if (err.response.data) {
+            console.error(err.response.data);
+          } else {
+            console.error(err);
+          }
         }
       });
   };
@@ -191,7 +219,7 @@ const Agents = ({ user }) => {
     setCustomersFetch(true);
   };
 
-  return isFetch ? (
+  return isAgentsFetch ? (
     <Loading />
   ) : (
     <div className="w-full h-screen-85 flex">
@@ -207,7 +235,7 @@ const Agents = ({ user }) => {
             {isAddAgent ? "Hide" : "Add"}
           </button>
         </div>
-        <div className="h-full border border-gray-300 p-2 rounded-lg flex flex-col">
+        <div className="h-full border border-gray-300 p-2 rounded-lg flex flex-col hover:border-gray-400 ease-in duration-75">
           <form
             onSubmit={handleAddAgent}
             className={`w-full mb-2 trans-toggle flex-shrink-0 flex-grow-0 ${
@@ -216,7 +244,7 @@ const Agents = ({ user }) => {
           >
             <input
               type="text"
-              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full"
+              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full hover:border-gray-400 ease-in duration-75"
               placeholder="Username"
               value={addAgentUser}
               onChange={handleAddUserChange}
@@ -237,7 +265,7 @@ const Agents = ({ user }) => {
             <hr />
           </form>
           <form className="w-full h-fit-content mb-2">
-            <div className="border border-gray-300 rounded-full pl-2 pr-2 flex items-center h-8">
+            <div className="border border-gray-300 rounded-full pl-2 pr-2 flex items-center h-8 hover:border-gray-400 ease-in duration-75">
               <img
                 src={search_icon}
                 alt=""
@@ -252,18 +280,24 @@ const Agents = ({ user }) => {
             </div>
           </form>
           <div className="h-full">
-            {agents.map((agent) => (
-              <UserCard
-                user={agent}
-                setUser={handleChangeAgent}
-                setRemove={handleRemoveAgent}
-              />
-            ))}
+            {agents.length > 0 ? (
+              agents.map((agent) => (
+                <UserCard
+                  user={agent}
+                  setUser={handleChangeAgent}
+                  setRemove={handleRemoveAgent}
+                />
+              ))
+            ) : (
+              <p className="w-full h-5 flex justify-center items-center">
+                No Agent
+              </p>
+            )}
           </div>
         </div>
       </div>
       {agent.username && (
-        <div className="w-full h-fit-content p-6 border border-gray-300 rounded-lg shadow mb-10">
+        <div className="w-full h-fit-content p-6 border border-gray-300 rounded-lg shadow mb-10 hover:border-gray-400 ease-in duration-75">
           <div className="relative w-full flex mb-4">
             <div className="grid grid-cols-3 gap-2 w-max pl-9 mr-auto">
               <p className="mr-1 flex items-center justify-end">Username:</p>
@@ -333,7 +367,7 @@ const Agents = ({ user }) => {
           >
             <input
               type="text"
-              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full"
+              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full hover:border-gray-400 ease-in duration-75"
               placeholder="Username"
               value={addCustomer}
               onChange={handleAddCustomerChange}
@@ -353,7 +387,7 @@ const Agents = ({ user }) => {
 
             <hr />
           </form>
-          <div className="p-2 border border-gray-300 rounded-md grid-cols-2 gap-2">
+          <div className="p-2 border border-gray-300 rounded-md grid-cols-2 gap-2 hover:border-gray-400 ease-in duration-75">
             {isCustomersFetch ? (
               <div className="col-span-2 h-6 flex justify-center items-center">
                 <img src={load_gif} alt="" className="h-6 w-6 mr-2" />

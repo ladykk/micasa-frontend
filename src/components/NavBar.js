@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 //import pictures
@@ -17,7 +17,6 @@ const NavBar = ({
   toggleOverlay,
 }) => {
   const handleOverlayOnClick = (e) => {
-    console.log(e.target.id);
     if (e.target.id === "overlay-menu-overlay") {
       toggleOverlay();
     }
@@ -70,7 +69,7 @@ const NavBar = ({
               </Link>
             </div>
             <Link
-              to="/dashboard/sell"
+              to="/dashboard/manage"
               className="pl-5 pr-5 pt-1 pb-1 mr-4 bg-white rounded-xl text-blue-500 font-normal ease-in duration-75 hover:bg-opacity-90"
             >
               Sell

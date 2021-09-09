@@ -72,6 +72,7 @@ const SignUpPage = () => {
         }
       default:
         setForm({ ...form, [target.name]: target.value });
+        break;
     }
   };
 
@@ -91,37 +92,50 @@ const SignUpPage = () => {
         }
       })
       .catch((err) => {
-        switch (err.response.status) {
-          case 400:
-            const error = err.response.data.error;
-            switch (error) {
-              case "Format incorrect.":
-                setErrors({ ...errors, form: "Format incorrect." });
-                setTimeout(() => setErrors({ ...errors, form: "" }), 60000);
-                break;
-              case "(username) is already exist.":
-                setErrors({
-                  ...errors,
-                  username: `${form.username} is already used.`,
-                });
-                break;
-              case "(email) is already exist.":
-                setErrors({
-                  ...errors,
-                  email: `${form.email} is already used.`,
-                });
+        if (err) {
+          if (err.response.data) {
+            switch (err.response.status) {
+              case 400:
+                const error = err.response.data.error.detail;
+                switch (error) {
+                  case "Format incorrect.":
+                    setErrors({ ...errors, form: "Format incorrect." });
+                    setTimeout(() => setErrors({ ...errors, form: "" }), 6000);
+                    break;
+                  case "(username) is already exist.":
+                    setErrors({
+                      ...errors,
+                      username: `${form.username} is already used.`,
+                    });
+                    break;
+                  case "(email) is already exist.":
+                    setErrors({
+                      ...errors,
+                      email: `${form.email} is already used.`,
+                    });
+                    break;
+                  case "(phone_number) is already exist.":
+                    setErrors({
+                      ...errors,
+                      phone_number: `${form.phone_number} is already used.`,
+                    });
+                    break;
+                  default:
+                    console.error(err.response);
+                    setErrors({ ...errors, form: err.response.data.error });
+                    setTimeout(() => setErrors({ ...errors, form: "" }), 6000);
+                }
                 break;
               default:
                 console.error(err.response);
                 setErrors({ ...errors, form: "Something went wrong." });
-                setTimeout(() => setErrors({ ...errors, form: "" }), 60000);
+                setTimeout(() => setErrors({ ...errors, form: "" }), 6000);
+                break;
             }
-            break;
-          default:
-            console.error(err.response);
+          } else {
+            console.error(err);
             setErrors({ ...errors, form: "Something went wrong." });
-            setTimeout(() => setErrors({ ...errors, form: "" }), 60000);
-            break;
+          }
         }
       });
   };
@@ -196,7 +210,7 @@ const SignUpPage = () => {
               <p className="text-red-500">{errors.avatar_file}</p>
             </div>
             <div className=" w-3/5 h/full p-2 text-black">
-              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 border-gray-300 hover:border-gray-400">
                 <img src={name_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="text"
@@ -210,7 +224,13 @@ const SignUpPage = () => {
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.full_name}</p>
-              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div
+                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                  errors.username
+                    ? "border-red-400"
+                    : "border-gray-300 hover:border-gray-400"
+                }`}
+              >
                 <img src={user_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="text"
@@ -224,7 +244,13 @@ const SignUpPage = () => {
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.username}</p>
-              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div
+                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                  errors.confirm_password
+                    ? "border-red-400"
+                    : "border-gray-300 hover:border-gray-400"
+                }`}
+              >
                 <img src={password_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="password"
@@ -238,7 +264,13 @@ const SignUpPage = () => {
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.password}</p>
-              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div
+                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                  errors.confirm_password
+                    ? "border-red-400"
+                    : "border-gray-300 hover:border-gray-400"
+                }`}
+              >
                 <img src={password_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="password"
@@ -254,7 +286,13 @@ const SignUpPage = () => {
               <p className="text-red-500 mt-1 mb-2">
                 {errors.confirm_password}
               </p>
-              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div
+                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                  errors.email
+                    ? "border-red-400"
+                    : "border-gray-300 hover:border-gray-400"
+                }`}
+              >
                 <img src={email_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="email"
@@ -268,7 +306,13 @@ const SignUpPage = () => {
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.email}</p>
-              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md ">
+              <div
+                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                  errors.phone_number
+                    ? "border-red-400"
+                    : "border-gray-300 hover:border-gray-400"
+                }`}
+              >
                 <img src={phone_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="text"

@@ -29,8 +29,12 @@ const PropertyCard = ({
   toggleOverlay,
 }) => {
   const [isFavorite, setFavorite] = useState(false);
+
   const handleFavorite = async () => {
+    //Set favorite of the property
+    //Check if user exist.
     if (user.username) {
+      //CASE: User exist.
       const favoriteForm = new FormData();
       favoriteForm.append("is_favorite", !isFavorite ? "true" : "false");
       await axios({
@@ -45,23 +49,43 @@ const PropertyCard = ({
           }
         })
         .catch((err) => {
-          setFavorite(false);
+          if (err) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err);
+            }
+          }
         });
       setFavorite(!isFavorite);
     } else {
+      //CASE: User not exist.
+      //DO: Open Sign In Overlay.
       toggleOverlay();
     }
   };
 
   useEffect(() => {
+    //Fetch favorite of the property
     (async () => {
-      await axios
-        .get(`${CustomerAPI.apiUrls.favorite_property}/${data.property_id}`)
-        .then((result) => {
-          if (result.status === 200) {
-            setFavorite(result.data.payload);
-          }
-        });
+      if (isHasFavorite) {
+        await axios
+          .get(`${CustomerAPI.apiUrls.favorite_property}/${data.property_id}`)
+          .then((result) => {
+            if (result.status === 200) {
+              setFavorite(result.data.payload);
+            }
+          })
+          .catch((err) => {
+            if (err) {
+              if (err.response.data) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
+          });
+      }
     })();
   });
 
@@ -73,13 +97,15 @@ const PropertyCard = ({
         return "bg-green-500";
       case "Sold":
       case "Cancel":
+      case "Rejected":
         return "bg-red-500";
       case "Reserved":
         return "bg-yellow-500";
       case "Not Listing":
+      case "Pending":
         return "bg-gray-500";
       default:
-        return "bg-gray-500 hidden";
+        return "hidden";
     }
   };
   const getFacilities = () => {
@@ -121,7 +147,7 @@ const PropertyCard = ({
         <div className="absolute top-0 right-0 p-1 pl-2 pr-2 bg-white bg-opacity-90 rounded-bl-lg">
           <div className="flex flex-col justify-center items-end">
             <p>
-              <span className="font-normal">{data.contract}:</span>{" "}
+              <span className="font-normal">{data.contract_type}:</span>{" "}
               {data.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ฿{" "}
               {data.rent_payment !== "None" ? `/ ${data.rent_payment}` : ""}
             </p>
@@ -178,13 +204,13 @@ const PropertyCard = ({
           {data.bedroom !== "None" && (
             <div className="flex items-end justify-start mr-4 mb-3">
               <img src={bedroom} alt="" className="w-6 h-6 mr-1" />
-              <p>{PropertyData.getBedroomString(data.bedroom)}</p>
+              <p>{data.bedroom}</p>
             </div>
           )}
           {data.bathroom !== "None" && (
             <div className="flex items-end justify-start mr-4 mb-3">
               <img src={bathroom} alt="" className="w-6 h-6 mr-1" />
-              <p>{PropertyData.getBathroomString(data.bathroom)}</p>
+              <p>{data.bathroom}</p>
             </div>
           )}
           <div className="flex items-end justify-start mr-4 mb-3">

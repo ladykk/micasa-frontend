@@ -5,17 +5,22 @@ import avatar_icon from "../assets/icons/userform/avatar.png";
 import star from "../assets/icons/review/star.png";
 import quote from "../assets/icons/review/quote.png";
 
+//import modules
+import ImageAPI from "../modules/api/ImageAPI";
+
 const ReviewCard = ({ review, id }) => {
   const { message, rate, full_name, avatar_id } = review;
   const even = Number.parseInt(id, 10) % 2 === 0;
   const stars = () => {
     let stars = [];
     for (let i = 1; i <= 5; i++) {
-      if (i <= rate) {
-        stars.push(<img src={star} alt="" className="w-6 pl-1" />);
-      } else {
-        stars.push(<img src={star} alt="" className="w-6 pl-1 grayscale" />);
-      }
+      stars.push(
+        <img
+          src={star}
+          alt=""
+          className={`w-6 pl-1 ${rate < i && "grayscale"}`}
+        />
+      );
     }
     return stars;
   };
@@ -25,7 +30,7 @@ const ReviewCard = ({ review, id }) => {
       className={` max-w-4xl mx-auto flex ${even && "flex-row-reverse"} mb-16`}
     >
       <img
-        src={avatar_id ? `/images/avatar/${avatar_id}` : avatar_icon}
+        src={avatar_id ? ImageAPI.getAvatarURL(avatar_id) : avatar_icon}
         alt=""
         className={`rounded-full w-24 h-24 ${
           even ? "ml" : "mr"
@@ -41,9 +46,9 @@ const ReviewCard = ({ review, id }) => {
           alt=""
           className="w-10 h-10 flex-shrink-0 flex-grow-0 self-start"
         />
-        <div className="flex flex-col ml-5 mr-5">
+        <div className="flex flex-col ml-5 mr-5 w-full">
           <div className="flex self-end mb-3">{stars()}</div>
-          <p className="text-justify mb-3">{message}</p>
+          <p className="text-justify mb-3 w-full min-h-40">{message}</p>
           <p className="font-normal">{full_name}</p>
         </div>
         <img

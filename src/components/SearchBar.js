@@ -16,8 +16,8 @@ const SearchBar = () => {
       case "property_type":
         setQuery({ ...query, property_type: target.value });
         break;
-      case "contract":
-        setQuery({ ...query, contract: target.value });
+      case "contract_type":
+        setQuery({ ...query, contract_type: target.value });
         break;
       default:
         console.error({
@@ -31,9 +31,9 @@ const SearchBar = () => {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    const { contract, ...params } = query;
+    const { contract_type, ...params } = query;
     history.push(
-      `/search/${contract}${PropertyAPI.generateQueryString(params, null)}`
+      `/search/${contract_type}${PropertyAPI.generateQueryString(params, null)}`
     );
   };
 
@@ -61,9 +61,9 @@ const SearchBar = () => {
         {PropertyData.getTypesAsOption()}
       </select>
       <select
-        name="contract"
-        id="contract"
-        value={query.contract ? query.contract : ""}
+        name="contract_type"
+        id="contract_type"
+        value={query.contract_type ? query.contract_type : ""}
         className="h-full flex-grow-0 flex-shrink-0 w-36 focus:outline-none mr-2"
         onChange={handleChange}
         required

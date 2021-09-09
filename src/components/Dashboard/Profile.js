@@ -1,14 +1,16 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Prompt } from "react-router-dom";
 
 //import pictures
 import avatar_icon from "../../assets/icons/userform/avatar.png";
 import contact from "../../assets/images/contact.png";
+import loading from "../../assets/images/progress.gif";
 
 //import modules
 const ImageAPI = require("../../modules/api/ImageAPI");
 const UserAPI = require("../../modules/api/UserAPI");
+const CustomerAPI = require("../../modules/api/CustomerAPI");
 const DateModule = require("../../modules/DateModule");
 
 const Profile = ({ user, setIsUserFetch }) => {
@@ -21,22 +23,53 @@ const Profile = ({ user, setIsUserFetch }) => {
     avatar_file: null,
   });
   const [isBlock, setBlock] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [preview, setPreview] = useState(null);
+  const [errors, setErrors] = useState({
+    email: false,
+    phone_number: false,
+    form: "",
+  });
+  const [preview, setPreview] = useState(
+    user.avatar_id ? ImageAPI.getAvatarURL(user.avatar_id) : null
+  );
+
+  const [isAgentFetch, setIsAgentFetch] = useState(true);
+  const [agent, setAgent] = useState(null);
+
+  useEffect(() => {
+    //Fetch Agent.
+    (async () => {
+      await axios
+        .get(CustomerAPI.apiUrls.agent)
+        .then((result) => {
+          if (result.status === 200) {
+            setAgent(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            }
+          } else {
+            console.error(err);
+          }
+        })
+        .finally(() => setIsAgentFetch(false));
+    })();
+  }, [isAgentFetch]);
 
   //avatar
-  const current_avatar = user.avatar_id
-    ? ImageAPI.getAvatarURL(user.avatar_id)
-    : avatar_icon;
   const avatar_file = React.createRef();
   const removerAvatar = () => {
     avatar_file.current.value = "";
     setForm({ ...form, avatar_file: null });
     setPreview(null);
+    setBlock(true);
   };
 
   const handleOnChange = ({ target }) => {
     setBlock(true);
+    setErrors({ ...errors, [target.name]: false, form: "" });
     switch (target.name) {
       case "avatar_file":
         try {
@@ -66,6 +99,7 @@ const Profile = ({ user, setIsUserFetch }) => {
 
   const handleCancelChange = () => {
     removerAvatar();
+    setPreview(user.avatar_id ? ImageAPI.getAvatarURL(user.avatar_id) : null);
     setBlock(false);
     setForm({
       full_name: user.full_name,
@@ -80,39 +114,71 @@ const Profile = ({ user, setIsUserFetch }) => {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     const updateForm = UserAPI.updateFrom(form);
-    console.log("fetch");
     await axios({
       method: "patch",
       url: UserAPI.apiUrls.update,
       data: updateForm,
       header: { "Content-Type": "multipart/form-data" },
     })
-      .then((result) => {
+      .then(async (result) => {
+        if (preview === null && form.avatar_file === null) {
+          await axios.delete(UserAPI.apiUrls.remove_avatar);
+        }
         if (result.status === 201) {
           setIsUserFetch(true);
         }
       })
-      .catch(({ response }) => {
-        if (response) {
-          switch (response.status) {
-            case 401:
-              setErrors({
-                ...errors,
-                form: "Invalid credential or Session expired.",
-              });
-              break;
-            default:
-              console.error(response.data);
-              setErrors({ ...errors, form: "Something went wrong." });
-              break;
+      .catch((err) => {
+        if (err) {
+          if (err.response.data) {
+            switch (err.response.status) {
+              case 400:
+                switch (err.response.status) {
+                  case 400:
+                    const error = err.response.data.error.detail;
+                    switch (error) {
+                      case "(email) is already exist.":
+                        console.log("email");
+                        setErrors({
+                          ...errors,
+                          email: true,
+                          form: `${form.email} is already used.`,
+                        });
+                        break;
+                      case "(phone_number) is already exist.":
+                        setErrors({
+                          ...errors,
+                          phone_number: true,
+                          form: `${form.phone_number} is already used.`,
+                        });
+                        break;
+                      default:
+                        console.error(err.response);
+                        setErrors({ ...errors, form: err.response.data.error });
+                    }
+                    break;
+                  default:
+                    console.error(err.response);
+                    setErrors({ ...errors, form: "Something went wrong." });
+                    break;
+                }
+                break;
+              case 401:
+                setErrors({
+                  ...errors,
+                  form: err.response.data.error,
+                });
+                break;
+              default:
+                console.error(err.response.data);
+                setErrors({ ...errors, form: "Something went wrong." });
+                break;
+            }
           }
-          setTimeout(
-            setTimeout(() => setErrors({ ...errors, form: "" })),
-            60000
-          );
+        } else {
+          console.error(err);
         }
       });
-    console.log("end");
   };
 
   return (
@@ -120,20 +186,20 @@ const Profile = ({ user, setIsUserFetch }) => {
       <Prompt when={isBlock} message="Are you sure to dismiss the change?" />
       <h1 className="text-5xl mb-5">My Profile</h1>
       <form
-        className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow place-items-start mb-10"
+        className="w-full h-fit-content relative p-6 flex border border-gray-300 rounded-lg shadow place-items-start mb-10 hover:border-gray-400 ease-in duration-75"
         onSubmit={handleOnSubmit}
       >
         <div className="grid grid-cols-4 gap-2 w-max pl-9 mr-auto">
           <p className="mr-1 flex items-center justify-end">Username:</p>
           <p className="col-span-3 h-8 flex items-center">{user.username}</p>
           {user.class === "Agent" && (
-            <p className="mr-1 flex items-center justify-end">REAL-ID:</p>
+            <p className="mr-1 flex items-center justify-end">Agent ID:</p>
           )}
           {user.class === "Agent" && (
             <p className="col-span-3 h-8 flex items-center">{user.agent_id}</p>
           )}
           {user.class === "Webmaster" && (
-            <p className="mr-1 flex items-center justify-end">WEB-ID:</p>
+            <p className="mr-1 flex items-center justify-end">Webmaster ID:</p>
           )}
           {user.class === "Webmaster" && (
             <p className="col-span-3 h-8 flex items-center">
@@ -148,7 +214,7 @@ const Profile = ({ user, setIsUserFetch }) => {
             placeholder="Name"
             value={form.full_name}
             onChange={handleOnChange}
-            className=" col-span-3 w-72 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none"
+            className="col-span-3 w-72 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none hover:border-gray-400 ease-in duration-75"
             required
           />
           <p className="mr-1 flex items-center justify-end">Email:</p>
@@ -159,7 +225,11 @@ const Profile = ({ user, setIsUserFetch }) => {
             placeholder="Email Address"
             value={form.email}
             onChange={handleOnChange}
-            className=" col-span-3 w-72 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none"
+            className={`col-span-3 w-72 h-8 bg-white p-2 rounded-lg shadow border outline-none ${
+              errors.email
+                ? "border-red-400"
+                : "border-gray-300 hover:border-gray-400"
+            }  ease-in duration-75`}
             required
           />
           <p className="mr-1 flex items-center justify-end">Phone number:</p>
@@ -170,7 +240,11 @@ const Profile = ({ user, setIsUserFetch }) => {
             onChange={handleOnChange}
             value={form.phone_number}
             placeholder="Phone number"
-            className=" col-span-3 w-72 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none"
+            className={`col-span-3 w-72 h-8 bg-white p-2 rounded-lg shadow border outline-none ${
+              errors.phone_number
+                ? "border-red-400"
+                : "border-gray-300 hover:border-gray-400"
+            } ease-in duration-75`}
             required
           />
           <p className="mr-1 flex items-center justify-end">Gender:</p>
@@ -213,7 +287,7 @@ const Profile = ({ user, setIsUserFetch }) => {
             id="birthday"
             value={form.birthday}
             onChange={handleOnChange}
-            className=" col-span-3 w-1/2 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none"
+            className="col-span-3 w-1/2 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none hover:border-gray-400 ease-in duration-75"
           />
           <div></div>
           <div className="col-span-3 flex">
@@ -234,7 +308,6 @@ const Profile = ({ user, setIsUserFetch }) => {
                 Cancel
               </button>
             )}
-            {errors.form && <div></div>}
             {errors.form && (
               <p className="text-red-500 col-span-3">{errors.avatar_file}</p>
             )}
@@ -251,7 +324,7 @@ const Profile = ({ user, setIsUserFetch }) => {
           />
           <div className="relative w-28 h-28 mb-8 mt-4">
             <img
-              src={preview ? preview : current_avatar}
+              src={preview ? preview : avatar_icon}
               alt=""
               className="w-full h-full rounded-full object-cover object-center"
             />
@@ -278,37 +351,47 @@ const Profile = ({ user, setIsUserFetch }) => {
 
           <p className="text-red-500">{errors.avatar_file}</p>
         </div>
+        {errors.form && (
+          <p className="text-red-500 ml-3 absolute bottom-5 right-5">
+            {errors.form}
+          </p>
+        )}
       </form>
       {user.class === "Customer" && (
         <div>
           <h1 className="text-5xl mb-5">My Real Estate Agent</h1>
-          {user.agent !== null ? (
-            <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow place-items-start">
+          {isAgentFetch ? (
+            <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow items-center justify-center">
+              <img src={loading} alt="" className="w-8 h-8 mr-2" />
+              <p>Loading...</p>
+            </div>
+          ) : agent !== null ? (
+            <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow place-items-start hover:border-gray-400 ease-in duration-75">
               <div className="grid grid-cols-4 gap-2 w-max pl-9 mr-auto">
-                <p className="mr-1 flex items-center justify-end">REAL-ID:</p>
+                <p className="mr-1 flex items-center justify-end">Agent ID:</p>
                 <p className="col-span-3 h-8 flex items-center">
-                  {user.agent.agent_id}
+                  {agent.agent_id}
                 </p>
                 <p className="mr-1 flex items-center justify-end">Name:</p>
                 <p className="col-span-3 h-8 flex items-center">
-                  {user.agent.full_name}
+                  {agent.full_name}
                 </p>
                 <p className="mr-1 flex items-center justify-end">Email:</p>
                 <p className="col-span-3 h-8 flex items-center">
-                  {user.agent.email}
+                  {agent.email}
                 </p>
                 <p className="mr-1 flex items-center justify-end">
                   Phone number:
                 </p>
                 <p className="col-span-3 h-8 flex items-center">
-                  {user.agent.phone_number}
+                  {agent.phone_number}
                 </p>
               </div>
               <div className="w-48 h/full p-2 flex flex-col items-center">
                 <img
                   src={
-                    user.agent.avatar_id !== null
-                      ? ImageAPI.getAvatarURL(user.agent.avatar_id)
+                    agent.avatar_id !== null
+                      ? ImageAPI.getAvatarURL(agent.avatar_id)
                       : avatar_icon
                   }
                   alt=""
@@ -317,7 +400,7 @@ const Profile = ({ user, setIsUserFetch }) => {
               </div>
             </div>
           ) : (
-            <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow justify-center">
+            <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow justify-center hover:border-gray-400 ease-in duration-75">
               <div className="flex justify-center items-center">
                 <img src={contact} className="w-28 h-28 mr-6" alt="" />
                 <div>

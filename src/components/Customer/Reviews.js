@@ -1,14 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 //import components
 import ReviewFormCard from "./ReviewFormCard";
 import ReviewHistoryCard from "./ReviewHistoryCard";
+import Loading from "../Loading";
+
+//import modules
+import ReviewsAPI from "../../modules/api/ReviewsAPI";
 
 const Reviews = ({ user }) => {
-  const [pending, setPending] = useState([1]);
-  const [reviewed, setReviewed] = useState([1]);
-  return (
+  const [isPendingFetch, setPendingFetch] = useState(true);
+  const [isReviewedFetch, setReviewedFetch] = useState(true);
+  const [pending, setPending] = useState([]);
+  const [reviewed, setReviewed] = useState([]);
+
+  useEffect(() => {
+    //Fetch pending review
+    (async () => {
+      if (isPendingFetch) {
+        await axios
+          .get(ReviewsAPI.apiUrls.pending)
+          .then((result) => {
+            if (result.status === 200) {
+              setPending(result.data.payload);
+            }
+          })
+          .catch((err) => {
+            if (err) {
+              if (err.response.data) {
+                console.error(err.response.data);
+              }
+            } else {
+              console.error(err);
+            }
+          })
+          .finally(() => setPendingFetch(false));
+      }
+    })();
+  }, [isPendingFetch]);
+
+  useEffect(() => {
+    (async () => {
+      if (isReviewedFetch) {
+        await axios
+          .get(ReviewsAPI.apiUrls.history)
+          .then((result) => {
+            if (result.status === 200) {
+              setReviewed(result.data.payload);
+            }
+          })
+          .catch((err) => {
+            if (err) {
+              if (err.response.data) {
+                console.error(err.response.data);
+              }
+            } else {
+              console.error(err);
+            }
+          })
+          .finally(() => setReviewedFetch(false));
+      }
+    })();
+  }, [isReviewedFetch]);
+
+  const toggleFetch = () => {
+    setPendingFetch(true);
+    setReviewedFetch(true);
+  };
+
+  return isPendingFetch || isReviewedFetch ? (
+    <Loading isStatic={true} />
+  ) : (
     <div className="w-full h-auto">
       {pending.length === 0 && reviewed.length === 0 && (
         <div className="flex items-center justify-center flex-col">
@@ -27,16 +91,20 @@ const Reviews = ({ user }) => {
       {pending.length > 0 && (
         <div className="mb-8">
           <h1 className="text-5xl mb-5">Pending Review</h1>
-          {pending.map((property_id) => (
-            <ReviewFormCard key={property_id} property_id={property_id} />
+          {pending.map((property) => (
+            <ReviewFormCard
+              key={property.property_id}
+              property={property}
+              toggleFetch={toggleFetch}
+            />
           ))}
         </div>
       )}
       {reviewed.length > 0 && (
         <div>
           <h1 className="text-5xl mb-5">Review History</h1>
-          {pending.map((review_id) => (
-            <ReviewHistoryCard key={review_id} review_id={review_id} />
+          {reviewed.map((property) => (
+            <ReviewHistoryCard key={property.property_id} property={property} />
           ))}
         </div>
       )}

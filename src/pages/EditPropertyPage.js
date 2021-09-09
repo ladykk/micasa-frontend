@@ -9,6 +9,7 @@ import {
 
 //import pictures
 import arrow from "../assets/icons/property_detail/arrow.png";
+import error from "../assets/images/error.png";
 
 //import pages
 import PropertyPage from "./PropertyPage";
@@ -26,10 +27,11 @@ const EditPropertyPage = ({ user }) => {
   const { id } = useParams();
   const [isFetch, setIsFetch] = useState(true);
   const [property, setProperty] = useState({});
-  const [res_status, setRes_status] = useState(401);
+  const [res, setRes] = useState(null);
 
   useEffect(() => {
     if (isFetch) {
+      //Fetch Detail
       (async () => {
         await axios
           .get(`${PropertyAPI.apiUrls.edit}/${id}`)
@@ -42,19 +44,27 @@ const EditPropertyPage = ({ user }) => {
                 );
               }
               setProperty(result.data.payload);
-              setIsFetch(false);
             }
           })
           .catch((err) => {
-            const response = err.response;
-            switch (response.status) {
-              case 400:
-              case 401:
-                setRes_status(response.status);
-              default:
-                console.error(response.data);
+            if (err) {
+              if (err.response.data) {
+                switch (err.response.status) {
+                  case 400:
+                  case 401:
+                  case 404:
+                    setRes(err.response.status);
+                    break;
+                  default:
+                    console.error(err.response.data);
+                    break;
+                }
+              }
+            } else {
+              console.error(err);
             }
-          });
+          })
+          .finally(() => setIsFetch(false));
       })();
     }
   }, [isFetch]);
@@ -83,8 +93,13 @@ const EditPropertyPage = ({ user }) => {
             <PropertyPage user={user} edit={property} />
           </Route>
         </Switch>
+      ) : res ? (
+        <Redirect to={`/${res}`} />
       ) : (
-        <Redirect to={`/${res_status}`} />
+        <div className="absolute top-0 left-0 pt-12 w-screen h-screen flex flex-col items-center justify-center">
+          <img src={error} alt="" className="w-32 h-32 mb-5" />
+          <p className="text-2xl">Something went wrong.</p>
+        </div>
       )}
     </div>
   ) : (

@@ -45,13 +45,18 @@ const MiniPropertyCard = ({ property, handleRemoveProperty }) => {
         }
       })
       .catch((err) => {
-        const response = err.response;
-        console.error(response);
+        if (err) {
+          if (err.response.data) {
+            console.error(err.response.data);
+          } else {
+            console.error(err);
+          }
+        }
       });
   };
 
   return (
-    <div className="border border-gray-300 grid grid-cols-7 p-1.5 pl-3 pr-3 place-content-center place-items-center rounded-lg mb-2">
+    <div className="border border-gray-300 grid grid-cols-7 p-1.5 pl-3 pr-3 place-content-center place-items-center rounded-lg mb-2 hover:border-gray-400 ease-in duration-75">
       <div className="flex relative w-full h-full items-center">
         {property.is_favorite && (
           <img

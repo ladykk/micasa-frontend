@@ -6,7 +6,7 @@ const addPropertyForm = (form) => {
         for (let nested_attribute in form[attribute]) {
           addPropertyForm.append(
             nested_attribute,
-            form[attribute][nested_attribute] == true ? "true" : "false"
+            form[attribute][nested_attribute] === true ? "true" : "false"
           );
         }
         break;
@@ -37,7 +37,7 @@ const updatePropertyForm = (data, form) => {
           ) {
             updatePropertyForm.append(
               nested_attribute,
-              form[attribute][nested_attribute] == true ? "true" : "false"
+              form[attribute][nested_attribute] === true ? "true" : "false"
             );
           }
         }
@@ -89,8 +89,8 @@ const generateQueryString = (params, options) => {
         }
         break;
       default:
-        if (!params[param]) {
-          active_params.push(`${param}=false`);
+        if (params[param]) {
+          active_params.push(`${param}=true`);
         }
         break;
     }
@@ -104,7 +104,7 @@ const generateQueryString = (params, options) => {
 const apiUrls = {
   add: "/api/property/add",
   edit: "/api/property/edit",
-  seller: "/api/property/seller",
+  seller: "/api/property/owned",
   byId: "/api/property/id",
   query: "/api/property/query",
   contact: "/api/property/contact",

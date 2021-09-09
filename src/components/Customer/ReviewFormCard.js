@@ -1,17 +1,15 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 //import pictures
 import no_img from "../../assets/images/noimage.png";
 import star from "../../assets/icons/review/star.png";
 
-const ReviewFormCard = ({ property_id }) => {
-  const [property, setProperty] = useState({
-    property_id: "1",
-    name: "Rhythm Ratchada - Huai Kwang",
-    position: "Buyer",
-    img: "https://www.angelrealestate.co.th/wp-content/uploads/2019/07/interior.jpg",
-  });
+//import modules
+import ImageAPI from "../../modules/api/ImageAPI";
+import ReviewsAPI from "../../modules/api/ReviewsAPI";
 
+const ReviewFormCard = ({ property, toggleFetch }) => {
   const [form, setForm] = useState({
     message: "",
     rate: 0,
@@ -26,22 +24,62 @@ const ReviewFormCard = ({ property_id }) => {
     }
   };
 
-  const handleOnSubmit = ({ target }) => {
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    //Check Error
     if (form.message === "" && form.rate === 0) {
-      setErrors({
+      return setErrors({
         ...errors,
         message: "Please don't leave a space.",
         rate: "Please rate this property.",
       });
     } else if (form.message === "") {
-      setErrors({ ...errors, message: "Please don't leave a space." });
+      return setErrors({ ...errors, message: "Please don't leave a space." });
     } else if (form.rate === 0) {
-      setErrors({ ...errors, rate: "Please rate this property." });
+      return setErrors({ ...errors, rate: "Please rate this property." });
     }
+
+    const reviewData = new FormData();
+    reviewData.append("rate", form.rate);
+    reviewData.append("message", form.message);
+    reviewData.append("property_id", property.property_id);
+
+    await axios({
+      method: "post",
+      url: ReviewsAPI.apiUrls.pending,
+      data: reviewData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then((result) => {
+        if (result.status === 201) {
+          toggleFetch();
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          if (err.response.data) {
+            switch (err.response.status) {
+              case 400:
+              case 401:
+                setErrors({ form: err.response.data.error });
+                break;
+              default:
+                console.error(err.response.data);
+                setErrors({ form: "Something Wrong." });
+                break;
+            }
+            setTimeout(() => {
+              setErrors({ ...errors, form: null });
+            }, 6000);
+          }
+        } else {
+          console.error(err);
+        }
+      });
   };
 
   const getPositionColor = () => {
-    switch (property.position) {
+    switch (property.role) {
       case "Buyer":
         return "bg-blue-500";
       case "Seller":
@@ -80,23 +118,27 @@ const ReviewFormCard = ({ property_id }) => {
   return (
     <div className="relative mb-3">
       <form className="w-full h-fit-content mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
-        <div className=" w-80 border-r border-gray-300 flex-grow-0 flex-shrink-0 relative">
+        <div className=" w-80 border-r border-gray-300 flex-grow-0 flex-shrink-0 relative hover:border-gray-400 ease-in duration-75">
           <img
-            src={property.img ? property.img : no_img}
+            src={
+              property.image_cover
+                ? ImageAPI.getImageURL(property.image_cover)
+                : no_img
+            }
             alt=""
             className="w-full h-full rounded-tl-xl rounded-bl-xl  object-cover object-center"
           />
-          {property.position && (
+          {property.role && (
             <p
               className={`absolute top-0 right-0 text-md mt-2 mr-2 p-0.5 pl-3 pr-3 rounded-full text-white font-normal ${getPositionColor()}`}
             >
-              {property.position}
+              {property.role}
             </p>
           )}
         </div>
         <div className="w-full h-full p-5">
           <div className="w-full h-6 flex justify-between items-center mb-3">
-            <h1 className="font-normal text-xl">{property.name}</h1>
+            <h1 className="font-normal text-xl">{property.property_name}</h1>
             <div className="flex self-end">{stars()}</div>
           </div>
           <hr className="w-full mb-3" />
@@ -104,10 +146,10 @@ const ReviewFormCard = ({ property_id }) => {
             <textarea
               name="message"
               id="message"
-              value={form.value}
+              value={form.message}
               onChange={handleOnChange}
               placeholder="Please express how you feel about us..."
-              className="w-full h-full border border-gray-300 rounded-md p-2 outline-none resize-none"
+              className="w-full h-full border border-gray-300 rounded-md p-2 outline-none resize-none hover:border-gray-400 ease-in duration-75"
               required
             ></textarea>
             <button
@@ -121,13 +163,14 @@ const ReviewFormCard = ({ property_id }) => {
         </div>
       </form>
       <p
-        className={`w-max ml-auto p-0.5 pl-3 pr-3 border border-gray-300 rounded-full text-red-500 ${
+        className={`w-max ml-auto p-0.5 pl-3 pr-3 border border-gray-300 hover:border-gray-400 ease-in duration-75 rounded-full text-red-500 ${
           !(errors.rate || errors.message) && "hidden"
         }`}
       >
         {errors.rate}
         {errors.rate && errors.message && " / "}
         {errors.message}
+        {errors.form}
       </p>
     </div>
   );

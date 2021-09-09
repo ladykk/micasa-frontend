@@ -27,6 +27,7 @@ const apiUrls = {
   logout: "/api/user/logout",
   update: "/api/user/update",
   register: "/api/user/register",
+  remove_avatar: "/api/user/remove_avatar",
 };
 
 module.exports = {

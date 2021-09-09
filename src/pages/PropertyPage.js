@@ -66,8 +66,9 @@ const PropertyPage = ({
         }
       : {}
   );
-  const [seller, setSeller] = useState({});
+  const [seller, setSeller] = useState(null);
   useEffect(() => {
+    //Fetch detail
     (async () => {
       if (isFetch && !edit && !preview) {
         await axios
@@ -85,19 +86,20 @@ const PropertyPage = ({
             }
           })
           .catch((err) => {
-            const response = err.response;
-            switch (response.status) {
-              case 400:
-                history.replace("/400");
-                break;
-              case 401:
-                history.replace("/401");
-                break;
-              case 404:
-                history.replace("/404");
-                break;
-              default:
-                console.error(response.data);
+            if (err) {
+              if (err.response.data) {
+                switch (err.response.status) {
+                  case 400:
+                  case 401:
+                  case 404:
+                    history.replace(`/${err.response.status}`);
+                    break;
+                  default:
+                    console.error(err.response.data);
+                }
+              }
+            } else {
+              console.error(err);
             }
           });
       }
@@ -120,15 +122,21 @@ const PropertyPage = ({
           }
         })
         .catch((err) => {
-          setFavorite(false);
+          if (err) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err);
+            }
+          }
         });
-      setFavorite(!isFavorite);
     } else {
       toggleOverlay();
     }
   };
 
   useEffect(() => {
+    //Fetch is favorite.
     (async () => {
       if (id) {
         await axios
@@ -137,12 +145,22 @@ const PropertyPage = ({
             if (result.status === 200) {
               setFavorite(result.data.payload);
             }
+          })
+          .catch((err) => {
+            if (err) {
+              if (err.response.data) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
           });
       }
     })();
   });
 
   useEffect(() => {
+    //Fetch seller
     (async () => {
       if (user.class !== "Customer") {
         await axios
@@ -150,6 +168,15 @@ const PropertyPage = ({
           .then((result) => {
             if (result.status === 200) {
               setSeller(result.data.payload);
+            }
+          })
+          .catch((err) => {
+            if (err) {
+              if (err.response.data) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
             }
           });
       }
@@ -190,7 +217,8 @@ const PropertyPage = ({
         elements.push(
           <img
             src={property.images[image]}
-            className="w-full h-96 object-cover object-center border border-gray-300 rounded-md shadow"
+            alt=""
+            className="w-auto h-auto max-h-96 object-contain object-center shadow rounded mb-6"
           />
         );
       }
@@ -214,7 +242,7 @@ const PropertyPage = ({
         } background-cover-centered pt-12`}
         style={{
           backgroundImage: `url('${
-            property ? property.images.image_cover : no_img
+            property.images.image_cover ? property.images.image_cover : no_img
           }')`,
         }}
       >
@@ -228,17 +256,19 @@ const PropertyPage = ({
               <p className="font-normal">Back to result</p>
             </div>
             {edit ? (
-              <Link
-                to={`/edit/${property.property_id}/form`}
-                className="flex bg-green-500 text-white p-1 pr-3 pl-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75 "
-              >
-                <p className="font-normal">Edit Properties</p>
-                <img
-                  src={edit_icon}
-                  alt=""
-                  className="w-5 h-5 ml-2 invert-icon"
-                />
-              </Link>
+              edit.status !== "Sold" ? (
+                <Link
+                  to={`/edit/${property.property_id}/form`}
+                  className="flex bg-green-500 text-white p-1 pr-3 pl-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75 "
+                >
+                  <p className="font-normal">Edit Properties</p>
+                  <img
+                    src={edit_icon}
+                    alt=""
+                    className="w-5 h-5 ml-2 invert-icon"
+                  />
+                </Link>
+              ) : null
             ) : (
               user.class === "Customer" &&
               user.username !== property.seller && (
@@ -341,7 +371,7 @@ const PropertyPage = ({
           </div>
           <div className="flex justify-between items-center mb-3">
             <p className="text-lg">
-              <span className="font-normal">{property.contract}:</span>{" "}
+              <span className="font-normal">{property.contract_type}:</span>{" "}
               {property.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
               ฿{" "}
               {property.rent_payment !== "None" && `/ ${property.rent_payment}`}{" "}
@@ -398,17 +428,13 @@ const PropertyPage = ({
                 {property.bedroom !== "None" && (
                   <div className="w-full flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={bedroom} alt="" />
-                    <p className="text-lg">
-                      {PropertyData.getBedroomString(property.bedroom)}
-                    </p>
+                    <p className="text-lg">{property.bedroom}</p>
                   </div>
                 )}
                 {property.bathroom !== "None" && (
                   <div className="w-full flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={bathroom} alt="" />
-                    <p className="text-lg">
-                      {PropertyData.getBathroomString(property.bathroom)}
-                    </p>
+                    <p className="text-lg">{property.bathroom}</p>
                   </div>
                 )}
                 <div className="w-full flex items-center justify-start mb-3">
@@ -447,7 +473,7 @@ const PropertyPage = ({
                 )}
               </div>
               <h1 className="w-full text-xl underline mb-5">Contact</h1>
-              {seller.username ? (
+              {seller ? (
                 <div className="w-full pl-6 mb-5">
                   <img
                     src={
@@ -491,7 +517,7 @@ const PropertyPage = ({
           </div>
           {/* Images */}
           <div
-            className={`w-full h-fit-content trans-hide grid grid-cols-2 gap-3 ${
+            className={`w-full h-fit-content trans-hide flex flex-wrap items-center justify-around ${
               page === "images" && "active"
             }`}
           >

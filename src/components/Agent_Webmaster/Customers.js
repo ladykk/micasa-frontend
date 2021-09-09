@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
 //import pictures
@@ -23,7 +22,7 @@ const Customers = ({ user }) => {
   //Toggle
   const [isAddCustomer, setIsAddCustomer] = useState(false);
 
-  const [agents, setAgents] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [customer, setCustomer] = useState({});
   const [properties, setProperties] = useState([]);
 
@@ -45,6 +44,7 @@ const Customers = ({ user }) => {
   };
 
   useEffect(() => {
+    //Fetch Customer
     (async () => {
       if (isFetch) {
         await axios
@@ -52,36 +52,48 @@ const Customers = ({ user }) => {
           .then((result) => {
             if (result.status === 200) {
               let users = result.data.payload;
-              setAgents(users);
-              setFetch(false);
+              setCustomers(users);
             }
           })
           .catch((err) => {
-            console.error(err);
-          });
+            if (err) {
+              if (err.response) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
+          })
+          .finally(() => setFetch(false));
       }
     })();
-  });
+  }, [isFetch]);
 
   useEffect(() => {
     (async () => {
+      //Fetch customer's properties
       if (isPropertiesFetch) {
         await axios
           .get(`${AgentAPI.apiUrls.properties}/${customer.username}`)
           .then((result) => {
             if (result.status === 200) {
               let properties = result.data.payload;
-              console.log(properties);
               setProperties(properties);
-              setPropertiesFetch(false);
             }
           })
           .catch((err) => {
-            console.error(err);
-          });
+            if (err) {
+              if (err.response) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
+          })
+          .finally(() => setPropertiesFetch(false));
       }
     })();
-  });
+  }, [isPropertiesFetch]);
 
   //Customers
   const [addCustomerUser, setAddCustomerUser] = useState("");
@@ -114,15 +126,20 @@ const Customers = ({ user }) => {
         }
       })
       .catch((err) => {
-        if (err.response) {
-          const response = err.response;
-          switch (response.status) {
-            case 400:
-              setCustomerResponse(response.data.error);
-              break;
-            default:
-              console.error(response.data);
-              setCustomerResponse("Something went wrong.");
+        if (err) {
+          if (err.response.data) {
+            switch (err.response.status) {
+              case 400:
+              case 401:
+                setCustomerResponse(err.response.data.error);
+                break;
+              default:
+                console.error(err.response.data);
+                setCustomerResponse("Something went wrong.");
+                break;
+            }
+          } else {
+            console.error(err);
           }
         }
       });
@@ -149,7 +166,7 @@ const Customers = ({ user }) => {
             {isAddCustomer ? "Hide" : "Add"}
           </button>
         </div>
-        <div className="h-full border border-gray-300 p-2 rounded-lg flex flex-col">
+        <div className="h-full border border-gray-300 p-2 rounded-lg flex flex-col hover:border-gray-400 ease-in duration-75">
           <form
             onSubmit={handleAddCustomer}
             className={`w-full mb-2 trans-toggle flex-shrink-0 flex-grow-0 ${
@@ -158,7 +175,7 @@ const Customers = ({ user }) => {
           >
             <input
               type="text"
-              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full"
+              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full hover:border-gray-400 ease-in duration-75"
               placeholder="Username"
               value={addCustomerUser}
               onChange={handleAddUserChange}
@@ -179,7 +196,7 @@ const Customers = ({ user }) => {
             <hr />
           </form>
           <form className="w-full h-fit-content mb-2">
-            <div className="border border-gray-300 rounded-full pl-2 pr-2 flex items-center h-8">
+            <div className="border border-gray-300 rounded-full pl-2 pr-2 flex items-center h-8 hover:border-gray-400 ease-in duration-75">
               <img
                 src={search_icon}
                 alt=""
@@ -194,14 +211,20 @@ const Customers = ({ user }) => {
             </div>
           </form>
           <div className="h-full">
-            {agents.map((agent) => (
-              <UserCard user={agent} setUser={handleChangeCustomer} />
-            ))}
+            {customers.length > 0 ? (
+              customers.map((agent) => (
+                <UserCard user={agent} setUser={handleChangeCustomer} />
+              ))
+            ) : (
+              <p className="w-full h-5 flex justify-center items-center">
+                No Customer
+              </p>
+            )}
           </div>
         </div>
       </div>
       {customer.username && (
-        <div className="w-full h-screen-85 p-6 flex flex-col border border-gray-300 rounded-lg shadow mb-10">
+        <div className="w-full h-screen-85 p-6 flex flex-col border border-gray-300 rounded-lg shadow mb-10 hover:border-gray-400 ease-in duration-75">
           <div className="w-full flex mb-4">
             <div className="grid grid-cols-3 gap-2 w-max pl-9 mr-auto">
               <p className="mr-1 flex items-center justify-end">Username:</p>
@@ -244,7 +267,7 @@ const Customers = ({ user }) => {
             </div>
           </div>
           <hr className="mb-2" />
-          <div className="w-max mb-2 p-1 border border-gray-300 rounded-full">
+          <div className="w-max mb-2 p-1 border border-gray-300 rounded-full hover:border-gray-400 ease-in duration-75">
             <button
               onClick={handlePageChange}
               value="favorite"
@@ -264,8 +287,8 @@ const Customers = ({ user }) => {
               History
             </button>
           </div>
-          <div className="p-2 border overflow-y-auto border-gray-300 rounded-md grid-cols-2 gap-2 relative">
-            <div className="bg-white border border-gray-300 grid grid-cols-7 p-2 pl-3 pr-3 place-content-center place-items-center rounded-lg mb-3 sticky top-1 z-40">
+          <div className="p-2 border overflow-y-auto border-gray-300 rounded-md grid-cols-2 gap-2 relative hover:border-gray-400 ease-in duration-75">
+            <div className="bg-white border border-gray-300 grid grid-cols-7 p-2 pl-3 pr-3 place-content-center place-items-center rounded-lg mb-3 sticky top-1 z-40 hover:border-gray-400 ease-in duration-75">
               <p className="font-normal">Property ID</p>
               <p className="font-normal">Status</p>
               <p className="col-span-4 font-normal">Property Name</p>

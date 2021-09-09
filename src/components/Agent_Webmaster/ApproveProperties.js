@@ -9,7 +9,6 @@ import axios from "axios";
 import box from "../../assets/icons/webmaster/box.png";
 
 //import modules
-const ImageAPI = require("../../modules/api/ImageAPI");
 const WebmasterAPI = require("../../modules/api/WebmasterAPI");
 
 const ApproveProperties = () => {
@@ -17,6 +16,7 @@ const ApproveProperties = () => {
   const [properties, setProperties] = useState([]);
 
   useEffect(() => {
+    //Fetch properties
     if (isFetch) {
       (async () => {
         await axios
@@ -24,15 +24,18 @@ const ApproveProperties = () => {
           .then((result) => {
             if (result.status === 200) {
               setProperties(result.data);
-              setIsFetch(false);
             }
           })
-          .catch((error) => {
-            const response = error.response;
-            switch (response.status) {
-              default:
+          .catch((err) => {
+            if (err) {
+              if (err.response) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
             }
-          });
+          })
+          .finally(() => setIsFetch(false));
       })();
     }
   }, [isFetch]);
@@ -56,7 +59,7 @@ const ApproveProperties = () => {
         </div>
       ) : (
         <div className="w-full h-auto">
-          <div className="border border-gray-300 grid grid-cols-7 p-2 pl-3 pr-3 place-content-center place-items-center rounded-lg">
+          <div className="border border-gray-300 grid grid-cols-7 p-2 pl-3 pr-3 place-content-center place-items-center rounded-lg hover:border-gray-400 ease-in duration-75">
             <p className="font-normal">Property ID</p>
             <p className="font-normal">Status</p>
             <p className="col-span-4 font-normal">Property Name</p>

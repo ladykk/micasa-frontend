@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 
 const status = [
@@ -187,18 +186,30 @@ const ownership = ["Freehold", "Leasehold"];
 const bedroom = [
   "None",
   "Studio",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
+  "1 Bedroom",
+  "2 Bedrooms",
+  "3 Bedrooms",
+  "4 Bedrooms",
+  "5 Bedrooms",
+  "6 Bedrooms",
+  "7 Bedrooms",
+  "8 Bedrooms",
+  "9 Bedrooms",
+  "10+ Bedrooms",
 ];
-const bathroom = ["None", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+const bathroom = [
+  "None",
+  "1 Bathroom",
+  "2 Bathrooms",
+  "3 Bathrooms",
+  "4 Bathrooms",
+  "5 Bathrooms",
+  "6 Bathrooms",
+  "7 Bathrooms",
+  "8 Bathrooms",
+  "9 Bathrooms",
+  "10+ Bathrooms",
+];
 
 const getStatusAsOption = () => {
   const elements = [];
@@ -233,10 +244,10 @@ const getTypesAsOption = () => {
 };
 const getContractsAsOption = () => {
   const elements = [];
-  contracts.forEach((contract) =>
+  contracts.forEach((contract_type) =>
     elements.push(
-      <option key={contract} value={contract}>
-        {contract}
+      <option key={contract_type} value={contract_type}>
+        {contract_type}
       </option>
     )
   );
@@ -309,33 +320,13 @@ const getOwnershipAsOption = () => {
   );
   return elements;
 };
-const getBedroomString = (string) => {
-  const number = Number.parseInt(string, 10);
-  if (number) {
-    return `${number} ${number > 1 ? "Bedrooms" : "Bedroom"}`;
-  } else if (string === "None") {
-    return "None";
-  } else {
-    return string;
-  }
-};
 
-const getBathroomString = (string) => {
-  const number = Number.parseInt(string, 10);
-  if (number) {
-    return `${number} ${number > 1 ? "Bathrooms" : "Bathroom"}`;
-  } else if (string === "None") {
-    return "None";
-  } else {
-    return string;
-  }
-};
 const getBedroomAsOption = () => {
   const elements = [];
   bedroom.forEach((amount) =>
     elements.push(
       <option key={amount} value={amount}>
-        {getBedroomString(amount)}
+        {amount}
       </option>
     )
   );
@@ -346,7 +337,7 @@ const getBathroomAsOption = () => {
   bathroom.forEach((amount) =>
     elements.push(
       <option key={amount} value={amount}>
-        {getBathroomString(amount)}
+        {amount}
       </option>
     )
   );
@@ -408,6 +399,4 @@ export default {
   getBedroomAsOption,
   getBathroomAsOption,
   getFacilityName,
-  getBedroomString,
-  getBathroomString,
 };

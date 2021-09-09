@@ -32,17 +32,24 @@ const SignInForm = ({ toggleOverlay, handleSignIn }) => {
           handleSignIn();
         }
       })
-      .catch(({ response }) => {
-        if (response) {
-          switch (response.status) {
-            case 401:
-              setError("Username or Password is incorrect.");
-              break;
-            default:
-              console.error(response.data);
-              setError("Something went wrong.");
-              break;
+      .catch((err) => {
+        if (err) {
+          if (err.response.data) {
+            switch (err.response.status) {
+              case 400:
+                setError("Enter Username and Password.");
+                break;
+              case 401:
+                setError("Username or Password is incorrect.");
+                break;
+              default:
+                console.error(err.response.data);
+                setError("Something went wrong.");
+                break;
+            }
           }
+        } else {
+          console.error(err);
         }
       });
   };
