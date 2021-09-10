@@ -1,4 +1,4 @@
-import axios from "axios";
+import instance from "../../modules/Instance";
 import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -33,7 +33,7 @@ const MiniPropertyCard = ({ property, handleRemoveProperty }) => {
       property.property_id,
       target.value
     );
-    await axios({
+    await instance({
       method: "patch",
       url: WebmasterAPI.apiUrls.approve,
       data: approveForm,
@@ -46,7 +46,7 @@ const MiniPropertyCard = ({ property, handleRemoveProperty }) => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             console.error(err.response.data);
           } else {
             console.error(err);

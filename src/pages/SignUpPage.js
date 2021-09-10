@@ -8,7 +8,7 @@ import user_icon from "../assets/icons/userform/user.png";
 import password_icon from "../assets/icons/userform/key.png";
 import email_icon from "../assets/icons/userform/email.png";
 import phone_icon from "../assets/icons/userform/phone-call.png";
-import axios from "axios";
+import instance from "../modules/Instance";
 
 //import modules
 const UserAPI = require("../modules/api/UserAPI");
@@ -79,7 +79,7 @@ const SignUpPage = () => {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     const signUpForm = UserAPI.signUpForm(form);
-    await axios({
+    await instance({
       method: "post",
       url: UserAPI.apiUrls.register,
       data: signUpForm,
@@ -93,7 +93,7 @@ const SignUpPage = () => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             switch (err.response.status) {
               case 400:
                 const error = err.response.data.error.detail;

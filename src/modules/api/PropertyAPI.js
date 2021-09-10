@@ -108,6 +108,7 @@ const apiUrls = {
   byId: "/api/property/id",
   query: "/api/property/query",
   contact: "/api/property/contact",
+  favorite: "/api/property/favorite",
 };
 
 module.exports = {

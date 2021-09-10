@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import instance from "../modules/Instance";
 
 //import pictures
 import no_img from "../assets/images/noimage.png";
@@ -20,6 +20,7 @@ import leasehold from "../assets/icons/property/contract.png";
 import PropertyData from "../modules/PropertyData";
 
 import CustomerAPI from "../modules/api/CustomerAPI";
+import PropertyAPI from "../modules/api/PropertyAPI";
 
 const PropertyCard = ({
   data,
@@ -29,6 +30,7 @@ const PropertyCard = ({
   toggleOverlay,
 }) => {
   const [isFavorite, setFavorite] = useState(false);
+  const [canFavorite, setCanFavorite] = useState(false);
 
   const handleFavorite = async () => {
     //Set favorite of the property
@@ -37,7 +39,7 @@ const PropertyCard = ({
       //CASE: User exist.
       const favoriteForm = new FormData();
       favoriteForm.append("is_favorite", !isFavorite ? "true" : "false");
-      await axios({
+      await instance({
         method: "post",
         url: `${CustomerAPI.apiUrls.favorite_property}/${data.property_id}`,
         data: favoriteForm,
@@ -50,7 +52,7 @@ const PropertyCard = ({
         })
         .catch((err) => {
           if (err) {
-            if (err.response.data) {
+            if (err.response) {
               console.error(err.response.data);
             } else {
               console.error(err);
@@ -69,7 +71,7 @@ const PropertyCard = ({
     //Fetch favorite of the property
     (async () => {
       if (isHasFavorite) {
-        await axios
+        await instance
           .get(`${CustomerAPI.apiUrls.favorite_property}/${data.property_id}`)
           .then((result) => {
             if (result.status === 200) {
@@ -78,7 +80,31 @@ const PropertyCard = ({
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
+          });
+      }
+    })();
+  });
+
+  useEffect(() => {
+    //Fetch can favorite this property
+    (async () => {
+      if (isHasFavorite) {
+        await instance
+          .get(`${PropertyAPI.apiUrls.favorite}/${data.property_id}`)
+          .then((result) => {
+            if (result.status === 200) {
+              setCanFavorite(result.data.payload);
+            }
+          })
+          .catch((err) => {
+            if (err) {
+              if (err.response) {
                 console.error(err.response.data);
               } else {
                 console.error(err);
@@ -165,7 +191,7 @@ const PropertyCard = ({
             <h1 className="font-normal text-xl">{data.property_name}</h1>
           </Link>
           {isHasFavorite &&
-            user.username !== data.seller &&
+            canFavorite &&
             user.class !== "Agent" &&
             user.class !== "Webmaster" && (
               <img

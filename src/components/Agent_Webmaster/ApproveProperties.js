@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 //import components
 import MiniPropertyCard from "./MiniPropertyCard";
 import Loading from "../Loading";
-import axios from "axios";
+import instance from "../../modules/Instance";
 
 //import images
 import box from "../../assets/icons/webmaster/box.png";
@@ -19,7 +19,7 @@ const ApproveProperties = () => {
     //Fetch properties
     if (isFetch) {
       (async () => {
-        await axios
+        await instance
           .get(WebmasterAPI.apiUrls.approve)
           .then((result) => {
             if (result.status === 200) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import instance from "../../modules/Instance";
 
 //import pictures
 import add from "../../assets/icons/property_detail/add.png";
@@ -35,7 +35,7 @@ const ManageProperties = ({ user }) => {
     //Fetch properties
     (async () => {
       if (isFetch) {
-        await axios
+        await instance
           .get(PropertyAPI.apiUrls.seller)
           .then((result) => {
             if (result.status === 200) {
@@ -74,7 +74,7 @@ const ManageProperties = ({ user }) => {
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 console.error(err.response.data);
               }
             } else {

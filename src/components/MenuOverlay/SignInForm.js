@@ -5,7 +5,7 @@ import user_icon from "../../assets/icons/userform/user.png";
 import password_icon from "../../assets/icons/userform/key.png";
 
 import UserAPI from "../../modules/api/UserAPI";
-import axios from "axios";
+import instance from "../../modules/Instance";
 
 const SignInForm = ({ toggleOverlay, handleSignIn }) => {
   const [form, setForm] = useState({
@@ -20,7 +20,7 @@ const SignInForm = ({ toggleOverlay, handleSignIn }) => {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     const signInForm = UserAPI.signInForm(form);
-    await axios({
+    await instance({
       method: "post",
       url: UserAPI.apiUrls.login,
       data: signInForm,
@@ -34,7 +34,7 @@ const SignInForm = ({ toggleOverlay, handleSignIn }) => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             switch (err.response.status) {
               case 400:
                 setError("Enter Username and Password.");

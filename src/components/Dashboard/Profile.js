@@ -1,4 +1,4 @@
-import axios from "axios";
+import instance from "../../modules/Instance";
 import React, { useState, useEffect } from "react";
 import { Prompt } from "react-router-dom";
 
@@ -38,7 +38,7 @@ const Profile = ({ user, setIsUserFetch }) => {
   useEffect(() => {
     //Fetch Agent.
     (async () => {
-      await axios
+      await instance
         .get(CustomerAPI.apiUrls.agent)
         .then((result) => {
           if (result.status === 200) {
@@ -47,7 +47,7 @@ const Profile = ({ user, setIsUserFetch }) => {
         })
         .catch((err) => {
           if (err) {
-            if (err.response.data) {
+            if (err.response) {
               console.error(err.response.data);
             }
           } else {
@@ -114,7 +114,7 @@ const Profile = ({ user, setIsUserFetch }) => {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     const updateForm = UserAPI.updateFrom(form);
-    await axios({
+    await instance({
       method: "patch",
       url: UserAPI.apiUrls.update,
       data: updateForm,
@@ -122,7 +122,7 @@ const Profile = ({ user, setIsUserFetch }) => {
     })
       .then(async (result) => {
         if (preview === null && form.avatar_file === null) {
-          await axios.delete(UserAPI.apiUrls.remove_avatar);
+          await instance.delete(UserAPI.apiUrls.remove_avatar);
         }
         if (result.status === 201) {
           setIsUserFetch(true);
@@ -130,7 +130,7 @@ const Profile = ({ user, setIsUserFetch }) => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             switch (err.response.status) {
               case 400:
                 switch (err.response.status) {
@@ -138,7 +138,6 @@ const Profile = ({ user, setIsUserFetch }) => {
                     const error = err.response.data.error.detail;
                     switch (error) {
                       case "(email) is already exist.":
-                        console.log("email");
                         setErrors({
                           ...errors,
                           email: true,

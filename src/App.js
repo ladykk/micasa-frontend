@@ -5,7 +5,7 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import axios from "axios";
+import instance from "./modules/Instance";
 
 //import components
 import NavBar from "./components/NavBar";
@@ -42,12 +42,12 @@ function App() {
   };
   const handleSignOut = async () => {
     //Set Logout
-    await axios({
+    await instance({
       method: "post",
       url: UserAPI.apiUrls.logout,
     }).catch((err) => {
       if (err) {
-        if (err.response.data) {
+        if (err.response) {
           console.error(err.response.data);
         } else {
           console.error(err);
@@ -61,7 +61,7 @@ function App() {
     //Fetch user detail.
     if (isUserFetch) {
       (async () => {
-        await axios({
+        await instance({
           method: "get",
           url: UserAPI.apiUrls.getUser,
         })
@@ -72,7 +72,7 @@ function App() {
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 console.error(err.response.data);
               } else {
                 console.error(err);

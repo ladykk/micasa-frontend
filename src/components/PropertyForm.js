@@ -10,7 +10,7 @@ import progress from "../assets/images/progress.gif";
 
 //import components
 import PropertyPage from "../pages/PropertyPage";
-import axios from "axios";
+import instance from "../modules/Instance";
 
 //import modules
 const PropertyAPI = require("../modules/api/PropertyAPI");
@@ -332,7 +332,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
     setSubmit(true);
     if (data) {
       const updatePropertyForm = PropertyAPI.updatePropertyForm(data, form);
-      await axios({
+      await instance({
         method: "patch",
         url: `${PropertyAPI.apiUrls.edit}/${data.property_id}`,
         data: updatePropertyForm,
@@ -347,7 +347,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
         })
         .catch((err) => {
           if (err) {
-            if (err.response.data) {
+            if (err.response) {
               switch (err.response.status) {
                 case 400:
                 case 401:
@@ -368,7 +368,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
         });
     } else {
       const addPropertyForm = PropertyAPI.addPropertyForm(form);
-      await axios({
+      await instance({
         method: "post",
         url: PropertyAPI.apiUrls.add,
         data: addPropertyForm,
@@ -382,7 +382,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
         })
         .catch((err) => {
           if (err) {
-            if (err.response.data) {
+            if (err.response) {
               switch (err.response.status) {
                 case 400:
                 case 401:

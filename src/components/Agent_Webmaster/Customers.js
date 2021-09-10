@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import instance from "../../modules/Instance";
 
 //import pictures
 import avatar_icon from "../../assets/icons/userform/avatar.png";
@@ -47,7 +47,7 @@ const Customers = ({ user }) => {
     //Fetch Customer
     (async () => {
       if (isFetch) {
-        await axios
+        await instance
           .get(AgentAPI.apiUrls.customers)
           .then((result) => {
             if (result.status === 200) {
@@ -73,7 +73,7 @@ const Customers = ({ user }) => {
     (async () => {
       //Fetch customer's properties
       if (isPropertiesFetch) {
-        await axios
+        await instance
           .get(`${AgentAPI.apiUrls.properties}/${customer.username}`)
           .then((result) => {
             if (result.status === 200) {
@@ -113,7 +113,7 @@ const Customers = ({ user }) => {
     e.preventDefault();
     const addCustomerForm = new FormData();
     addCustomerForm.append("username", addCustomerUser);
-    await axios({
+    await instance({
       method: "post",
       url: AgentAPI.apiUrls.addCustomer,
       data: addCustomerForm,
@@ -127,7 +127,7 @@ const Customers = ({ user }) => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             switch (err.response.status) {
               case 400:
               case 401:

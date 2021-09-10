@@ -1,4 +1,4 @@
-import axios from "axios";
+import instance from "../modules/Instance";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -14,7 +14,7 @@ const ReviewsPage = () => {
   useEffect(() => {
     //Fetch reviews
     (async () => {
-      await axios.get(ReviewsAPI.apiUrls.reviews).then((result) => {
+      await instance.get(ReviewsAPI.apiUrls.reviews).then((result) => {
         if (result.status === 200) {
           setReviews(result.data.payload);
         }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import instance from "../../modules/Instance";
 
 //import components
 import ReviewFormCard from "./ReviewFormCard";
@@ -20,7 +20,7 @@ const Reviews = ({ user }) => {
     //Fetch pending review
     (async () => {
       if (isPendingFetch) {
-        await axios
+        await instance
           .get(ReviewsAPI.apiUrls.pending)
           .then((result) => {
             if (result.status === 200) {
@@ -29,7 +29,7 @@ const Reviews = ({ user }) => {
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 console.error(err.response.data);
               }
             } else {
@@ -44,7 +44,7 @@ const Reviews = ({ user }) => {
   useEffect(() => {
     (async () => {
       if (isReviewedFetch) {
-        await axios
+        await instance
           .get(ReviewsAPI.apiUrls.history)
           .then((result) => {
             if (result.status === 200) {
@@ -53,7 +53,7 @@ const Reviews = ({ user }) => {
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 console.error(err.response.data);
               }
             } else {

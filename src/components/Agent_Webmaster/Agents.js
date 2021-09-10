@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import instance from "../../modules/Instance";
 
 //import pictures
 import avatar_icon from "../../assets/icons/userform/avatar.png";
@@ -30,7 +30,7 @@ const Agents = () => {
     (async () => {
       //Fetch agents
       if (isAgentsFetch) {
-        await axios
+        await instance
           .get(WebmasterAPI.apiUrls.agents)
           .then((result) => {
             if (result.status === 200) {
@@ -55,7 +55,7 @@ const Agents = () => {
   useEffect(() => {
     (async () => {
       if (isCustomersFetch) {
-        await axios
+        await instance
           .get(`${WebmasterAPI.apiUrls.customers}/${agent.agent_id}`)
           .then((result) => {
             if (result.status === 200) {
@@ -95,7 +95,7 @@ const Agents = () => {
     e.preventDefault();
     const addAgentForm = new FormData();
     addAgentForm.append("username", addAgentUser);
-    await axios({
+    await instance({
       method: "post",
       url: WebmasterAPI.apiUrls.addAgent,
       data: addAgentForm,
@@ -109,7 +109,7 @@ const Agents = () => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             switch (err.response.status) {
               case 400:
               case 401:
@@ -127,7 +127,7 @@ const Agents = () => {
       });
   };
   const handleRemoveAgent = async (user) => {
-    await axios
+    await instance
       .delete(`${WebmasterAPI.apiUrls.deleteAgent}/${user.username}`)
       .then((result) => {
         if (result.status === 201) {
@@ -136,7 +136,7 @@ const Agents = () => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             console.error(err.response.data);
           } else {
             console.error(err);
@@ -164,7 +164,7 @@ const Agents = () => {
     const addCustomerForm = new FormData();
     addCustomerForm.append("username", addCustomer);
     addCustomerForm.append("agent_username", agent.username);
-    await axios({
+    await instance({
       method: "post",
       url: WebmasterAPI.apiUrls.addCustomer,
       data: addCustomerForm,
@@ -178,7 +178,7 @@ const Agents = () => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             switch (err.response.status) {
               case 400:
               case 401:
@@ -196,7 +196,7 @@ const Agents = () => {
       });
   };
   const handleRemoveCustomer = async (user) => {
-    await axios
+    await instance
       .delete(`${WebmasterAPI.apiUrls.deleteCustomer}/${user.username}`)
       .then((result) => {
         if (result.status === 201) {
@@ -205,7 +205,7 @@ const Agents = () => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             console.error(err.response.data);
           } else {
             console.error(err);

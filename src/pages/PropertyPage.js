@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect, useHistory, useParams } from "react-router-dom";
 import Iframe from "react-iframe";
-import axios from "axios";
+import instance from "../modules/Instance";
 
 //import pictures
 import no_img from "../assets/images/noimage.png";
@@ -50,6 +50,7 @@ const PropertyPage = ({
   const history = useHistory();
   const [isFetch, setFetch] = useState(preview || edit ? false : true);
   const [isFavorite, setFavorite] = useState(false);
+  const [canFavorite, setCanFavorite] = useState(false);
   const [property, setProperty] = useState(
     edit
       ? {
@@ -71,7 +72,7 @@ const PropertyPage = ({
     //Fetch detail
     (async () => {
       if (isFetch && !edit && !preview) {
-        await axios
+        await instance
           .get(`${PropertyAPI.apiUrls.byId}/${id}`)
           .then((result) => {
             if (result.status === 200) {
@@ -87,7 +88,7 @@ const PropertyPage = ({
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 switch (err.response.status) {
                   case 400:
                   case 401:
@@ -110,7 +111,7 @@ const PropertyPage = ({
     if (user.username) {
       const favoriteForm = new FormData();
       favoriteForm.append("is_favorite", !isFavorite ? "true" : "false");
-      await axios({
+      await instance({
         method: "post",
         url: `${CustomerAPI.apiUrls.favorite_property}/${id}`,
         data: favoriteForm,
@@ -123,7 +124,7 @@ const PropertyPage = ({
         })
         .catch((err) => {
           if (err) {
-            if (err.response.data) {
+            if (err.response) {
               console.error(err.response.data);
             } else {
               console.error(err);
@@ -139,7 +140,7 @@ const PropertyPage = ({
     //Fetch is favorite.
     (async () => {
       if (id) {
-        await axios
+        await instance
           .get(`${CustomerAPI.apiUrls.favorite_property}/${id}`)
           .then((result) => {
             if (result.status === 200) {
@@ -148,7 +149,31 @@ const PropertyPage = ({
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
+                console.error(err.response.data);
+              } else {
+                console.error(err);
+              }
+            }
+          });
+      }
+    })();
+  });
+
+  useEffect(() => {
+    //Fetch can favorite this property
+    (async () => {
+      if (id) {
+        await instance
+          .get(`${PropertyAPI.apiUrls.favorite}/${id}`)
+          .then((result) => {
+            if (result.status === 200) {
+              setCanFavorite(result.data.payload);
+            }
+          })
+          .catch((err) => {
+            if (err) {
+              if (err.response) {
                 console.error(err.response.data);
               } else {
                 console.error(err);
@@ -163,7 +188,7 @@ const PropertyPage = ({
     //Fetch seller
     (async () => {
       if (user.class !== "Customer") {
-        await axios
+        await instance
           .get(`${PropertyAPI.apiUrls.contact}/${id}`)
           .then((result) => {
             if (result.status === 200) {
@@ -172,7 +197,7 @@ const PropertyPage = ({
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 console.error(err.response.data);
               } else {
                 console.error(err);
@@ -271,7 +296,7 @@ const PropertyPage = ({
               ) : null
             ) : (
               user.class === "Customer" &&
-              user.username !== property.seller && (
+              canFavorite && (
                 <div
                   onClick={handleFavorite}
                   className={`flex bg-white text-red-500 p-1 pr-3 pl-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75 ${

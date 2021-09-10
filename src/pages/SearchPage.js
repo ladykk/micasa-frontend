@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useQuery } from "../modules/RouterModule";
-import axios from "axios";
+import instance from "../modules/Instance";
 
 //import components
 import Filter from "../components/Filter";
@@ -113,7 +113,7 @@ const SearchPage = ({ user, toggleOverlay }) => {
               }
           }
         }
-        await axios
+        await instance
           .get(PropertyAPI.apiUrls.query, { params: active_params })
           .then((result) => {
             if (result.status === 200) {
@@ -138,7 +138,7 @@ const SearchPage = ({ user, toggleOverlay }) => {
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 console.error(err.response.data);
               } else {
                 console.error(err);

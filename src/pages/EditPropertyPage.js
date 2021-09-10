@@ -20,7 +20,7 @@ import PropertyForm from "../components/PropertyForm";
 
 import PropertyAPI from "../modules/api/PropertyAPI";
 import ImageAPI from "../modules/api/ImageAPI";
-import axios from "axios";
+import instance from "../modules/Instance";
 
 const EditPropertyPage = ({ user }) => {
   const history = useHistory();
@@ -33,7 +33,7 @@ const EditPropertyPage = ({ user }) => {
     if (isFetch) {
       //Fetch Detail
       (async () => {
-        await axios
+        await instance
           .get(`${PropertyAPI.apiUrls.edit}/${id}`)
           .then((result) => {
             if (result.status === 200) {
@@ -48,7 +48,7 @@ const EditPropertyPage = ({ user }) => {
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 switch (err.response.status) {
                   case 400:
                   case 401:

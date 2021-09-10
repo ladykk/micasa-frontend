@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import instance from "../../modules/Instance";
 
 //import components
 import PropertyCard from "../PropertyCard";
@@ -27,7 +27,7 @@ const FavoriteProperties = ({ user }) => {
     //Fetch favorite property
     (async () => {
       if (isFetch) {
-        await axios
+        await instance
           .get(CustomerAPI.apiUrls.favorite_properties)
           .then((result) => {
             if (result.status === 200) {
@@ -45,7 +45,7 @@ const FavoriteProperties = ({ user }) => {
           })
           .catch((err) => {
             if (err) {
-              if (err.response.data) {
+              if (err.response) {
                 console.error(err.response.data);
               }
             } else {

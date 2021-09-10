@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import instance from "../../modules/Instance";
 
 //import pictures
 import no_img from "../../assets/images/noimage.png";
@@ -44,7 +44,7 @@ const ReviewFormCard = ({ property, toggleFetch }) => {
     reviewData.append("message", form.message);
     reviewData.append("property_id", property.property_id);
 
-    await axios({
+    await instance({
       method: "post",
       url: ReviewsAPI.apiUrls.pending,
       data: reviewData,
@@ -57,7 +57,7 @@ const ReviewFormCard = ({ property, toggleFetch }) => {
       })
       .catch((err) => {
         if (err) {
-          if (err.response.data) {
+          if (err.response) {
             switch (err.response.status) {
               case 400:
               case 401:
