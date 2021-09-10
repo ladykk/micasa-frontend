@@ -1,3 +1,3 @@
 const isDev = false;
 
-module.exports = isDev ? "http://localhost:5000" : "http://192.168.1.10:5000";
+module.exports = isDev ? "http://localhost:5000" : "http://ladyk.ddns.net:5000";
