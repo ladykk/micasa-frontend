@@ -31,7 +31,6 @@ import avatar_icon from "../assets/icons/userform/avatar.png";
 
 //import components
 import Facilities from "../components/Facilities";
-import PropertyData from "../modules/PropertyData";
 import Loading from "../components/Loading";
 
 //import modules
@@ -258,13 +257,13 @@ const PropertyPage = ({
       className={`${
         preview
           ? "relative w-full h-full"
-          : "w-screen h-screen absolute top-0 left-0"
+          : "w-full h-ful absolute top-0 left-0 right-0 overflow-x-hidden"
       }`}
     >
       <div
         className={`w-full ${
-          preview ? "h-120 rounded-t-md" : "h-3/4"
-        } background-cover-centered pt-12`}
+          preview ? "h-120 rounded-t-md" : "h-screen-75"
+        } background-cover-centered pt-20`}
         style={{
           backgroundImage: `url('${
             property.images.image_cover ? property.images.image_cover : no_img
@@ -272,10 +271,12 @@ const PropertyPage = ({
         }}
       >
         {!preview && (
-          <div className="w-4/5 h-auto mx-auto relative flex justify-between pt-5">
+          <div className="w-4/5 h-auto mx-auto relative flex justify-between">
             <div
               className="flex bg-blue-500 text-white p-1 pl-3 pr-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75"
-              onClick={() => history.goBack()}
+              onClick={() => {
+                history.goBack();
+              }}
             >
               <img src={arrow} alt="" className="invert-icon w-5 h-5 mr-2" />
               <p className="font-normal">Back to result</p>
@@ -319,11 +320,11 @@ const PropertyPage = ({
       </div>
       <div
         className={`h-16 ${
-          preview ? " w-full" : "w-screen desktop:h-20"
+          preview ? " w-full " : "w-full desktop:h-20 overflow-x-hidden"
         }  mx-auto bg-gray-200`}
       >
         <div
-          className={`w-full ${!preview && "xl:w-4/5"}  h-full mx-auto flex`}
+          className={`w-full  ${!preview && "xl:w-4/5"}  h-full mx-auto flex`}
         >
           <div
             onClick={() => setPage("overview")}
@@ -373,7 +374,7 @@ const PropertyPage = ({
         </div>
       </div>
       <div
-        className={`w-full ${
+        className={`w-full  ${
           preview ? "pr-3 pl-3 border-box" : "xl:w-4/5 xl:p-0 mx-auto"
         }   h-auto`}
       >
@@ -414,74 +415,74 @@ const PropertyPage = ({
             </div>
           </div>
         </div>
-        <div className={`w-full h-max-content pb-12`}>
+        <div className={`w-full  h-max-content pb-12`}>
           {/* Overview */}
           <div
             className={`flex h-fit-content trans-hide ${
               page === "overview" && "active"
             }`}
           >
-            <div className="w-full flex-1">
-              <h1 className="w-full text-xl underline mb-4">Description</h1>
+            <div className="w-full  flex-1">
+              <h1 className="w-full  text-xl underline mb-4">Description</h1>
               <p className="text-lg mb-8 text-justify">
                 {property.description}
               </p>
-              <h1 className="w-full text-xl underline mb-4">Facilities</h1>
+              <h1 className="w-full  text-xl underline mb-4">Facilities</h1>
               <div className="flex flex-wrap items-center justify-start">
                 {getFacilities()}
               </div>
             </div>
             <div className=" w-max ml-28 mr-10 flex-shrink-0 flex-grow-0">
-              <h1 className="w-full text-xl underline mb-4">
+              <h1 className="w-full  text-xl underline mb-4">
                 Property Information
               </h1>
-              <div className="w-full pl-6 mb-8">
-                <div className="w-full flex items-center justify-start mb-3">
+              <div className="w-full  pl-6 mb-8">
+                <div className="w-full  flex items-center justify-start mb-3">
                   <img className="w-7 h-7 mr-3" src={property_type} alt="" />
                   <p className="text-lg">{property.property_type}</p>
                 </div>
-                <div className="w-full flex items-center justify-start mb-3">
+                <div className="w-full  flex items-center justify-start mb-3">
                   <img className="w-7 h-7 mr-3" src={location} alt="" />
                   <p className="text-lg">{`${property.province}, ${property.district}`}</p>
                 </div>
                 {property.near_station && (
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={station} alt="" />
                     <p className="text-lg">{property.near_station}</p>
                   </div>
                 )}
                 {property.bedroom !== "None" && (
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={bedroom} alt="" />
                     <p className="text-lg">{property.bedroom}</p>
                   </div>
                 )}
                 {property.bathroom !== "None" && (
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={bathroom} alt="" />
                     <p className="text-lg">{property.bathroom}</p>
                   </div>
                 )}
-                <div className="w-full flex items-center justify-start mb-3">
+                <div className="w-full  flex items-center justify-start mb-3">
                   <img className="w-7 h-7 mr-3" src={area} alt="" />
                   <p className="text-lg">
                     {property.area} m<sup>2</sup>
                   </p>
                 </div>
                 {property.furnishing === "Furnished" && (
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={furnished} alt="" />
                     <p className="text-lg">{property.furnishing}</p>
                   </div>
                 )}
                 {property.furnishing === "Unfurnished" && (
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={unfurnished} alt="" />
                     <p className="text-lg">{property.furnishing}</p>
                   </div>
                 )}
                 {property.furnishing === "Partly furnished" && (
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img
                       className="w-7 h-7 mr-3"
                       src={partly_furnished}
@@ -491,15 +492,15 @@ const PropertyPage = ({
                   </div>
                 )}
                 {property.ownership === "Leasehold" && (
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={leasehold} alt="" />
                     <p className="text-lg">{property.ownership}</p>
                   </div>
                 )}
               </div>
-              <h1 className="w-full text-xl underline mb-5">Contact</h1>
+              <h1 className="w-full  text-xl underline mb-5">Contact</h1>
               {seller ? (
-                <div className="w-full pl-6 mb-5">
+                <div className="w-full  pl-6 mb-5">
                   <img
                     src={
                       seller.avatar_id
@@ -509,30 +510,30 @@ const PropertyPage = ({
                     className="w-24 h-24 rounded-full object-cover object-center mb-2 mx-auto"
                     alt=""
                   />
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={account} alt="" />
                     <p className="text-lg">{seller.username}</p>
                   </div>
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={full_name} alt="" />
                     <p className="text-lg">{seller.full_name}</p>
                   </div>
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={phone} alt="" />
                     <p className="text-lg">{seller.phone_number}</p>
                   </div>
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={email} alt="" />
                     <p className="text-lg">{seller.email}</p>
                   </div>
                 </div>
               ) : (
-                <div className="w-full pl-6 mb-5">
-                  <div className="w-full flex items-center justify-start mb-3">
+                <div className="w-full  pl-6 mb-5">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={phone} alt="" />
                     <p className="text-lg">02-000-0000</p>
                   </div>
-                  <div className="w-full flex items-center justify-start mb-3">
+                  <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={email} alt="" />
                     <p className="text-lg">sales@micasa.com</p>
                   </div>
@@ -542,7 +543,7 @@ const PropertyPage = ({
           </div>
           {/* Images */}
           <div
-            className={`w-full h-fit-content trans-hide flex flex-wrap items-center justify-around ${
+            className={`w-full  h-fit-content trans-hide flex flex-wrap items-center justify-around ${
               page === "images" && "active"
             }`}
           >
@@ -556,7 +557,7 @@ const PropertyPage = ({
           >
             <Iframe
               url={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAy2j5w0QgLgcqULL0Kj0jGanCZ3WlEdKk&q=${property.maps_query}&zoom=19`}
-              className={`w-full ${preview ? "h-120" : "h-screen-80"} `}
+              className={`w-full  ${preview ? "h-120" : "h-screen-80"} `}
             />
           </div>
         </div>

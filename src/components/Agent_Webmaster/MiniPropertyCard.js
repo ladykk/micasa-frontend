@@ -57,7 +57,7 @@ const MiniPropertyCard = ({ property, handleRemoveProperty }) => {
 
   return (
     <div className="border border-gray-300 grid grid-cols-7 p-1.5 pl-3 pr-3 place-content-center place-items-center rounded-lg mb-2 hover:border-gray-400 ease-in duration-75">
-      <div className="flex relative w-full h-full items-center">
+      <div className="flex relative w-full  h-full items-center">
         {property.is_favorite && (
           <img
             src={favorite}
@@ -66,7 +66,7 @@ const MiniPropertyCard = ({ property, handleRemoveProperty }) => {
           />
         )}
 
-        <p className=" absolute top-0 left-0 right-0 bottom-0 mr-3 w-full flex items-center justify-center">
+        <p className=" absolute top-0 left-0 right-0 bottom-0 mr-3 w-full  flex items-center justify-center">
           {property.property_id}
         </p>
       </div>
@@ -78,7 +78,7 @@ const MiniPropertyCard = ({ property, handleRemoveProperty }) => {
       </p>
 
       <Link
-        className=" col-span-4 w-full text-center"
+        className=" col-span-4 w-full  text-center"
         to={`/property/${property.property_id}`}
         target="_blank"
       >

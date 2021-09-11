@@ -183,7 +183,7 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
           </div>
         </div>
         {/* Property Type */}
-        <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 mb-3 hover:border-gray-400 ease-in duration-75">
+        <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 mb-3 hover:border-gray-400 ease-in duration-75">
           <img src={property_type_icon} alt="" className="w-6 h-6 mr-1" />
           <select
             name="property_type"
@@ -198,7 +198,7 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
         </div>
         {/* Bedroom & Bathroom */}
         <div className="flex mb-3 w-full">
-          <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 mr-1 hover:border-gray-400 ease-in duration-75">
+          <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 mr-1 hover:border-gray-400 ease-in duration-75">
             <img src={bedroom_icon} alt="" className="w-6 h-6 mr-1" />
             <select
               name="bedroom"
@@ -211,7 +211,7 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
               {PropertyData.getBedroomAsOption()}
             </select>
           </div>
-          <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1 hover:border-gray-400 ease-in duration-75">
+          <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 ml-1 hover:border-gray-400 ease-in duration-75">
             <img src={bathroom_icon} alt="" className="w-6 h-6 mr-1" />
             <select
               name="bathroom"

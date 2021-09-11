@@ -74,8 +74,8 @@ const EditPropertyPage = ({ user }) => {
       {property.property_id ? (
         <Switch>
           <Route path={`/edit/${id}/form`} exact>
-            <div className="w-screen h-fit-content absolute top-0 left-0 right-0 bottom-0 pt-20">
-              <div className="w-full pl-5 pr-5 desktop:w-4/5 desktop:p-0 h-fit-content mx-auto pb-20 relative">
+            <div className="w-full h-fit-content  pt-20 overflow-x-hidden">
+              <div className="w-full  pl-5 pr-5 desktop:w-4/5 desktop:p-0 h-fit-content mx-auto pb-20 relative">
                 <div className="flex items-center mb-5">
                   <img
                     src={arrow}
@@ -96,7 +96,7 @@ const EditPropertyPage = ({ user }) => {
       ) : res ? (
         <Redirect to={`/${res}`} />
       ) : (
-        <div className="absolute top-0 left-0 pt-12 w-screen h-screen flex flex-col items-center justify-center">
+        <div className="absolute top-0 left-0 right-0 pt-12 w-full h-screen flex flex-col items-center justify-center overflow-x-hidden">
           <img src={error} alt="" className="w-32 h-32 mb-5" />
           <p className="text-2xl">Something went wrong.</p>
         </div>

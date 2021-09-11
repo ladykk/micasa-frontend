@@ -26,6 +26,24 @@ const Agents = () => {
   const [agent, setAgent] = useState({});
   const [customers, setCustomers] = useState([]);
 
+  //Agent term
+  const [agentTerm, setAgentTerm] = useState("");
+  const [filterAgents, setFilterAgents] = useState([]);
+  const handleAgentTermChange = ({ target }) => {
+    setAgentTerm(target.value);
+    if (target.value === "") {
+      setFilterAgents(agents);
+    } else {
+      setFilterAgents(
+        agents.filter(
+          (agent) =>
+            agent.username.startsWith(target.value) ||
+            agent.full_name.startsWith(target.value)
+        )
+      );
+    }
+  };
+
   useEffect(() => {
     (async () => {
       //Fetch agents
@@ -36,6 +54,7 @@ const Agents = () => {
             if (result.status === 200) {
               let users = result.data.payload;
               setAgents(users);
+              setFilterAgents(users);
             }
           })
           .catch((err) => {
@@ -220,9 +239,9 @@ const Agents = () => {
   };
 
   return isAgentsFetch ? (
-    <Loading />
+    <Loading isStatic={true} />
   ) : (
-    <div className="w-full h-screen-85 flex">
+    <div className="w-full  h-screen-85 flex">
       <div className="h-full mr-5 w-80 flex-grow-0 flex-shrink-0 flex flex-col">
         <div className="mb-5 h-fit-content flex items-end justify-between">
           <h1 className="text-5xl">Agents</h1>
@@ -238,13 +257,13 @@ const Agents = () => {
         <div className="h-full border border-gray-300 p-2 rounded-lg flex flex-col hover:border-gray-400 ease-in duration-75">
           <form
             onSubmit={handleAddAgent}
-            className={`w-full mb-2 trans-toggle flex-shrink-0 flex-grow-0 ${
+            className={`w-full  mb-2 trans-toggle flex-shrink-0 flex-grow-0 ${
               isAddAgent && "active"
             }`}
           >
             <input
               type="text"
-              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full hover:border-gray-400 ease-in duration-75"
+              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full  hover:border-gray-400 ease-in duration-75"
               placeholder="Username"
               value={addAgentUser}
               onChange={handleAddUserChange}
@@ -252,19 +271,19 @@ const Agents = () => {
             />
             <button
               type="submit"
-              className="mt-2 mb-2 w-full flex items-center justify-center h-7 bg-blue-500 rounded-full text-white font-normal flex-shrink-0 flex-grow-0"
+              className="mt-2 mb-2 w-full  flex items-center justify-center h-7 bg-blue-500 rounded-full text-white font-normal flex-shrink-0 flex-grow-0"
             >
               Add Agent
             </button>
             {addUserResponse && (
-              <p className="w-full mb-2 text-center text-red-500">
+              <p className="w-full  mb-2 text-center text-red-500">
                 {addUserResponse}
               </p>
             )}
 
             <hr />
           </form>
-          <form className="w-full h-fit-content mb-2">
+          <form className="w-full  h-fit-content mb-2">
             <div className="border border-gray-300 rounded-full pl-2 pr-2 flex items-center h-8 hover:border-gray-400 ease-in duration-75">
               <img
                 src={search_icon}
@@ -274,14 +293,17 @@ const Agents = () => {
               <input
                 type="text"
                 name="terms"
+                value={agentTerm}
+                onChange={handleAgentTermChange}
+                placeholder="Search by username or full name"
                 id="terms"
-                className="w-full outline-none"
+                className="w-full  outline-none"
               />
             </div>
           </form>
           <div className="h-full">
             {agents.length > 0 ? (
-              agents.map((agent) => (
+              filterAgents.map((agent) => (
                 <UserCard
                   user={agent}
                   setUser={handleChangeAgent}
@@ -289,7 +311,7 @@ const Agents = () => {
                 />
               ))
             ) : (
-              <p className="w-full h-5 flex justify-center items-center">
+              <p className="w-full  h-5 flex justify-center items-center">
                 No Agent
               </p>
             )}
@@ -297,8 +319,8 @@ const Agents = () => {
         </div>
       </div>
       {agent.username && (
-        <div className="w-full h-fit-content p-6 border border-gray-300 rounded-lg shadow mb-10 hover:border-gray-400 ease-in duration-75">
-          <div className="relative w-full flex mb-4">
+        <div className="w-full  h-fit-content p-6 border border-gray-300 rounded-lg shadow mb-10 hover:border-gray-400 ease-in duration-75">
+          <div className="relative w-full  flex mb-4">
             <div className="grid grid-cols-3 gap-2 w-max pl-9 mr-auto">
               <p className="mr-1 flex items-center justify-end">Username:</p>
               <p className="col-span-2 h-8 flex items-center">
@@ -361,13 +383,13 @@ const Agents = () => {
           </div>
           <form
             onSubmit={handleAddCustomer}
-            className={`w-full mb-2 trans-toggle flex-shrink-0 flex-grow-0 ${
+            className={`w-full  mb-2 trans-toggle flex-shrink-0 flex-grow-0 ${
               isAddCustomer && "active"
             }`}
           >
             <input
               type="text"
-              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full hover:border-gray-400 ease-in duration-75"
+              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full  hover:border-gray-400 ease-in duration-75"
               placeholder="Username"
               value={addCustomer}
               onChange={handleAddCustomerChange}
@@ -375,12 +397,12 @@ const Agents = () => {
             />
             <button
               type="submit"
-              className="mt-2 mb-2 w-full flex items-center justify-center h-7 bg-blue-500 rounded-full text-white font-normal flex-shrink-0 flex-grow-0"
+              className="mt-2 mb-2 w-full  flex items-center justify-center h-7 bg-blue-500 rounded-full text-white font-normal flex-shrink-0 flex-grow-0"
             >
               Add Customer
             </button>
             {addCustomerResponse && (
-              <p className="w-full mb-2 text-center text-red-500">
+              <p className="w-full  mb-2 text-center text-red-500">
                 {addCustomerResponse}
               </p>
             )}

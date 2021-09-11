@@ -22,8 +22,8 @@ const DashboardPage = ({
   let { menu } = useParams();
   return !isUserFetch ? (
     user.username ? (
-      <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 pt-20 pb-10 ">
-        <div className="w-full pl-5 pr-5 desktop:w-4/5 h-auto mx-auto flex">
+      <div className="w-full h-auto absolute top-0 left-0 right-0  pt-20 pb-10 overflow-x-hidden">
+        <div className="w-full  pl-5 pr-5 desktop:w-4/5 h-auto mx-auto flex">
           <Menu user={user} handleSignOut={handleSignOut} menu={menu} />
           <Switch>
             <Route path="/dashboard/agents">

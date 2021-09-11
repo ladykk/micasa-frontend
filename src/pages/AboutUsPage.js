@@ -6,16 +6,19 @@ import pic1 from "../assets/images/about/pic1.png";
 import pic2 from "../assets/images/about/pic2.png";
 import pic3 from "../assets/images/about/pic3.png";
 import pic4 from "../assets/images/about/pic4.png";
+import logo from "../assets/images/logo512.png";
+import phone from "../assets/icons/userform/phone-call.png";
+import email from "../assets/icons/userform/email.png";
 
 const AboutUsPage = () => {
   return (
-    <div className="w-screen h-auto absolute top-0 left-0 right-0">
-      <div className="w-full h-screen pt-12 background-1 bg-black relative">
+    <div className="w-full h-auto absolute top-0 left-0 right-0 overflow-x-hidden">
+      <div className="w-full  h-screen pt-12 background-1 bg-black relative">
         <div className=" w-96 h-auto flex items-center flex-col absolute top-1/4 left-1/2 transform-center">
           <h1 className="text-white text-7xl font-semibold text-shadow">
             MI CASA
           </h1>
-          <hr className="w-full mt-2 mb-2" />
+          <hr className="w-full  mt-2 mb-2" />
           <p className="text-white text-3xl text-shadow">Since 2000</p>
         </div>
         <div className="w-2/4 absolute bottom-1/4 left-1/2 transform-center">
@@ -29,15 +32,15 @@ const AboutUsPage = () => {
           </p>
         </div>
       </div>
-      <div className="w-full h-auto p-20 bg-black text-white">
-        <div className="w-full pl-5 pr-5 desktop:w-3/4 1xl:p-0 h-full mx-auto">
-          <div className="w-full flex items-center mb-12">
+      <div className="w-full  h-auto p-20 bg-black text-white">
+        <div className="w-full  pl-5 pr-5 desktop:w-3/4 1xl:p-0 h-full mx-auto">
+          <div className="w-full  flex items-center mb-12">
             <img
               src={pic1}
               alt=""
               className="w-2/5 mr-24 flex-shrink-0 flex-grow-0"
             />
-            <div className="w-full flex flex-col items-end">
+            <div className="w-full  flex flex-col items-end">
               <h1 className="text-2xl mb-5">
                 Thinking of selling your property?
               </h1>
@@ -48,13 +51,13 @@ const AboutUsPage = () => {
               </p>
             </div>
           </div>
-          <div className="w-full flex flex-row-reverse items-center mb-12">
+          <div className="w-full  flex flex-row-reverse items-center mb-12">
             <img
               src={pic2}
               alt=""
               className="w-2/5 ml-24 flex-shrink-0 flex-grow-0"
             />
-            <div className="w-full flex flex-col items-end">
+            <div className="w-full  flex flex-col items-end">
               <h1 className="text-2xl mb-5">
                 Why use Mi Casa to find a home to buy?
               </h1>
@@ -64,13 +67,13 @@ const AboutUsPage = () => {
               </p>
             </div>
           </div>
-          <div className="w-full flex items-center mb-12">
+          <div className="w-full  flex items-center mb-12">
             <img
               src={pic3}
               alt=""
               className="w-2/5 mr-24 flex-shrink-0 flex-grow-0"
             />
-            <div className="w-full flex flex-col items-end">
+            <div className="w-full  flex flex-col items-end">
               <h1 className="text-2xl mb-5">
                 Why use Mi Casa to find a home to rent?
               </h1>
@@ -80,13 +83,13 @@ const AboutUsPage = () => {
               </p>
             </div>
           </div>
-          <div className="w-full flex flex-row-reverse items-center mb-12">
+          <div className="w-full  flex flex-row-reverse items-center mb-12">
             <img
               src={pic4}
               alt=""
               className="w-2/5 ml-24 flex-shrink-0 flex-grow-0"
             />
-            <div className="w-full flex flex-col items-end">
+            <div className="w-full  flex flex-col items-end">
               <h1 className="text-2xl mb-5">
                 Why use Mi Casa to sell your home?
               </h1>
@@ -98,8 +101,31 @@ const AboutUsPage = () => {
           </div>
         </div>
       </div>
-      <div className="w-full h-screen pt-12 background-3 bg-black relative">
-        <div className=" w-96 h-auto flex items-center flex-col absolute top-1/4 left-1/2 transform-center">
+      <div
+        className="w-full  h-screen pt-12 background-3 bg-black relative"
+        id="contact"
+      >
+        <div className="w-full  h-auto flex flex-col items-center justify-center pt-10">
+          <h1 className="text-7xl text-center mb-10 text-white text-shadow">
+            Contact us
+          </h1>
+          <div className="flex justify-center items-center">
+            <img src={logo} alt="" className="w-40 h-40 mr-10" />
+            <div className="w-full  pl-6 mb-5">
+              <div className="w-full  flex items-center justify-start mb-5">
+                <img className="w-8 h-8 mr-5 invert-icon" src={phone} alt="" />
+                <p className="text-xl text-white text-shadow">02-000-0000</p>
+              </div>
+              <div className="w-full  flex items-center justify-start">
+                <img className="w-8 h-8 mr-5 invert-icon" src={email} alt="" />
+                <p className="text-xl text-white text-shadow">
+                  micasacorp2000@gmail.com
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className=" w-96 h-auto flex items-center flex-col absolute bottom-1/4 left-1/2 transform-center">
           <h1 className="text-white text-4xl font-semibold text-shadow mb-5">
             Join us today
           </h1>

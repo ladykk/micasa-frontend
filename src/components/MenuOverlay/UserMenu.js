@@ -17,8 +17,8 @@ const ImageAPI = require("../../modules/api/ImageAPI");
 
 const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
   return (
-    <div className="flex flex-col items-center w-full h-full p-3 pt-4 pb-4">
-      <div className="w-full flex items-center">
+    <div className="flex flex-col items-center w-full  h-full p-3 pt-4 pb-4">
+      <div className="w-full  flex items-center">
         <img
           src={
             user.avatar_id === null
@@ -33,11 +33,11 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
           <h1 className="text-lg">{user.full_name}</h1>
         </div>
       </div>
-      <hr className="w-full mt-3 mb-3" />
+      <hr className="w-full  mt-3 mb-3" />
       <Link
         to="/dashboard/profile"
         onClick={toggleOverlay}
-        className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
+        className="w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
       >
         <img src={profile} alt="" className="w-5 h-5 mr-2 invert-icon" />
         <p className="text-md">My Profile</p>
@@ -46,7 +46,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
         <Link
           to="/dashboard/favorites"
           onClick={toggleOverlay}
-          className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
+          className="w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
         >
           <img src={favorites} alt="" className="w-5 h-5 mr-2 invert-icon" />
           <p className="text-md">Favorite Properties</p>
@@ -56,7 +56,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
         <Link
           to="/dashboard/manage"
           onClick={toggleOverlay}
-          className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
+          className="w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
         >
           <img src={sell} alt="" className="w-5 h-5 mr-2 invert-icon" />
           <p className="text-md">Manage Properties</p>
@@ -66,7 +66,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
         <Link
           to="/dashboard/reviews"
           onClick={toggleOverlay}
-          className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
+          className="w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
         >
           <img src={reviews} alt="" className="w-5 h-5 mr-2 invert-icon" />
           <p className="text-md">Reviews</p>
@@ -76,7 +76,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
         <Link
           to="/dashboard/customers"
           onClick={toggleOverlay}
-          className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
+          className="w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
         >
           <img src={customers} alt="" className="w-5 h-5 mr-2 invert-icon" />
           <p className="text-md">Customers</p>
@@ -86,7 +86,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
         <Link
           to="/dashboard/agents"
           onClick={toggleOverlay}
-          className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
+          className="w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
         >
           <img src={agents} alt="" className="w-5 h-5 mr-2 invert-icon" />
           <p className="text-md">Manage Agents</p>
@@ -96,7 +96,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
         <Link
           to="/dashboard/approve"
           onClick={toggleOverlay}
-          className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
+          className="w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
         >
           <img src={approving} alt="" className="w-5 h-5 mr-2 invert-icon" />
           <p className="text-md">Approving Properties</p>
@@ -108,7 +108,7 @@ const UserMenu = ({ user, handleSignOut, toggleOverlay }) => {
           handleSignOut();
           toggleOverlay();
         }}
-        className="w-full h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
+        className="w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-white cursor-pointer hover:bg-opacity-40 hover:bg-black ease-in duration-75"
       >
         <img src={signout} alt="" className="w-5 h-5 mr-2 invert-icon" />
         <p className="text-md">Sign Out</p>

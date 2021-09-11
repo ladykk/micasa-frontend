@@ -37,7 +37,7 @@ const ReviewCard = ({ review, id }) => {
         }-2 flex-shrink-0 flex-grow-0`}
       />
       <div
-        className={`w-full h-auto flex items-center bg-white p-4 rounded-lg ${
+        className={`w-full  h-auto flex items-center bg-white p-4 rounded-lg ${
           even ? "rounded-tr-none" : "rounded-tl-none"
         }`}
       >
@@ -46,9 +46,9 @@ const ReviewCard = ({ review, id }) => {
           alt=""
           className="w-10 h-10 flex-shrink-0 flex-grow-0 self-start"
         />
-        <div className="flex flex-col ml-5 mr-5 w-full">
+        <div className="flex flex-col ml-5 mr-5 w-full ">
           <div className="flex self-end mb-3">{stars()}</div>
-          <p className="text-justify mb-3 w-full min-h-40">{message}</p>
+          <p className="text-justify mb-3 w-full  min-h-40">{message}</p>
           <p className="font-normal">{full_name}</p>
         </div>
         <img

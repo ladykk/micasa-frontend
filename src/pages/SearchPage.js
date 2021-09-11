@@ -146,12 +146,17 @@ const SearchPage = ({ user, toggleOverlay }) => {
             }
           })
           .finally(() => {
-            setOptions({ ...options, page: 1 });
             setFetch(false);
           });
       }
     })();
   }, [isFetch, contract_type]);
+
+  useEffect(() => {
+    if (contract_type) {
+      setOptions({ ...options, page: 1 });
+    }
+  }, [contract_type]);
 
   const handleOnChange = ({ target }) => {
     setParams({ ...params, [target.name]: target.value });
@@ -159,24 +164,41 @@ const SearchPage = ({ user, toggleOverlay }) => {
 
   const handleOnOptionChange = ({ target }) => {
     setOptions({ ...options, [target.name]: target.value });
+    history.replace(
+      `/search/${contract_type}${PropertyAPI.generateQueryString(params, {
+        ...options,
+        [target.name]: target.value,
+      })}`
+    );
   };
 
   const handlePageChange = ({ target }) => {
     const page = Number.parseInt(options.page, 10);
+    let newPage;
     switch (target.innerHTML) {
       case "&lt;":
         if (page - 1 !== 0) {
           setOptions({ ...options, page: page - 1 });
+          newPage = page - 1;
         }
         break;
       case "&gt;":
         if (page + 1 !== total_page + 1) {
           setOptions({ ...options, page: page + 1 });
+          newPage = page + 1;
         }
         break;
       default:
-        setOptions({ ...options, page: Number.parseInt(target.innerHTML, 10) });
+        newPage = Number.parseInt(target.innerHTML, 10);
+        setOptions({ ...options, page: newPage });
     }
+    history.replace(
+      `/search/${contract_type}${PropertyAPI.generateQueryString(params, {
+        ...options,
+        page: newPage,
+      })}`
+    );
+    window.scrollTo(0, 0);
   };
 
   const handleOnSubmit = (e) => {
@@ -184,6 +206,7 @@ const SearchPage = ({ user, toggleOverlay }) => {
     history.replace(
       `/search/${contract_type}${PropertyAPI.generateQueryString(params, null)}`
     );
+    setOptions({ ...options, page: 1 });
     setFetch(true);
   };
 
@@ -213,18 +236,18 @@ const SearchPage = ({ user, toggleOverlay }) => {
       : Math.ceil(sorted_properties.length / options.items_per_page);
 
   return (
-    <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 pt-20 pb-10 ">
-      <div className="w-full pl-5 pr-5 desktop:w-4/5 h-auto mx-auto flex">
+    <div className="w-full h-auto absolute top-0 left-0 right-0 pt-20 overflow-x-hidden">
+      <div className="w-full pl-5 pr-5 desktop:w-4/5 h-auto mx-auto flex pb-5">
         <Filter
           contract_type={contract_type}
           params={params}
           setParams={setParams}
           handleOnSubmit={handleOnSubmit}
         />
-        <div className="w-full h-auto">
+        <div className="w-full  h-auto">
           {/* Search Bar */}
           <form
-            className="flex items-center w-full h-12 bg-white rounded-full pl-4 shadow border border-gray-300 mb-3 hover:border-gray-400 ease-in duration-75"
+            className="flex items-center w-full  h-12 bg-white rounded-full pl-4 shadow border border-gray-300 mb-3 hover:border-gray-400 ease-in duration-75"
             onSubmit={handleOnSubmit}
           >
             <input
@@ -232,7 +255,7 @@ const SearchPage = ({ user, toggleOverlay }) => {
               name="terms"
               id="terms"
               placeholder="Search by property name, district, train station, or keyword."
-              className="w-full h-full focus:outline-none m-2"
+              className="w-full  h-full focus:outline-none m-2"
               onChange={handleOnChange}
               value={params.terms}
             />
@@ -253,11 +276,11 @@ const SearchPage = ({ user, toggleOverlay }) => {
               className="flex
           "
             >
-              <div className="w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1 hover:border-gray-400 ease-in duration-75">
+              <div className="w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 ml-1 hover:border-gray-400 ease-in duration-75">
                 <select
                   name="sort_by"
                   id="sort_by"
-                  className="w-full h-full outline-none"
+                  className="w-full  h-full outline-none"
                   value={options.sort_by}
                   onChange={handleOnOptionChange}
                 >
@@ -267,11 +290,11 @@ const SearchPage = ({ user, toggleOverlay }) => {
                   <option value="price-high">Price: High to Low</option>
                 </select>
               </div>
-              <div className=" w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1 hover:border-gray-400 ease-in duration-75">
+              <div className=" w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 ml-1 hover:border-gray-400 ease-in duration-75">
                 <select
                   name="items_per_page"
                   id="items_per_page"
-                  className="w-full h-full outline-none"
+                  className="w-full  h-full outline-none"
                   value={options.items_per_page}
                   onChange={handleOnOptionChange}
                 >
@@ -281,11 +304,28 @@ const SearchPage = ({ user, toggleOverlay }) => {
                   <option value="20">20 Items / Page</option>
                 </select>
               </div>
+              <div className="flex ml-5">
+                <button
+                  name="left"
+                  onClick={handlePageChange}
+                  className="flex items-center justify-center w-8 h-9 border-gray-300 border hover:border-gray-400 hover:border-2 ease-in duration-75 rounded-lg shadow cursor-pointer"
+                >
+                  {"<"}
+                </button>
+                <p className="ml-3 text-xl">. . .</p>
+                <button
+                  name="right"
+                  onClick={handlePageChange}
+                  className="flex items-center justify-center w-8 h-9 ml-3 border-gray-300 border hover:border-gray-400 hover:border-2 ease-in duration-75 rounded-lg shadow cursor-pointer"
+                >
+                  {">"}
+                </button>
+              </div>
             </div>
           </div>
           {/* Cards */}
           {isFetch ? (
-            <div className="w-full h-auto">
+            <div className="w-full  h-auto">
               <Loading isStatic={true} />
             </div>
           ) : sorted_properties.length > 0 ? (
@@ -307,7 +347,7 @@ const SearchPage = ({ user, toggleOverlay }) => {
               }
             })
           ) : (
-            <div className="w-full h-auto flex flex-col justify-center items-center pt-5">
+            <div className="w-full  h-auto flex flex-col justify-center items-center pt-5">
               <img src={box} alt="" className="w-20 h-20 mt-5 mb-5" />
               <p className="text-lg">No property found.</p>
             </div>

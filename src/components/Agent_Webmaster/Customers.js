@@ -28,6 +28,24 @@ const Customers = ({ user }) => {
 
   const [page, setPage] = useState("favorite");
 
+  //Agent term
+  const [customerTerm, setCustomerTerm] = useState("");
+  const [filterCustomers, setFilterCustomers] = useState([]);
+  const handleCustomerTermChange = ({ target }) => {
+    setCustomerTerm(target.value);
+    if (target.value === "") {
+      setFilterCustomers(customers);
+    } else {
+      setFilterCustomers(
+        customers.filter(
+          (customer) =>
+            customer.username.startsWith(target.value) ||
+            customer.full_name.startsWith(target.value)
+        )
+      );
+    }
+  };
+
   let display_properties;
   switch (page) {
     case "favorite":
@@ -53,6 +71,7 @@ const Customers = ({ user }) => {
             if (result.status === 200) {
               let users = result.data.payload;
               setCustomers(users);
+              setFilterCustomers(users);
             }
           })
           .catch((err) => {
@@ -151,9 +170,9 @@ const Customers = ({ user }) => {
   };
 
   return isFetch ? (
-    <Loading />
+    <Loading isStatic={true} />
   ) : (
-    <div className="w-full h-screen-85 flex">
+    <div className="w-full  h-screen-85 flex">
       <div className="h-full mr-5 w-max flex-grow-0 flex-shrink-0 flex flex-col">
         <div className="mb-5 h-fit-content flex items-end justify-between">
           <h1 className="text-5xl">Customers</h1>
@@ -169,13 +188,13 @@ const Customers = ({ user }) => {
         <div className="h-full border border-gray-300 p-2 rounded-lg flex flex-col hover:border-gray-400 ease-in duration-75">
           <form
             onSubmit={handleAddCustomer}
-            className={`w-full mb-2 trans-toggle flex-shrink-0 flex-grow-0 ${
+            className={`w-full  mb-2 trans-toggle flex-shrink-0 flex-grow-0 ${
               isAddCustomer && "active"
             }`}
           >
             <input
               type="text"
-              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full hover:border-gray-400 ease-in duration-75"
+              className="border border-gray-300 rounded-full pl-3 pr-3 flex items-center h-8 outline-none w-full  hover:border-gray-400 ease-in duration-75"
               placeholder="Username"
               value={addCustomerUser}
               onChange={handleAddUserChange}
@@ -183,19 +202,19 @@ const Customers = ({ user }) => {
             />
             <button
               type="submit"
-              className="mt-2 mb-2 w-full flex items-center justify-center h-7 bg-blue-500 rounded-full text-white font-normal flex-shrink-0 flex-grow-0"
+              className="mt-2 mb-2 w-full  flex items-center justify-center h-7 bg-blue-500 rounded-full text-white font-normal flex-shrink-0 flex-grow-0"
             >
               Add Customer
             </button>
             {addCustomerResponse && (
-              <p className="w-full mb-2 text-center text-red-500">
+              <p className="w-full  mb-2 text-center text-red-500">
                 {addCustomerResponse}
               </p>
             )}
 
             <hr />
           </form>
-          <form className="w-full h-fit-content mb-2">
+          <form className="w-full  h-fit-content mb-2">
             <div className="border border-gray-300 rounded-full pl-2 pr-2 flex items-center h-8 hover:border-gray-400 ease-in duration-75">
               <img
                 src={search_icon}
@@ -205,18 +224,21 @@ const Customers = ({ user }) => {
               <input
                 type="text"
                 name="terms"
+                value={customerTerm}
+                onChange={handleCustomerTermChange}
+                placeholder="Search by username or full name"
                 id="terms"
-                className="w-full outline-none"
+                className="w-full  outline-none"
               />
             </div>
           </form>
           <div className="h-full">
             {customers.length > 0 ? (
-              customers.map((agent) => (
+              filterCustomers.map((agent) => (
                 <UserCard user={agent} setUser={handleChangeCustomer} />
               ))
             ) : (
-              <p className="w-full h-5 flex justify-center items-center">
+              <p className="w-full  h-5 flex justify-center items-center">
                 No Customer
               </p>
             )}
@@ -224,8 +246,8 @@ const Customers = ({ user }) => {
         </div>
       </div>
       {customer.username && (
-        <div className="w-full h-screen-85 p-6 flex flex-col border border-gray-300 rounded-lg shadow mb-10 hover:border-gray-400 ease-in duration-75">
-          <div className="w-full flex mb-4">
+        <div className="w-full  h-screen-85 p-6 flex flex-col border border-gray-300 rounded-lg shadow mb-10 hover:border-gray-400 ease-in duration-75">
+          <div className="w-full  flex mb-4">
             <div className="grid grid-cols-3 gap-2 w-max pl-9 mr-auto">
               <p className="mr-1 flex items-center justify-end">Username:</p>
               <p className="col-span-2 h-8 flex items-center">

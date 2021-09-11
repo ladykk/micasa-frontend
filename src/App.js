@@ -5,7 +5,11 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import instance from "./modules/Instance";
+
+//import pictures
+import server from "./assets/icons/database-storage.png";
 
 //import components
 import NavBar from "./components/NavBar";
@@ -28,6 +32,8 @@ import Loading from "./components/Loading";
 import UserAPI from "./modules/api/UserAPI";
 
 function App() {
+  //Database
+  const [isDBConnected, setDBConnected] = useState(true);
   //Overlay
   const [isOverlayOpen, setOverlay] = useState(false);
   const toggleOverlay = () => {
@@ -76,6 +82,7 @@ function App() {
                 console.error(err.response.data);
               } else {
                 console.error(err);
+                setDBConnected(false);
               }
             }
           })
@@ -84,9 +91,32 @@ function App() {
     }
   });
 
+  useEffect(() => {
+    let interval = null;
+    if (isDBConnected) {
+      interval = setInterval(async () => {
+        await instance
+          .get("/")
+          .then((result) => {
+            if (result.status === 200) {
+              setDBConnected(true);
+            } else {
+              setDBConnected(false);
+            }
+          })
+          .catch((err) => {
+            setDBConnected(false);
+          });
+      }, 600000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isDBConnected]);
+
   return (
     <Router>
-      <div className="app">
+      <div className="app w-full h-auto">
         <NavBar
           user={user}
           handleSignIn={handleSignIn}
@@ -94,7 +124,7 @@ function App() {
           isOverlayOpen={isOverlayOpen}
           toggleOverlay={toggleOverlay}
         />
-        <div className="pt-12 w-screen h-screen relative overflow-x-hidden">
+        <div className="pt-12 w-full h-auto overflow-x-hidden">
           <Switch>
             <Route path="/add">
               {!isUserFetch ? (
@@ -164,6 +194,28 @@ function App() {
               <Redirect to="/404" />
             </Route>
           </Switch>
+          {!isDBConnected && (
+            <div className="z-50 fixed bottom-10 left-10 flex flex-col items-start justify-center">
+              <div className="bg-red-500 w-max p-1 pl-3 pr-3 flex rounded-full mb-2 shadow-lg">
+                <img src={server} alt="" className="w-6 h-6 invert-icon mr-2" />
+                <p className="font-normal text-white">
+                  Cannot connect to server !
+                </p>
+              </div>
+
+              <p className="bg-white p-2 rounded-lg text-left shadow-lg">
+                Some function might not working properly. <br />
+                Please refresh the browser or{" "}
+                <HashLink
+                  to="/about#contact"
+                  className=" text-gray-700 underline"
+                >
+                  contact us
+                </HashLink>
+                .
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </Router>

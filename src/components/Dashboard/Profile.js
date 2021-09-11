@@ -181,11 +181,11 @@ const Profile = ({ user, setIsUserFetch }) => {
   };
 
   return (
-    <div className="w-full h-auto">
+    <div className="w-full  h-auto">
       <Prompt when={isBlock} message="Are you sure to dismiss the change?" />
       <h1 className="text-5xl mb-5">My Profile</h1>
       <form
-        className="w-full h-fit-content relative p-6 flex border border-gray-300 rounded-lg shadow place-items-start mb-10 hover:border-gray-400 ease-in duration-75"
+        className="w-full  h-fit-content relative p-6 flex border border-gray-300 rounded-lg shadow place-items-start mb-10 hover:border-gray-400 ease-in duration-75"
         onSubmit={handleOnSubmit}
       >
         <div className="grid grid-cols-4 gap-2 w-max pl-9 mr-auto">
@@ -325,7 +325,7 @@ const Profile = ({ user, setIsUserFetch }) => {
             <img
               src={preview ? preview : avatar_icon}
               alt=""
-              className="w-full h-full rounded-full object-cover object-center"
+              className="w-full  h-full rounded-full object-cover object-center"
             />
             <button
               type="button"
@@ -360,12 +360,12 @@ const Profile = ({ user, setIsUserFetch }) => {
         <div>
           <h1 className="text-5xl mb-5">My Real Estate Agent</h1>
           {isAgentFetch ? (
-            <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow items-center justify-center">
+            <div className="w-full  h-fit-content p-6 flex border border-gray-300 rounded-lg shadow items-center justify-center">
               <img src={loading} alt="" className="w-8 h-8 mr-2" />
               <p>Loading...</p>
             </div>
           ) : agent !== null ? (
-            <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow place-items-start hover:border-gray-400 ease-in duration-75">
+            <div className="w-full  h-fit-content p-6 flex border border-gray-300 rounded-lg shadow place-items-start hover:border-gray-400 ease-in duration-75">
               <div className="grid grid-cols-4 gap-2 w-max pl-9 mr-auto">
                 <p className="mr-1 flex items-center justify-end">Agent ID:</p>
                 <p className="col-span-3 h-8 flex items-center">
@@ -399,7 +399,7 @@ const Profile = ({ user, setIsUserFetch }) => {
               </div>
             </div>
           ) : (
-            <div className="w-full h-fit-content p-6 flex border border-gray-300 rounded-lg shadow justify-center hover:border-gray-400 ease-in duration-75">
+            <div className="w-full  h-fit-content p-6 flex border border-gray-300 rounded-lg shadow justify-center hover:border-gray-400 ease-in duration-75">
               <div className="flex justify-center items-center">
                 <img src={contact} className="w-28 h-28 mr-6" alt="" />
                 <div>

@@ -117,7 +117,7 @@ const ReviewFormCard = ({ property, toggleFetch }) => {
 
   return (
     <div className="relative mb-3">
-      <form className="w-full h-fit-content mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
+      <form className="w-full  h-fit-content mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
         <div className=" w-80 border-r border-gray-300 flex-grow-0 flex-shrink-0 relative hover:border-gray-400 ease-in duration-75">
           <img
             src={
@@ -126,7 +126,7 @@ const ReviewFormCard = ({ property, toggleFetch }) => {
                 : no_img
             }
             alt=""
-            className="w-full h-full rounded-tl-xl rounded-bl-xl  object-cover object-center"
+            className="w-full  h-full rounded-tl-xl rounded-bl-xl  object-cover object-center"
           />
           {property.role && (
             <p
@@ -136,20 +136,20 @@ const ReviewFormCard = ({ property, toggleFetch }) => {
             </p>
           )}
         </div>
-        <div className="w-full h-full p-5">
-          <div className="w-full h-6 flex justify-between items-center mb-3">
+        <div className="w-full  h-full p-5">
+          <div className="w-full  h-6 flex justify-between items-center mb-3">
             <h1 className="font-normal text-xl">{property.property_name}</h1>
             <div className="flex self-end">{stars()}</div>
           </div>
-          <hr className="w-full mb-3" />
-          <div className="w-full h-40 flex items-center">
+          <hr className="w-full  mb-3" />
+          <div className="w-full  h-40 flex items-center">
             <textarea
               name="message"
               id="message"
               value={form.message}
               onChange={handleOnChange}
               placeholder="Please express how you feel about us..."
-              className="w-full h-full border border-gray-300 rounded-md p-2 outline-none resize-none hover:border-gray-400 ease-in duration-75"
+              className="w-full  h-full border border-gray-300 rounded-md p-2 outline-none resize-none hover:border-gray-400 ease-in duration-75"
               required
             ></textarea>
             <button

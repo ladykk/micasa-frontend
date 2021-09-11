@@ -48,17 +48,17 @@ const ApproveProperties = () => {
   };
 
   return isFetch ? (
-    <Loading />
+    <Loading isStatic={true} />
   ) : (
-    <div className="w-full h-auto">
+    <div className="w-full  h-auto">
       <h1 className="text-5xl mb-5">Approving Properties</h1>
       {properties.length === 0 ? (
-        <div className="w-full h-auto flex flex-col justify-center items-center pt-5">
+        <div className="w-full  h-auto flex flex-col justify-center items-center pt-5">
           <img src={box} alt="" className="w-20 h-20 mb-2" />
           <p className="text-lg">No property waiting for review.</p>
         </div>
       ) : (
-        <div className="w-full h-auto">
+        <div className="w-full  h-auto">
           <div className="border border-gray-300 grid grid-cols-7 p-2 pl-3 pr-3 place-content-center place-items-center rounded-lg hover:border-gray-400 ease-in duration-75">
             <p className="font-normal">Property ID</p>
             <p className="font-normal">Status</p>

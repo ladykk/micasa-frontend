@@ -18,7 +18,7 @@ const ImageAPI = require("../../modules/api/ImageAPI");
 const Menu = ({ user, handleSignOut, menu }) => {
   return (
     <div className="flex flex-col items-center w-80 h-full p-4 border border-gray-300 rounded-xl shadow mr-16 flex-grow-0 flex-shrink-0 hover:border-gray-400 ease-in duration-75">
-      <div className="w-full flex items-center">
+      <div className="w-full  flex items-center">
         <img
           src={
             user.avatar_id ? ImageAPI.getAvatarURL(user.avatar_id) : avatar_icon
@@ -31,10 +31,10 @@ const Menu = ({ user, handleSignOut, menu }) => {
           <h1 className="text-lg">{user.full_name}</h1>
         </div>
       </div>
-      <hr className="w-full mt-3 mb-3" />
+      <hr className="w-full  mt-3 mb-3" />
       <Link
         to="/dashboard/profile"
-        className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
+        className={`w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
           menu === "profile" && "bg-gray-300 bg-opacity-30"
         }`}
       >
@@ -44,7 +44,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
       {user.class === "Customer" && (
         <Link
           to="/dashboard/favorites"
-          className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
+          className={`w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
             menu === "favorites" && "bg-gray-300 bg-opacity-30"
           }`}
         >
@@ -55,7 +55,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
       {user.class === "Customer" && (
         <Link
           to="/dashboard/manage"
-          className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
+          className={`w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
             menu === "manage" && "bg-gray-300 bg-opacity-30"
           }`}
         >
@@ -66,7 +66,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
       {user.class === "Customer" && (
         <Link
           to="/dashboard/reviews"
-          className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
+          className={`w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
             menu === "reviews" && "bg-gray-300 bg-opacity-30"
           }`}
         >
@@ -77,7 +77,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
       {user.class === "Agent" && (
         <Link
           to="/dashboard/customers"
-          className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
+          className={`w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
             menu === "customers" && "bg-gray-300 bg-opacity-30"
           }`}
         >
@@ -88,7 +88,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
       {user.class === "Webmaster" && (
         <Link
           to="/dashboard/agents"
-          className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
+          className={`w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
             menu === "agents" && "bg-gray-300 bg-opacity-30"
           }`}
         >
@@ -99,7 +99,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
       {user.class === "Webmaster" && (
         <Link
           to="/dashboard/approve"
-          className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
+          className={`w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75 ${
             menu === "approve" && "bg-gray-300 bg-opacity-30"
           }`}
         >
@@ -110,7 +110,7 @@ const Menu = ({ user, handleSignOut, menu }) => {
       <Link
         to="/"
         onClick={handleSignOut}
-        className={`w-full h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75`}
+        className={`w-full  h-10 flex items-center pl-2 pr-2 rounded-md text-black cursor-pointer hover:bg-opacity-30 hover:bg-gray-300 ease-in duration-75`}
       >
         <img src={signout} alt="" className="w-5 h-5 mr-2" />
         <p className="text-md">Sign Out</p>

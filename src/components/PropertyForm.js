@@ -408,7 +408,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
     const elements = [];
     for (let i = 1; i <= 10; i++) {
       elements.push(
-        <div className="relative w-full h-64 rounded-lg border border-gray-300 text-white hover:border-gray-400 ease-in duration-75">
+        <div className="relative w-full  h-64 rounded-lg border border-gray-300 text-white hover:border-gray-400 ease-in duration-75">
           <input
             type="file"
             id={`image_${i}`}
@@ -420,7 +420,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
           <img
             src={previews[`image_${i}`] ? previews[`image_${i}`] : no_img}
             alt=""
-            className="w-full h-full object-contain object-center rounded-lg"
+            className="w-full  h-full object-contain object-center rounded-lg"
           />
           <button
             type="button"
@@ -454,12 +454,12 @@ const PropertyForm = ({ data, setIsFetch }) => {
 
   return (
     <form
-      className="w-full h-max-content relative p-6 border border-gray-300 rounded-lg shadow place-items-start mb-10 hover:border-gray-400 ease-in duration-75"
+      className="w-full  h-max-content relative p-6 border border-gray-300 rounded-lg shadow place-items-start mb-10 hover:border-gray-400 ease-in duration-75"
       onSubmit={handleOnSubmit}
     >
       <Prompt when={isBlock} message={"Are you sure to dismiss the from ?"} />
       {/* Floating Panel */}
-      <div className="sticky top-5 left-0 right-0 w-full h-fit-content z-40 mb-5 flex items-center justify-between rounded-full border border-gray-300 p-2 pl-3 pr-3 bg-white shadow hover:border-gray-400 ease-in duration-75">
+      <div className="sticky top-5 left-0 right-0 w-full  h-fit-content z-40 mb-5 flex items-center justify-between rounded-full border border-gray-300 p-2 pl-3 pr-3 bg-white shadow hover:border-gray-400 ease-in duration-75">
         {/* Display Toggle */}
         <div className="flex items-center">
           <label className="switch mr-3">
@@ -488,14 +488,14 @@ const PropertyForm = ({ data, setIsFetch }) => {
               <p className="mr-2 flex items-center justify-end">
                 Status: <sup className="text-red-500">*</sup>
               </p>
-              <div className=" w-36 h-8 bg-white pl-2 pr-2 rounded-lg shadow border border-gray-300 hover:border-gray-400 ease-in duration-75">
+              <div className=" w-36 h-8 bg-white pl-2 rounded-lg shadow border border-gray-300 hover:border-gray-400 ease-in duration-75">
                 <select
                   type="text"
                   name="status"
                   id="status"
                   value={form.status}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                   disabled={display || data.status === "Pending"}
                 >
@@ -525,7 +525,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
           <button
             type="button"
             onClick={handleOnReset}
-            className={`mr-2 flex items-center justify-center w-full p-1 pl-3 pr-3 rounded-full text-white ${
+            className={`mr-2 flex items-center justify-center w-full  p-1 pl-3 pr-3 rounded-full text-white ${
               isBlock ? "bg-red-500" : "bg-gray-500"
             } font-normal align-middle hover:bg-opacity-90 ease-in duration-75`}
           >
@@ -534,7 +534,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
           {/* Submit Button */}
           <button
             type="submit"
-            className={`flex items-center justify-center w-full p-1 pl-3 pr-3 rounded-full text-white ${
+            className={`flex items-center justify-center w-full  p-1 pl-3 pr-3 rounded-full text-white ${
               isBlock ? "bg-blue-500" : "bg-gray-500"
             } font-normal align-middle hover:bg-opacity-90 ease-in duration-75`}
           >
@@ -543,7 +543,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
         </div>
       </div>
       {display ? (
-        <div className="w-full h-max-content border border-gray-300 rounded-md shadow hover:border-gray-400 ease-in duration-75">
+        <div className="w-full  h-max-content border border-gray-300 rounded-md shadow hover:border-gray-400 ease-in duration-75">
           {/* Preview */}
           <PropertyPage
             preview={form}
@@ -561,7 +561,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 Cover image: <sup className="text-red-500">*</sup>
               </p>
               <div
-                className={`relative w-full h-64 mb-5 rounded-lg border ${
+                className={`relative w-full  h-64 mb-5 rounded-lg border ${
                   errors.cover
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -578,7 +578,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 <img
                   src={previews.image_cover ? previews.image_cover : no_img}
                   alt=""
-                  className="w-full h-full object-cover object-center rounded-lg"
+                  className="w-full  h-full object-cover object-center rounded-lg"
                 />
                 <button
                   type="button"
@@ -613,19 +613,19 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 id="maps_query"
                 value={form.maps_query}
                 onChange={handleOnChange}
-                className="w-full mb-4 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none hover:border-gray-400 ease-in duration-75"
+                className="w-full  mb-4 h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none hover:border-gray-400 ease-in duration-75"
                 placeholder="Search in Google Maps"
               />
               {form.maps_query ? (
                 <Iframe
                   url={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAy2j5w0QgLgcqULL0Kj0jGanCZ3WlEdKk&q=${form.maps_query}&zoom=19`}
-                  className="w-full h-120 border border-gray-300 rounded-md shadow hover:border-gray-400 ease-in duration-75"
+                  className="w-full  h-120 border border-gray-300 rounded-md shadow hover:border-gray-400 ease-in duration-75"
                 />
               ) : (
                 <img
                   src={maps}
                   alt=""
-                  className="w-full h-120 border border-gray-300 rounded-md shadow object-cover object-center hover:border-gray-400 ease-in duration-75"
+                  className="w-full  h-120 border border-gray-300 rounded-md shadow object-cover object-center hover:border-gray-400 ease-in duration-75"
                 />
               )}
             </div>
@@ -646,7 +646,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   name="property_id"
                   id="property_id"
                   value={form.property_id}
-                  className=" col-span-3 w-full h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none hover:border-gray-400 ease-in duration-75"
+                  className=" col-span-3 w-full  h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none hover:border-gray-400 ease-in duration-75"
                   disabled
                   required
                 />
@@ -661,7 +661,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 id="property_name"
                 value={form.property_name}
                 onChange={handleOnChange}
-                className={`col-span-3 w-full h-8 bg-white p-2 rounded-lg shadow border outline-none ease-in duration-75 ${
+                className={`col-span-3 w-full  h-8 bg-white p-2 rounded-lg shadow border outline-none ease-in duration-75 ${
                   errors.property_name
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -673,7 +673,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 Property type: <sup className="text-red-500">*</sup>
               </p>
               <div
-                className={`col-span-3 w-64 h-8 bg-white pl-2 pr-2 rounded-lg shadow border ease-in duration-75 ${
+                className={`col-span-3 w-64 h-8 bg-white pl-2 rounded-lg shadow border ease-in duration-75 ${
                   errors.property_type
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -685,7 +685,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   id="property_type"
                   value={form.property_type}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                 >
                   <option value="" hidden disabled>
@@ -699,7 +699,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 Contract: <sup className="text-red-500">*</sup>
               </p>
               <div
-                className={`col-span-3 w-56 h-8 bg-white pl-2 pr-2 rounded-lg shadow border ease-in duration-75 ${
+                className={`col-span-3 w-56 h-8 bg-white pl-2 rounded-lg shadow border ease-in duration-75 ${
                   errors.contract_type
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -711,7 +711,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   id="contract_type"
                   value={form.contract_type}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                 >
                   <option value="" hidden disabled>
@@ -767,7 +767,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 {/* Rent Payment */}
                 {form.contract_type === "Rent" ? (
                   <div
-                    className={`col-span-3 w-full h-8 bg-white pl-2 pr-2 rounded-lg shadow border ${
+                    className={`col-span-3 w-full  h-8 bg-white pl-2 rounded-lg shadow border ${
                       errors.rent_payment
                         ? "border-red-400"
                         : "border-gray-300 hover:border-gray-400"
@@ -779,7 +779,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                       id="rent_payment"
                       value={form.rent_payment}
                       onChange={handleOnChange}
-                      className="outline-none w-full h-full"
+                      className="outline-none w-full  h-full"
                       required={form.contract_type === "Rent"}
                     >
                       <option value="None" hidden disabled>
@@ -805,7 +805,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   id="rent_requirement"
                   value={form.rent_requirement}
                   onChange={handleOnChange}
-                  className=" col-span-3 w-full h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none hover:border-gray-400 ease-in duration-75"
+                  className=" col-span-3 w-full  h-8 bg-white p-2 rounded-lg shadow border border-gray-300 outline-none hover:border-gray-400 ease-in duration-75"
                   placeholder='e.g. "Min. 1 year", "Max. 5 years". (Blank for none)'
                 />
               )}
@@ -814,7 +814,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 Bedroom: <sup className="text-red-500">*</sup>
               </p>
               <div
-                className={`col-span-3 w-56 h-8 bg-white pl-2 pr-2 rounded-lg shadow border ease-in duration-75 ${
+                className={`col-span-3 w-56 h-8 bg-white pl-2 rounded-lg shadow border ease-in duration-75 ${
                   errors.bedroom
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -826,7 +826,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   id="bedroom"
                   value={form.bedroom}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                 >
                   <option value="" hidden disabled>
@@ -840,7 +840,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 Bathroom: <sup className="text-red-500">*</sup>
               </p>
               <div
-                className={`col-span-3 w-56 h-8 bg-white pl-2 pr-2 rounded-lg shadow border ease-in duration-75 ${
+                className={`col-span-3 w-56 h-8 bg-white pl-2 rounded-lg shadow border ease-in duration-75 ${
                   errors.bathroom
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -852,7 +852,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   id="bathroom"
                   value={form.bathroom}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                 >
                   <option value="" hidden disabled>
@@ -866,7 +866,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 Furnishing: <sup className="text-red-500">*</sup>
               </p>
               <div
-                className={`col-span-3 w-56 h-8 bg-white pl-2 pr-2 rounded-lg shadow border ease-in duration-75 ${
+                className={`col-span-3 w-56 h-8 bg-white pl-2 rounded-lg shadow border ease-in duration-75 ${
                   errors.furnishing
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -878,7 +878,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   id="furnishing"
                   value={form.furnishing}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                 >
                   <option value="" hidden disabled>
@@ -889,14 +889,14 @@ const PropertyForm = ({ data, setIsFetch }) => {
               </div>
               {/* Ownership */}
               <p className="mr-1 flex items-center justify-end">Ownership:</p>
-              <div className="col-span-3 w-56 h-8 bg-white pl-2 pr-2 rounded-lg shadow border border-gray-300 hover:border-gray-400 ease-in duration-75">
+              <div className="col-span-3 w-56 h-8 bg-white pl-2 rounded-lg shadow border border-gray-300 hover:border-gray-400 ease-in duration-75">
                 <select
                   type="text"
                   name="ownership"
                   id="ownership"
                   value={form.ownership}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                 >
                   {PropertyData.getOwnershipAsOption()}
                 </select>
@@ -908,7 +908,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 District: <sup className="text-red-500">*</sup>
               </p>
               <div
-                className={`col-span-3 w-56 h-8 bg-white pl-2 pr-2 rounded-lg shadow border ease-in duration-75 ${
+                className={`col-span-3 w-56 h-8 bg-white pl-2 rounded-lg shadow border ease-in duration-75 ${
                   errors.district
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -920,7 +920,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   id="district"
                   value={form.district}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                 >
                   <option value="" hidden disabled>
@@ -934,7 +934,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                 Province: <sup className="text-red-500">*</sup>
               </p>
               <div
-                className={`col-span-3 w-56 h-8 bg-white pl-2 pr-2 rounded-lg shadow border ease-in duration-75 ${
+                className={`col-span-3 w-56 h-8 bg-white pl-2 rounded-lg shadow border ease-in duration-75 ${
                   errors.province
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -946,7 +946,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   id="province"
                   value={form.province}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                 >
                   <option value="" hidden disabled>
@@ -959,14 +959,14 @@ const PropertyForm = ({ data, setIsFetch }) => {
               <p className="mr-1 flex items-center justify-end">
                 Near station:
               </p>
-              <div className="col-span-3 w-full h-8 bg-white pl-2 pr-2 rounded-lg shadow border border-gray-300 hover:border-gray-400 ease-in duration-75">
+              <div className="col-span-3 w-full  h-8 bg-white pl-2 rounded-lg shadow border border-gray-300 hover:border-gray-400 ease-in duration-75">
                 <select
                   type="text"
                   name="near_station"
                   id="near_station"
                   value={form.near_station}
                   onChange={handleOnChange}
-                  className="outline-none w-full h-full"
+                  className="outline-none w-full  h-full"
                   required
                 >
                   {PropertyData.getStationsAsOption()}
@@ -974,7 +974,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
               </div>
               {/* Facilities */}
               <p className="text-lg font-normal mb-2 col-span-4">Facilities:</p>
-              <div className="col-start-2 col-end-5 w-full flex">
+              <div className="col-start-2 col-end-5 w-full  flex">
                 <div className="w-max mr-20">
                   <div className="flex items-center mb-1.5">
                     <input
@@ -1191,7 +1191,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
               placeholder="Describe your property..."
               onChange={handleOnChange}
               value={form.description}
-              className={`w-full h-60 border rounded-md p-2 outline-none resize-none ease-in duration-75 ${
+              className={`w-full  h-60 border rounded-md p-2 outline-none resize-none ease-in duration-75 ${
                 errors.description
                   ? "border-red-400"
                   : "border-gray-300 hover:border-gray-400"

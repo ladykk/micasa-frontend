@@ -152,7 +152,7 @@ const PropertyCard = ({
   };
 
   return (
-    <div className="w-full h-fit-content max-h-72 mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
+    <div className="w-full  h-fit-content max-h-72 mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
       <Link
         to={path}
         className=" w-80 max-h-72 border-r border-gray-300 flex-grow-0 flex-shrink-0 relative"
@@ -160,7 +160,7 @@ const PropertyCard = ({
         <img
           src={data.images.image_cover ? data.images.image_cover : no_img}
           alt=""
-          className="w-full h-full rounded-tl-xl rounded-bl-xl  object-cover object-center"
+          className="w-full  h-full rounded-tl-xl rounded-bl-xl  object-cover object-center"
         />
         {data.status && (
           <p
@@ -185,8 +185,8 @@ const PropertyCard = ({
           </div>
         </div>
       </Link>
-      <div className="w-full h-full max-h-72 p-5">
-        <div className="w-full h-6 flex justify-between items-center mb-3">
+      <div className="w-full  h-full max-h-72 p-5">
+        <div className="w-full  h-6 flex justify-between items-center mb-3">
           <Link to={path}>
             <h1 className="font-normal text-xl">{data.property_name}</h1>
           </Link>
@@ -202,8 +202,8 @@ const PropertyCard = ({
               />
             )}
         </div>
-        <hr className="w-full mb-3" />
-        <div className="w-full h-auto flex justify-between items-center mb-3">
+        <hr className="w-full  mb-3" />
+        <div className="w-full  h-auto flex justify-between items-center mb-3">
           <div className="flex items-center justify-start">
             <div className="flex items-end justify-start mr-4">
               <img src={location} alt="" className="w-6 h-6 mr-1" />
@@ -222,7 +222,7 @@ const PropertyCard = ({
             </div>
           </div>
         </div>
-        <div className="w-full h-auto flex justify-start items-center flex-wrap">
+        <div className="w-full  h-auto flex justify-start items-center flex-wrap">
           <div className="flex items-end justify-start mr-4 mb-3">
             <img src={property_type} alt="" className="w-6 h-6 mr-1" />
             <p>{data.property_type}</p>

@@ -3,7 +3,7 @@ import React from "react";
 //import pictures
 import loading from "../assets/images/loading.gif";
 
-const Loading = (isStatic = false) => {
+const Loading = ({ isStatic = false }) => {
   return (
     <div
       className={`${

@@ -73,7 +73,7 @@ const Reviews = ({ user }) => {
   return isPendingFetch || isReviewedFetch ? (
     <Loading isStatic={true} />
   ) : (
-    <div className="w-full h-auto">
+    <div className="w-full  h-auto">
       {pending.length === 0 && reviewed.length === 0 && (
         <div className="flex items-center justify-center flex-col">
           <h1 className="text-2xl mb-2">

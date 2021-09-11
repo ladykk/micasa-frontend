@@ -70,6 +70,8 @@ const SignUpPage = () => {
         } else {
           setErrors({ ...errors, confirm_password: "Password not matched." });
         }
+        setForm({ ...form, [target.name]: target.value });
+        break;
       default:
         setForm({ ...form, [target.name]: target.value });
         break;
@@ -141,11 +143,11 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="w-screen h-screen absolute top-0 left-0 right-0 bottom-0 pt-12 background-2 bg-black text-white">
+    <div className="w-full h-screen absolute top-0 left-0 right-0  pt-12 background-2 bg-black text-white overflow-x-hidden">
       <Prompt when={isBlock} message={"Are you sure to leave this page ?"} />
-      <div className="w-full pl-5 pr-5 xl:pl-14 xl:pr-14 desktop:w-4/5 desktop:p-0 h-full mx-auto relative flex">
+      <div className="w-full  pl-5 pr-5 xl:pl-14 xl:pr-14 desktop:w-4/5 desktop:p-0 h-full mx-auto relative flex">
         <div className=" w-1/3 flex flex-col justify-center flex-shrink-0 flex-grow-0 mr-48">
-          <div className="w-full flex items-end justify-between mb-4">
+          <div className="w-full  flex items-end justify-between mb-4">
             <h1 className="text-4xl">At Mi Casa,</h1>
             <p className="text-xl">
               <span className="text-red-600 font-normal">10,000+</span>{" "}
@@ -164,7 +166,7 @@ const SignUpPage = () => {
           </Link>
         </div>
         <form
-          className="w-full h-auto bg-black bg-opacity-60 rounded-xl p-7 mt-12 mb-12"
+          className="w-full  h-auto bg-black bg-opacity-60 rounded-xl p-7 mt-12 mb-12"
           onSubmit={handleOnSubmit}
         >
           <h1 className="text-center text-5xl font-semibold mt-5 mb-10">
@@ -184,7 +186,7 @@ const SignUpPage = () => {
                 <img
                   src={preview ? preview : avatar_icon}
                   alt=""
-                  className="w-full h-full rounded-full object-cover object-center"
+                  className="w-full  h-full rounded-full object-cover object-center"
                 />
                 <button
                   type="button"
@@ -210,7 +212,7 @@ const SignUpPage = () => {
               <p className="text-red-500">{errors.avatar_file}</p>
             </div>
             <div className=" w-3/5 h/full p-2 text-black">
-              <div className="w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 border-gray-300 hover:border-gray-400">
+              <div className="w-full  h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 border-gray-300 hover:border-gray-400">
                 <img src={name_icon} alt="" className="h-6 w-auto mr-2" />
                 <input
                   type="text"
@@ -220,12 +222,12 @@ const SignUpPage = () => {
                   onChange={handleChange}
                   value={form.full_name}
                   placeholder="Name"
-                  className="w-full focus:outline-none h-full"
+                  className="w-full  focus:outline-none h-full"
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.full_name}</p>
               <div
-                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                className={`w-full  h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
                   errors.username
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -240,12 +242,12 @@ const SignUpPage = () => {
                   onChange={handleChange}
                   value={form.username}
                   placeholder="Username"
-                  className="w-full focus:outline-none h-full"
+                  className="w-full  focus:outline-none h-full"
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.username}</p>
               <div
-                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                className={`w-full  h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
                   errors.confirm_password
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -260,12 +262,12 @@ const SignUpPage = () => {
                   onChange={handleChange}
                   value={form.password}
                   placeholder="Password"
-                  className="w-full focus:outline-none h-full"
+                  className="w-full  focus:outline-none h-full"
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.password}</p>
               <div
-                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                className={`w-full  h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
                   errors.confirm_password
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -280,14 +282,14 @@ const SignUpPage = () => {
                   onChange={handleChange}
                   value={form.confirm_password}
                   placeholder="Confirm Password"
-                  className="w-full focus:outline-none h-full"
+                  className="w-full  focus:outline-none h-full"
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">
                 {errors.confirm_password}
               </p>
               <div
-                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                className={`w-full  h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
                   errors.email
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -302,12 +304,12 @@ const SignUpPage = () => {
                   onChange={handleChange}
                   value={form.email}
                   placeholder="Email"
-                  className="w-full focus:outline-none h-full"
+                  className="w-full  focus:outline-none h-full"
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.email}</p>
               <div
-                className={`w-full h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
+                className={`w-full  h-10 mb-3 bg-white p-2 rounded-lg flex items-center shadow-md border ease-in duration-75 ${
                   errors.phone_number
                     ? "border-red-400"
                     : "border-gray-300 hover:border-gray-400"
@@ -322,7 +324,7 @@ const SignUpPage = () => {
                   onChange={handleChange}
                   value={form.phone_number}
                   placeholder="Phone number"
-                  className="w-full focus:outline-none h-full"
+                  className="w-full  focus:outline-none h-full"
                 />
               </div>
               <p className="text-red-500 mt-1 mb-2">{errors.phone_number}</p>
@@ -340,7 +342,7 @@ const SignUpPage = () => {
               </div>
               <button
                 type="submit"
-                className="flex items-center justify-center w-full h-10 mt-7 rounded-xl text-white bg-blue-500 text-lg font-normal align-middle hover:bg-opacity-90 ease-in duration-75"
+                className="flex items-center justify-center w-full  h-10 mt-7 rounded-xl text-white bg-blue-500 text-lg font-normal align-middle hover:bg-opacity-90 ease-in duration-75"
               >
                 Sign Up
               </button>

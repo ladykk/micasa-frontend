@@ -37,7 +37,7 @@ const ReviewHistoryCard = ({ property }) => {
   };
 
   return (
-    <form className="w-full h-fit-content mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
+    <form className="w-full  h-fit-content mb-3 border border-gray-300 rounded-xl shadow flex hover:border-gray-400 ease-in duration-75">
       <div className=" w-80 border-r border-gray-300 flex-grow-0 flex-shrink-0 relative hover:border-gray-400 ease-in duration-75">
         <img
           src={
@@ -46,7 +46,7 @@ const ReviewHistoryCard = ({ property }) => {
               : no_img
           }
           alt=""
-          className="w-full h-full rounded-tl-xl rounded-bl-xl  object-cover object-center"
+          className="w-full  h-full rounded-tl-xl rounded-bl-xl  object-cover object-center"
         />
         {property.role && (
           <p
@@ -56,13 +56,13 @@ const ReviewHistoryCard = ({ property }) => {
           </p>
         )}
       </div>
-      <div className="w-full h-full p-5">
-        <div className="w-full h-6 flex justify-between items-center mb-3">
+      <div className="w-full  h-full p-5">
+        <div className="w-full  h-6 flex justify-between items-center mb-3">
           <h1 className="font-normal text-xl">{property.property_name}</h1>
           <div className="flex self-end">{stars()}</div>
         </div>
-        <hr className="w-full mb-3" />
-        <div className="relative w-full h-40">
+        <hr className="w-full  mb-3" />
+        <div className="relative w-full  h-40">
           <p>{property.message}</p>
           <p className="absolute bottom-0 right-0 text-gray-400">
             {moment(new Date(property.timestamp)).fromNow()}

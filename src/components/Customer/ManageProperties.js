@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import instance from "../../modules/Instance";
+import { useQuery } from "../../modules/RouterModule";
 
 //import pictures
 import add from "../../assets/icons/property_detail/add.png";
@@ -14,7 +15,10 @@ import PropertyAPI from "../../modules/api/PropertyAPI";
 import ImageAPI from "../../modules/api/ImageAPI";
 import Loading from "../Loading";
 
-const ManageProperties = ({ user }) => {
+const ManageProperties = () => {
+  const history = useHistory();
+  const query = useQuery();
+
   const [page, setPage] = useState("approved");
   const [isFetch, setIsFetch] = useState(true);
   const [approved, setApproved] = useState([]);
@@ -26,6 +30,7 @@ const ManageProperties = ({ user }) => {
       case "pending":
       case "sold":
         setPage(target.id);
+        break;
       default:
         break;
     }
@@ -105,9 +110,11 @@ const ManageProperties = ({ user }) => {
   //params
   const [params, setParams] = useState({
     //Query Properties
-    page: 1,
-    sort_by: "new_added",
-    items_per_page: 5,
+    page: query.get("page") ? Number.parseInt(query.get("page"), 10) : 1,
+    sort_by: query.get("sort_by") ? query.get("sort_by") : "new_added",
+    items_per_page: query.get("items_per_page")
+      ? Number.parseInt(query.get("items_per_page"), 10)
+      : 5,
   });
   const total_page =
     display_set.length === 0
@@ -115,9 +122,15 @@ const ManageProperties = ({ user }) => {
       : Math.ceil(display_set.length / params.items_per_page);
   const handleOnChange = ({ target }) => {
     setParams({ ...params, [target.name]: target.value });
+    history.replace(
+      `/dashboard/manage${PropertyAPI.generateQueryString(null, {
+        ...params,
+        [target.name]: target.value,
+      })}`
+    );
   };
 
-  let filter_set;
+  let filter_set = display_set;
   switch (params.sort_by) {
     case "new_added":
       filter_set = display_set.sort((a, b) => b.property_id - a.property_id);
@@ -126,10 +139,10 @@ const ManageProperties = ({ user }) => {
       filter_set = display_set.sort((a, b) => b.seen - a.seen);
       break;
     case "price-low":
-      filter_set = display_set.sort((a, b) => b.price - a.price);
+      filter_set = display_set.sort((a, b) => a.price - b.price);
       break;
     case "price-high":
-      filter_set = display_set.sort((a, b) => a.price - b.price);
+      filter_set = display_set.sort((a, b) => b.price - a.price);
       break;
     default:
       filter_set = display_set;
@@ -137,24 +150,35 @@ const ManageProperties = ({ user }) => {
 
   const handlePageChange = ({ target }) => {
     const page = Number.parseInt(params.page, 10);
+    let newPage = page;
     switch (target.innerHTML) {
       case "&lt;":
         if (page - 1 !== 0) {
           setParams({ ...params, page: page - 1 });
+          newPage = page - 1;
         }
         break;
       case "&gt;":
         if (page + 1 !== total_page + 1) {
           setParams({ ...params, page: page + 1 });
+          newPage = page + 1;
         }
         break;
       default:
         setParams({ ...params, page: Number.parseInt(target.innerHTML, 10) });
+        newPage = Number.parseInt(target.innerHTML, 10);
     }
+    history.replace(
+      `/dashboard/manage${PropertyAPI.generateQueryString(null, {
+        ...params,
+        page: newPage,
+      })}`
+    );
+    window.scrollTo(0, 0);
   };
 
   return isFetch ? (
-    <Loading />
+    <Loading isStatic={true} />
   ) : (
     <div className="w-full h-auto">
       <h1 className="text-5xl mb-5">Manage Properties</h1>
@@ -204,7 +228,7 @@ const ManageProperties = ({ user }) => {
           </Link>
         </div>
       </div>
-      <div className="w-full h-auto">
+      <div className="w-full  h-auto">
         {/* Query Options */}
         <div className="flex justify-between items-center mb-3">
           <p className="text-gray-500">
@@ -215,11 +239,11 @@ const ManageProperties = ({ user }) => {
             className="flex
           "
           >
-            <div className="w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1 hover:border-gray-400 ease-in duration-75">
+            <div className="w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 ml-1 hover:border-gray-400 ease-in duration-75">
               <select
                 name="sort_by"
                 id="sort_by"
-                className="w-full h-full outline-none"
+                className="w-full  h-full outline-none"
                 value={params.sort_by}
                 onChange={handleOnChange}
               >
@@ -229,11 +253,11 @@ const ManageProperties = ({ user }) => {
                 <option value="price-high">Price: High to Low</option>
               </select>
             </div>
-            <div className=" w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 pr-2 ml-1 hover:border-gray-400 ease-in duration-75">
+            <div className=" w-44 h-9 border border-gray-300 rounded-xl flex items-center pl-2 ml-1 hover:border-gray-400 ease-in duration-75">
               <select
                 name="items_per_page"
                 id="items_per_page"
-                className="w-full h-full outline-none"
+                className="w-full  h-full outline-none"
                 value={params.items_per_page}
                 onChange={handleOnChange}
               >
@@ -243,11 +267,28 @@ const ManageProperties = ({ user }) => {
                 <option value="20">20 Items / Page</option>
               </select>
             </div>
+            <div className="flex ml-5">
+              <button
+                name="left"
+                onClick={handlePageChange}
+                className="flex items-center justify-center w-8 h-9 border-gray-300 border hover:border-gray-400 hover:border-2 ease-in duration-75 rounded-lg shadow cursor-pointer"
+              >
+                {"<"}
+              </button>
+              <p className="ml-3 text-xl">. . .</p>
+              <button
+                name="right"
+                onClick={handlePageChange}
+                className="flex items-center justify-center w-8 h-9 ml-3 border-gray-300 border hover:border-gray-400 hover:border-2 ease-in duration-75 rounded-lg shadow cursor-pointer"
+              >
+                {">"}
+              </button>
+            </div>
           </div>
         </div>
         {/* Cards */}
         {display_set.length > 0 ? (
-          display_set.map((property, index) => {
+          filter_set.map((property, index) => {
             const current_property = index + 1;
             const stop = params.page * params.items_per_page;
             const start = stop - params.items_per_page + 1;
@@ -265,7 +306,7 @@ const ManageProperties = ({ user }) => {
             }
           })
         ) : (
-          <div className="w-full h-auto flex flex-col justify-center items-center pt-5">
+          <div className="w-full  h-auto flex flex-col justify-center items-center pt-5">
             <img src={box} alt="" className="w-20 h-20 mt-5 mb-5" />
             <p className="text-lg">No property found.</p>
           </div>

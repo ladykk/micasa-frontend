@@ -39,7 +39,7 @@ const SearchBar = () => {
 
   return (
     <form
-      className="flex items-center w-full h-14 bg-white rounded-full pl-4 shadow-xl"
+      className="flex items-center w-full  h-14 bg-white rounded-full pl-4 shadow-xl"
       onSubmit={handleOnSubmit}
     >
       <input
@@ -47,14 +47,14 @@ const SearchBar = () => {
         name="terms"
         id="terms"
         placeholder="Search by property name, district, train station, or keyword."
-        className="w-full h-full focus:outline-none m-2"
+        className="w-full  h-full focus:outline-none m-2"
         onChange={handleChange}
       />
       <select
         name="property_type"
         id="property_type"
         value={query.property_type ? query.property_type : ""}
-        className="h-full flex-grow-0 flex-shrink-0 w-40 focus:outline-none mr-2"
+        className="h-full flex-grow-0 flex-shrink-0 w-40 focus:outline-none"
         onChange={handleChange}
       >
         <option value="">All Property Type</option>
@@ -64,7 +64,7 @@ const SearchBar = () => {
         name="contract_type"
         id="contract_type"
         value={query.contract_type ? query.contract_type : ""}
-        className="h-full flex-grow-0 flex-shrink-0 w-36 focus:outline-none mr-2"
+        className="h-full flex-grow-0 flex-shrink-0 w-36 focus:outline-none"
         onChange={handleChange}
         required
       >
