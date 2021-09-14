@@ -343,6 +343,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
             setBlock(false);
             setIsFetch(true);
             history.goBack();
+            setTimeout(() => {
+              window.location.reload(false);
+            }, 10);
           }
         })
         .catch((err) => {
@@ -378,6 +381,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
           if (result.status === 201) {
             setBlock(false);
             history.goBack();
+            window.location.reload(false);
           }
         })
         .catch((err) => {

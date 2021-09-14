@@ -66,7 +66,7 @@ const PropertyPage = ({
         }
       : {}
   );
-  const [seller, setSeller] = useState(null);
+  const [seller, setSeller] = useState({});
   useEffect(() => {
     //Fetch detail
     (async () => {
@@ -499,7 +499,7 @@ const PropertyPage = ({
                 )}
               </div>
               <h1 className="w-full  text-xl underline mb-5">Contact</h1>
-              {seller ? (
+              {seller.hasOwnProperty("Username") ? (
                 <div className="w-full  pl-6 mb-5">
                   <img
                     src={
@@ -535,7 +535,7 @@ const PropertyPage = ({
                   </div>
                   <div className="w-full  flex items-center justify-start mb-3">
                     <img className="w-7 h-7 mr-3" src={email} alt="" />
-                    <p className="text-lg">sales@micasa.com</p>
+                    <p className="text-lg">micasacorp2000@gmail.com</p>
                   </div>
                 </div>
               )}

@@ -69,7 +69,7 @@ const ReviewsPage = () => {
               <div className="w-full  flex items-center justify-start">
                 <img className="w-8 h-8 mr-5 invert-icon" src={email} alt="" />
                 <p className="text-xl text-white text-shadow">
-                  sales@micasa.com
+                  micasacorp2000@gmail.com
                 </p>
               </div>
             </div>

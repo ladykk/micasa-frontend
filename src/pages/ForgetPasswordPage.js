@@ -101,7 +101,6 @@ const ForgetPasswordPage = () => {
           .then((result) => {
             if (result.status === 200) {
               if (result.data.payload) {
-                console.log(result.data.payload);
                 setForm({
                   ...form,
                   username: result.data.payload.username,

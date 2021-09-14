@@ -408,7 +408,7 @@ const Profile = ({ user, setIsUserFetch }) => {
                   </p>
                   <div className="pl-10">
                     <p className="mb-1">Phone: 02-000-000</p>
-                    <p>Email: sales@micasa.com</p>
+                    <p>Email: micasacorp2000@gmail.com</p>
                   </div>
                 </div>
               </div>
