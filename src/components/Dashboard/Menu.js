@@ -13,7 +13,7 @@ import approving from "../../assets/icons/menu/auction.png";
 import signout from "../../assets/icons/menu/logout.png";
 
 //import modules
-const ImageAPI = require("../../modules/api/ImageAPI");
+import ImageAPI from "../../modules/api/ImageAPI";
 
 const Menu = ({ user, handleSignOut, menu }) => {
   return (

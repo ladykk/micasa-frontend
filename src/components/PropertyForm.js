@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Prompt, useHistory } from "react-router-dom";
 import Iframe from "react-iframe";
-import PropertyData from "../modules/PropertyData";
 
 //import pictures
 import no_img from "../assets/images/noimage.png";
@@ -13,10 +12,238 @@ import PropertyPage from "../pages/PropertyPage";
 import instance from "../modules/Instance";
 
 //import modules
-const PropertyAPI = require("../modules/api/PropertyAPI");
+import PropertyAPI from "../modules/api/PropertyAPI";
+import DataAPI from "../modules/api/DataAPI";
 
 const PropertyForm = ({ data, setIsFetch }) => {
   const history = useHistory();
+
+  //Options
+  const [status, setStatus] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [contracts, setContracts] = useState([]);
+  const [rentPayment, setRentPayment] = useState([]);
+  const [bedrooms, setBedrooms] = useState([]);
+  const [bathrooms, setBathrooms] = useState([]);
+  const [furnishing, setFurnishing] = useState([]);
+  const [ownerships, setOwnerships] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [nearStations, setNearStations] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      //Fetch Status
+      await instance
+        .get(DataAPI.apiUrls.status)
+        .then((result) => {
+          if (result.status === 200) {
+            setStatus(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Types
+      await instance
+        .get(DataAPI.apiUrls.type)
+        .then((result) => {
+          if (result.status === 200) {
+            setTypes(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Contracts
+      await instance
+        .get(DataAPI.apiUrls.contract)
+        .then((result) => {
+          if (result.status === 200) {
+            setContracts(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch RentPayment
+      await instance
+        .get(DataAPI.apiUrls.rent_payment)
+        .then((result) => {
+          if (result.status === 200) {
+            setRentPayment(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Bedrooms
+      await instance
+        .get(DataAPI.apiUrls.bedroom)
+        .then((result) => {
+          if (result.status === 200) {
+            setBedrooms(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Bathrooms
+      await instance
+        .get(DataAPI.apiUrls.bathroom)
+        .then((result) => {
+          if (result.status === 200) {
+            setBathrooms(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Furnishing
+      await instance
+        .get(DataAPI.apiUrls.furnishing)
+        .then((result) => {
+          if (result.status === 200) {
+            setFurnishing(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Ownerships
+      await instance
+        .get(DataAPI.apiUrls.ownership)
+        .then((result) => {
+          if (result.status === 200) {
+            setOwnerships(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Districts
+      await instance
+        .get(DataAPI.apiUrls.district)
+        .then((result) => {
+          if (result.status === 200) {
+            setDistricts(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Provinces
+      await instance
+        .get(DataAPI.apiUrls.province)
+        .then((result) => {
+          if (result.status === 200) {
+            setProvinces(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch NearStation
+      await instance
+        .get(DataAPI.apiUrls.near_station)
+        .then((result) => {
+          if (result.status === 200) {
+            setNearStations(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+    })();
+  }, []);
 
   const [isBlock, setBlock] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
@@ -458,12 +685,12 @@ const PropertyForm = ({ data, setIsFetch }) => {
 
   return (
     <form
-      className="w-full  h-max-content relative p-6 border border-gray-300 rounded-lg shadow place-items-start mb-10 hover:border-gray-400 ease-in duration-75"
+      className="w-full h-max-content relative p-6 border border-gray-300 rounded-lg shadow place-items-start mb-10 hover:border-gray-400 ease-in duration-75"
       onSubmit={handleOnSubmit}
     >
       <Prompt when={isBlock} message={"Are you sure to dismiss the from ?"} />
       {/* Floating Panel */}
-      <div className="sticky top-5 left-0 right-0 w-full  h-fit-content z-40 mb-5 flex items-center justify-between rounded-full border border-gray-300 p-2 pl-3 pr-3 bg-white shadow hover:border-gray-400 ease-in duration-75">
+      <div className="fixed bottom-5 left-0 right-0 w-screen-90 mx-auto h-fit-content z-40 flex items-center justify-between rounded-full border border-gray-300 p-2 pl-3 pr-3 bg-white shadow hover:border-gray-400 ease-in duration-75">
         {/* Display Toggle */}
         <div className="flex items-center">
           <label className="switch mr-3">
@@ -503,7 +730,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   required
                   disabled={display || data.status === "Pending"}
                 >
-                  {PropertyData.getStatusAsOption()}
+                  {status.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {form.status === "Sold" && (
@@ -695,7 +924,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   <option value="" hidden disabled>
                     Choose
                   </option>
-                  {PropertyData.getTypesAsOption()}
+                  {types.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Contract */}
@@ -721,7 +952,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   <option value="" hidden disabled>
                     Choose
                   </option>
-                  {PropertyData.getContractsAsOption()}
+                  {contracts.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Area */}
@@ -789,7 +1022,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                       <option value="None" hidden disabled>
                         Choose
                       </option>
-                      {PropertyData.getRentPaymentsAsOption()}
+                      {rentPayment.map((element) => (
+                        <option value={element}>{element}</option>
+                      ))}
                     </select>
                   </div>
                 ) : (
@@ -836,7 +1071,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   <option value="" hidden disabled>
                     Choose
                   </option>
-                  {PropertyData.getBedroomAsOption()}
+                  {bedrooms.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Bathroom */}
@@ -862,7 +1099,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   <option value="" hidden disabled>
                     Choose
                   </option>
-                  {PropertyData.getBathroomAsOption()}
+                  {bathrooms.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Furnishing */}
@@ -888,7 +1127,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   <option value="" hidden disabled>
                     Choose
                   </option>
-                  {PropertyData.getFurnishingAsOption()}
+                  {furnishing.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Ownership */}
@@ -902,7 +1143,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   onChange={handleOnChange}
                   className="outline-none w-full  h-full"
                 >
-                  {PropertyData.getOwnershipAsOption()}
+                  {ownerships.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Location */}
@@ -930,7 +1173,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   <option value="" hidden disabled>
                     Choose
                   </option>
-                  {PropertyData.getDistrictsAsOption()}
+                  {districts.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Province */}
@@ -956,7 +1201,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   <option value="" hidden disabled>
                     Choose
                   </option>
-                  {PropertyData.getProvincesAsOption()}
+                  {provinces.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Near Station */}
@@ -973,7 +1220,9 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   className="outline-none w-full  h-full"
                   required
                 >
-                  {PropertyData.getStationsAsOption()}
+                  {nearStations.map((element) => (
+                    <option value={element}>{element}</option>
+                  ))}
                 </select>
               </div>
               {/* Facilities */}

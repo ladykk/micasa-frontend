@@ -12,7 +12,7 @@ import Loading from "../Loading";
 
 //import modules
 import WebmasterAPI from "../../modules/api/WebmasterAPI";
-const ImageAPI = require("../../modules/api/ImageAPI");
+import ImageAPI from "../../modules/api/ImageAPI";
 
 const Agents = () => {
   //Fetch

@@ -9,7 +9,7 @@ import instance from "../../modules/Instance";
 import box from "../../assets/icons/webmaster/box.png";
 
 //import modules
-const WebmasterAPI = require("../../modules/api/WebmasterAPI");
+import WebmasterAPI from "../../modules/api/WebmasterAPI";
 
 const ApproveProperties = () => {
   const [isFetch, setIsFetch] = useState(true);

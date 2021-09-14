@@ -8,10 +8,10 @@ import contact from "../../assets/images/contact.png";
 import loading from "../../assets/images/progress.gif";
 
 //import modules
-const ImageAPI = require("../../modules/api/ImageAPI");
-const UserAPI = require("../../modules/api/UserAPI");
-const CustomerAPI = require("../../modules/api/CustomerAPI");
-const DateModule = require("../../modules/DateModule");
+import ImageAPI from "../../modules/api/ImageAPI";
+import UserAPI from "../../modules/api/UserAPI";
+import CustomerAPI from "../../modules/api/CustomerAPI";
+import DateModule from "../../modules/DateModule";
 
 const Profile = ({ user, setIsUserFetch }) => {
   const [form, setForm] = useState({

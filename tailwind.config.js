@@ -3,9 +3,12 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      width: {
+        "screen-90": "90vw",
+      },
       height: {
         120: "30rem",
-        "screen-80": "80vh",
+        "screen-90": "90vh",
         "screen-85": "85vh",
         "screen-70": "70vh",
         "screen-75": "75vh",

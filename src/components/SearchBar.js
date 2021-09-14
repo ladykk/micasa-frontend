@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import instance from "../modules/Instance";
+import { useHistory } from "react-router-dom";
 
 //import modules
-import PropertyData from "../modules/PropertyData";
+import DataAPI from "../modules/api/DataAPI";
 import PropertyAPI from "../modules/api/PropertyAPI";
-import { useHistory } from "react-router-dom";
 
 const SearchBar = () => {
   const history = useHistory();
@@ -28,6 +29,53 @@ const SearchBar = () => {
         });
     }
   };
+
+  //Options
+  const [types, setTypes] = useState([]);
+  const [contracts, setContracts] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      //Fetch Types
+      await instance
+        .get(DataAPI.apiUrls.type)
+        .then((result) => {
+          if (result.status === 200) {
+            setTypes(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Contracts
+      await instance
+        .get(DataAPI.apiUrls.contract)
+        .then((result) => {
+          if (result.status === 200) {
+            setContracts(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+    })();
+  }, []);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -58,7 +106,9 @@ const SearchBar = () => {
         onChange={handleChange}
       >
         <option value="">All Property Type</option>
-        {PropertyData.getTypesAsOption()}
+        {types.map((type) => (
+          <option value={type}>{type}</option>
+        ))}
       </select>
       <select
         name="contract_type"
@@ -71,7 +121,18 @@ const SearchBar = () => {
         <option value="" disabled hidden>
           Contract
         </option>
-        {PropertyData.getContractsAsOption()}
+        {contracts.map((contract) => {
+          switch (contract) {
+            case "Sell":
+              return <option value="buy">Buy</option>;
+            case "Rent":
+              return <option value="rent">Rent</option>;
+            case "New house":
+              return <option value="new">New house</option>;
+            default:
+              return <option value={contract}>{contract}</option>;
+          }
+        })}
       </select>
       <button className="h-full flex-grow-0 flex-shrink-0 w-28 bg-blue-500 text-white font-normal text-lg rounded-r-full">
         Search

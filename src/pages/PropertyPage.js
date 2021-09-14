@@ -215,6 +215,7 @@ const PropertyPage = ({
         return "bg-green-500";
       case "Sold":
       case "Cancel":
+      case "Rejected":
         return "bg-red-500";
       case "Reserved":
         return "bg-yellow-500";

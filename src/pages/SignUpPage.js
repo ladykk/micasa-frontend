@@ -11,7 +11,7 @@ import phone_icon from "../assets/icons/userform/phone-call.png";
 import instance from "../modules/Instance";
 
 //import modules
-const UserAPI = require("../modules/api/UserAPI");
+import UserAPI from "../modules/api/UserAPI";
 
 const SignUpPage = () => {
   const history = useHistory();

@@ -1,18 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import instance from "../modules/Instance";
 
 //import pictures
 import property_type_icon from "../assets/icons/filter/buildings.png";
 import bedroom_icon from "../assets/icons/filter/double-bed.png";
 import bathroom_icon from "../assets/icons/filter/toilet.png";
-import PropertyData from "../modules/PropertyData";
 import PropertyAPI from "../modules/api/PropertyAPI";
+
+//import modules
+import DataAPI from "../modules/api/DataAPI";
 
 const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
   const [errors, setErrors] = useState({});
   const [isFurnishingOpen, setFurnishing] = useState(false);
   const [isOwnershipOpen, setOwnership] = useState(false);
   const [isFacilitiesOpen, setFacilities] = useState(false);
+
+  //Options
+  const [types, setTypes] = useState([]);
+  const [bedrooms, setBedrooms] = useState([]);
+  const [bathrooms, setBathrooms] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      //Fetch Types
+      await instance
+        .get(DataAPI.apiUrls.type)
+        .then((result) => {
+          if (result.status === 200) {
+            setTypes(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Bedrooms
+      await instance
+        .get(DataAPI.apiUrls.bedroom)
+        .then((result) => {
+          if (result.status === 200) {
+            setBedrooms(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      //Fetch Bathrooms
+      await instance
+        .get(DataAPI.apiUrls.bathroom)
+        .then((result) => {
+          if (result.status === 200) {
+            setBathrooms(result.data.payload);
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data) {
+              console.error(err.response.data);
+            } else {
+              console.error(err.response);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+    })();
+  }, []);
 
   const handleFurnishingToggle = () => {
     setFurnishing(!isFurnishingOpen);
@@ -193,7 +263,9 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
             onChange={handleOnChange}
           >
             <option value="">All Property Type</option>
-            {PropertyData.getTypesAsOption()}
+            {types.map((bathroom) => (
+              <option value={bathroom}>{bathroom}</option>
+            ))}
           </select>
         </div>
         {/* Bedroom & Bathroom */}
@@ -208,7 +280,9 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
               onChange={handleOnChange}
             >
               <option value="">All Bedroom</option>
-              {PropertyData.getBedroomAsOption()}
+              {bedrooms.map((bathroom) => (
+                <option value={bathroom}>{bathroom}</option>
+              ))}
             </select>
           </div>
           <div className="w-full h-10 border border-gray-300 rounded-xl flex items-center pl-2 ml-1 hover:border-gray-400 ease-in duration-75">
@@ -221,7 +295,9 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
               onChange={handleOnChange}
             >
               <option value="">All Bathroom</option>
-              {PropertyData.getBathroomAsOption()}
+              {bathrooms.map((bathroom) => (
+                <option value={bathroom}>{bathroom}</option>
+              ))}
             </select>
           </div>
         </div>

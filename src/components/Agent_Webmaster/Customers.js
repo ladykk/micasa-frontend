@@ -13,7 +13,7 @@ import Loading from "../Loading";
 //import modules
 import AgentAPI from "../../modules/api/AgentAPI";
 import MiniPropertyCard from "./MiniPropertyCard";
-const ImageAPI = require("../../modules/api/ImageAPI");
+import ImageAPI from "../../modules/api/ImageAPI";
 
 const Customers = ({ user }) => {
   //Fetch

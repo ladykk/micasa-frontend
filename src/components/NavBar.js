@@ -7,7 +7,7 @@ import avatar_icon from "../assets/icons/userform/avatar.png";
 import MenuOverlay from "./MenuOverlay";
 
 //import modules
-const ImageAPI = require("../modules/api/ImageAPI");
+import ImageAPI from "../modules/api/ImageAPI";
 
 const NavBar = ({
   user,
