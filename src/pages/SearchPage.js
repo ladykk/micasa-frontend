@@ -20,6 +20,7 @@ const SearchPage = ({ user, toggleOverlay }) => {
   const query = useQuery();
 
   const { contract_type } = useParams();
+  const [isContractChange, setContractChange] = useState(false);
   const [params, setParams] = useState({
     //Terms
     terms: query.get("terms") ? query.get("terms") : "",
@@ -79,9 +80,12 @@ const SearchPage = ({ user, toggleOverlay }) => {
     page: query.get("page") ? Number.parseInt(query.get("page"), 10) : 1,
     sort_by: query.get("sort_by") ? query.get("sort_by") : "new_added",
     items_per_page: query.get("items_per_page")
-      ? query.get("items_per_page")
+      ? Number.parseInt(query.get("items_per_page"), 10)
       : 5,
   });
+
+  console.log(options)
+  console.log( Number.parseInt(query.get("page"), 10))
 
   useEffect(() => {
     (async () => {
@@ -153,10 +157,11 @@ const SearchPage = ({ user, toggleOverlay }) => {
   }, [isFetch, contract_type]);
 
   useEffect(() => {
-    if (contract_type) {
+    if (isContractChange) {
       setOptions({ ...options, page: 1 });
+      setContractChange(false)
     }
-  }, [contract_type]);
+  }, [isContractChange]);
 
   const handleOnChange = ({ target }) => {
     setParams({ ...params, [target.name]: target.value });
@@ -164,6 +169,9 @@ const SearchPage = ({ user, toggleOverlay }) => {
 
   const handleOnOptionChange = ({ target }) => {
     setOptions({ ...options, [target.name]: target.value });
+    if(target.name !== "page") {
+      setContractChange(true);
+    }
     history.replace(
       `/search/${contract_type}${PropertyAPI.generateQueryString(params, {
         ...options,
@@ -240,6 +248,7 @@ const SearchPage = ({ user, toggleOverlay }) => {
       <div className="w-full pl-5 pr-5 desktop:w-4/5 h-auto mx-auto flex pb-5">
         <Filter
           contract_type={contract_type}
+          setContractChange={setContractChange}
           params={params}
           setParams={setParams}
           handleOnSubmit={handleOnSubmit}

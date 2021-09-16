@@ -157,7 +157,7 @@ const PropertyPage = ({
           });
       }
     })();
-  });
+  },[id]);
 
   useEffect(() => {
     //Fetch can favorite this property
@@ -181,7 +181,7 @@ const PropertyPage = ({
           });
       }
     })();
-  });
+  },[id]);
 
   useEffect(() => {
     //Fetch seller
@@ -205,7 +205,7 @@ const PropertyPage = ({
           });
       }
     })();
-  });
+  },[]);
 
   const [page, setPage] = useState("overview");
 
@@ -273,7 +273,7 @@ const PropertyPage = ({
       >
         {!preview && (
           <div className="w-4/5 h-auto mx-auto relative flex justify-between">
-            <div
+            { history.length > 1 && <div
               className="flex bg-blue-500 text-white p-1 pl-3 pr-4 w-max items-center rounded-2xl cursor-pointer hover:bg-opacity-90 ease-in duration-75"
               onClick={() => {
                 history.goBack();
@@ -281,7 +281,7 @@ const PropertyPage = ({
             >
               <img src={arrow} alt="" className="invert-icon w-5 h-5 mr-2" />
               <p className="font-normal">Back to result</p>
-            </div>
+            </div> }
             {edit ? (
               edit.status !== "Sold" ? (
                 <Link
@@ -500,7 +500,7 @@ const PropertyPage = ({
                 )}
               </div>
               <h1 className="w-full  text-xl underline mb-5">Contact</h1>
-              {seller.hasOwnProperty("Username") ? (
+              {seller.hasOwnProperty("username") ? (
                 <div className="w-full  pl-6 mb-5">
                   <img
                     src={
@@ -552,7 +552,7 @@ const PropertyPage = ({
           </div>
           {/* Map */}
           <div
-            className={`flex h-fit-content trans-hide ${
+            className={`flex ${edit ? "h-fit-content" : "h-screen-75"} trans-hide ${
               page === "map" && "active"
             }`}
           >

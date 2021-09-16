@@ -11,7 +11,7 @@ import PropertyAPI from "../modules/api/PropertyAPI";
 //import modules
 import DataAPI from "../modules/api/DataAPI";
 
-const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
+const Filter = ({ contract_type, params, setParams, handleOnSubmit, setContractChange }) => {
   const [errors, setErrors] = useState({});
   const [isFurnishingOpen, setFurnishing] = useState(false);
   const [isOwnershipOpen, setOwnership] = useState(false);
@@ -222,6 +222,7 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
           <div className="h-9 flex items-center">
             <Link
               to={`/search/buy${PropertyAPI.generateQueryString(params, {})}`}
+              onClick={() => setContractChange(true)}
               className={`p-4 pt-1 pb-1 ml-1  font-normal rounded-full ${
                 contract_type === "buy"
                   ? "bg-blue-500 text-white border border-blue-500"
@@ -232,6 +233,7 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
             </Link>
             <Link
               to={`/search/rent${PropertyAPI.generateQueryString(params, {})}`}
+              onClick={() => setContractChange(true)}
               className={`p-4 pt-1 pb-1 ml-1  font-normal rounded-full ${
                 contract_type === "rent"
                   ? "bg-blue-500 text-white border border-blue-500"
@@ -242,6 +244,7 @@ const Filter = ({ contract_type, params, setParams, handleOnSubmit }) => {
             </Link>
             <Link
               to={`/search/new${PropertyAPI.generateQueryString(params, {})}`}
+              onClick={() => setContractChange(true)}
               className={`p-4 pt-1 pb-1 ml-1 font-normal rounded-full ${
                 contract_type === "new"
                   ? "bg-blue-500 text-white border border-blue-500"

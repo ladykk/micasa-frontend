@@ -34,7 +34,7 @@ const ReviewCard = ({ review, id }) => {
         alt=""
         className={`rounded-full w-24 h-24 ${
           even ? "ml" : "mr"
-        }-2 flex-shrink-0 flex-grow-0`}
+        }-2 flex-shrink-0 flex-grow-0 object-cover`}
       />
       <div
         className={`w-full  h-auto flex items-center bg-white p-4 rounded-lg ${

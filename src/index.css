@@ -161,7 +161,7 @@ p {
 
 .trans-hide.active {
   opacity: 1;
-  max-height: 3000px;
+  max-height: 100000px;
   transition: max-height 0.25s ease-in, opacity 0.25s ease-in;
 }
 

@@ -14,6 +14,7 @@ import Loading from "../Loading";
 import AgentAPI from "../../modules/api/AgentAPI";
 import MiniPropertyCard from "./MiniPropertyCard";
 import ImageAPI from "../../modules/api/ImageAPI";
+import DateModule from "../../modules/DateModule";
 
 const Customers = ({ user }) => {
   //Fetch
@@ -273,7 +274,7 @@ const Customers = ({ user }) => {
               </p>
               <p className="mr-1 flex items-center justify-end">Birthday:</p>
               <p className="col-span-2 h-8 flex items-center">
-                {customer.birthday ? customer.birthday : "NO DATA"}
+                {customer.birthday ? DateModule.formatDate(customer.birthday) : "NO DATA"}
               </p>
             </div>
             <div className="relative w-1/4 mb-8 mt-4 flex justify-center">

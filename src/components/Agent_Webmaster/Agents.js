@@ -13,6 +13,7 @@ import Loading from "../Loading";
 //import modules
 import WebmasterAPI from "../../modules/api/WebmasterAPI";
 import ImageAPI from "../../modules/api/ImageAPI";
+import DateModule from "../../modules/DateModule";
 
 const Agents = () => {
   //Fetch
@@ -94,7 +95,7 @@ const Agents = () => {
           .finally(() => setCustomersFetch(false));
       }
     })();
-  });
+  },[isCustomersFetch]);
 
   //Agents
   const [addAgentUser, setAddAgentUser] = useState("");
@@ -344,7 +345,7 @@ const Agents = () => {
               </p>
               <p className="mr-1 flex items-center justify-end">Birthday:</p>
               <p className="col-span-2 h-8 flex items-center">
-                {agent.birthday ? agent.birthday : "NO DATA"}
+                {agent.birthday ? DateModule.formatDate(agent.birthday) : "NO DATA"}
               </p>
             </div>
             <div className="relative w-1/4 mb-8 mt-4 flex justify-center">

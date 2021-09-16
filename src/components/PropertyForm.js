@@ -38,7 +38,27 @@ const PropertyForm = ({ data, setIsFetch }) => {
         .get(DataAPI.apiUrls.status)
         .then((result) => {
           if (result.status === 200) {
-            setStatus(result.data.payload);
+            if(data) {
+              let filter = result.data.payload;
+              switch(data.status) {
+                case "Rejected":
+                case "Pending":
+                  filter = result.data.payload.filter(element => element === 'Pending' || element === "Cancel");
+                  setStatus(filter);
+                  setForm({...form, status: "Pending"});
+                  break;
+                case "Cancel":
+                  filter = result.data.payload.filter(element => element === "Pending");
+                  setStatus(filter);
+                  setForm({...form, status: "Pending"});
+                  break;
+                default:
+                  filter = result.data.payload.filter(element => element !== "Pending" && element !== "Rejected");
+                  setStatus(filter)
+              }
+            } else {
+              setStatus(result.data.payload);
+            }
           }
         })
         .catch((err) => {
@@ -728,7 +748,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
                   onChange={handleOnChange}
                   className="outline-none w-full  h-full"
                   required
-                  disabled={display || data.status === "Pending"}
+                  disabled={display}
                 >
                   {status.map((element) => (
                     <option value={element}>{element}</option>
