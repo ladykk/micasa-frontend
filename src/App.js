@@ -89,7 +89,7 @@ function App() {
           .finally(() => setIsUserFetch(false));
       })();
     }
-  });
+  },[isUserFetch]);
 
   useEffect(() => {
     let interval = null;

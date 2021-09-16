@@ -89,7 +89,7 @@ const PropertyCard = ({
           });
       }
     })();
-  });
+  },[isHasFavorite]);
 
   useEffect(() => {
     //Fetch can favorite this property
@@ -113,7 +113,7 @@ const PropertyCard = ({
           });
       }
     })();
-  });
+  }, [isHasFavorite]);
 
   const path = `/${isManage ? "edit" : "property"}/${data.property_id}`;
 

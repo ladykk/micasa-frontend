@@ -25,7 +25,7 @@ const ReviewsPage = () => {
         }
       });
     })();
-  });
+  },[]);
 
   return (
     <div className="w-full h-auto absolute top-0 left-0 right-0 overflow-x-hidden">

@@ -205,7 +205,7 @@ const PropertyPage = ({
           });
       }
     })();
-  },[]);
+  },[user]);
 
   const [page, setPage] = useState("overview");
 
