@@ -627,8 +627,7 @@ const PropertyForm = ({ data, setIsFetch }) => {
         .then((result) => {
           if (result.status === 201) {
             setBlock(false);
-            history.goBack();
-            window.location.reload(false);
+            history.goBack(); 
           }
         })
         .catch((err) => {
