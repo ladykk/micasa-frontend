@@ -558,7 +558,7 @@ const PropertyPage = ({
           >
             <Iframe
               url={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAy2j5w0QgLgcqULL0Kj0jGanCZ3WlEdKk&q=${property.maps_query}&zoom=19`}
-              className={`w-full  ${preview ? "h-120" : "h-screen-80"} `}
+              className={`w-full  ${preview ? "h-120" : "h-screen-75"} `}
             />
           </div>
         </div>
